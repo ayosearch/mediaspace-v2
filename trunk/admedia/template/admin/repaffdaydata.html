@@ -1,0 +1,126 @@
+﻿<!--<?php
+include_once PrintEot('header');
+print <<<EOT
+-->
+<form id="form" name="form" action="$admin_file" method="post">
+<center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>数据查询 &gt;&gt; 站长按日数据统计 </strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="97%" align=center>              
+        <tr>
+            <td height="50px"><b>条件：</b><select ID="creative_id" name="creative_id"><option value="">请选择广告计划</option>$db_advlist</select>
+						站长ID：<input type="text" ID="aff_id" name="aff_id" style="WIDTH:60px" class="text"/>				
+						广告位ID：<input type="text"  ID="place_id" name="place_id"  style="WIDTH:60px" class="text"/>		
+						站点编号：<input type="text"  ID="site_id" name="site_id" style="WIDTH:60px" class="text"/>				
+						创意编号：<input type="text"  ID="creative_id" name="creative_id"  style="WIDTH:60px" class="text"/>			
+						开始时间：<input name="start_date" type="text" readonly id="start_date"  style="WIDTH:60px" class="text"><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_date" type="text" readonly id="end_date"  style="WIDTH:60px" class="text"><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+							<input type="button" ID="btnQuery" value="查询"  class="text"/>
+							<a href="javascript:document.location.reload();">
+						</td> 
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline"  width="17" /><span style="color: #547054"> 刷新</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>     						
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td> 
+                <td align="middle" class="title" height="20" valign="center">日期</td> 
+                <td align="middle" class="title" height="20" valign="center">站长-站点-广告位</td>                                                                   
+                <td align="middle" class="title" height="20" valign="center">广告-创意</td>
+                <td align="middle" class="title" height="20" valign="center">显示</td>                               
+                <td align="middle" class="title" height="20" valign="center">点击</td>    
+                <td align="middle" class="title" height="20" valign="center">计费</td> 
+                <td align="middle" class="title" height="20" valign="center">修正</td>                 
+                <td align="middle" class="title" height="20" valign="center">订单金额</td>      
+                <td align="middle" class="title" height="20" valign="center">送货费用</td> 
+                <td align="middle" class="title" height="20" valign="center">修正金额</td> 
+                <td align="middle" class="title" height="20" valign="center">单价</td> 
+                <td align="middle" class="title" height="20" valign="center">总价</td> 
+                <td align="middle" class="title" height="20" valign="center">结算总价</td>                                                                                                                                                                                                                                                                                                                                        
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affdaydatalist); 
+foreach($db_affdaydatalist as $db_affdaydate ){
+	$db_affiliate = getAffliate($db_affdaydate[aff_id]);
+	$db_creative = getAdvCreative($db_affdaydate[creative_id]);	
+	$db_affplace = getAffPlace($db_affdaydate[place_id]);
+	$db_affwebsite = getAffWebSite($db_affdaydate[site_id]);
+	$db_adv = getAdvertise($db_affdaydate[adv_id]);
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$db_show[create_time]);
+print <<<EOT
+-->  
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx</td>               
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[iday]</td>
+                <td align="middle" valign="center">&nbsp;$db_affiliate[name]($db_affdaydate[aff_id])-$db_affwebsite[name]($db_affdaydate[site_id])-$db_affplace[name]($db_affdaydate[place_id]</td>
+                <td align="middle" valign="center">&nbsp;$db_adv[name]($db_affdaydate[adv_id])-$db_creative[name]($db_affdaydate[creative_id])</td>    
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[show_num]</td>
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[click_num]</td> 
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[real_num]</td>
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[fake_num]</td>
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[order_money]</td>
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[total_money]</td>
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[fake_totalmoney]</td>  
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[price]</td>
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[total_money]</td>
+                <td align="middle" valign="center">&nbsp;$db_affdaydate[pay_money]</td>
+            </tr>
+ <!--
+EOT;
+}
+if($showcount==0){
+print <<<EOT
+-->
+ <tr align="center" valign="middle">
+ 	<td style="color:red;height:50px" colspan="14">请选择或设定查询条件</td>
+ </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+	<input type="hidden" id="count" name="count" value="$showcount" />
+</form>
+<!--
+EOT;
+?>-->

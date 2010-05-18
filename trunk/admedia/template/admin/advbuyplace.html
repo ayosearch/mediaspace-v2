@@ -1,0 +1,291 @@
+<!--<?php
+include_once PrintEot('header');
+if($action=="new" || $action=="edit"){
+	for($i=0;$i<24;$i++){
+		if($i<10) $si = "0".$i;
+		else $si = "".$i;
+		$start_hour .= "<option value='$i'>$si</option>";
+		$end_hour = $start_hour;
+	}
+	for($i=0;$i<60;$i++){
+		if($i<10) $si = "0".$i;
+		else $si = "".$i;
+		$start_minute .= "<option value='$i'>$si</option>";
+		$end_minute = $start_minute;
+	}
+print <<<EOT
+-->
+<form runat="server" id="addForm">
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　广告位排期管理</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+        <tr>			
+					<td align=right width=25%>所属广告计划：</td>
+					<td><select ID="adv_id" name="adv_id" style="width:125px">
+						<option value="0">请选择广告计划</option>$op_advlist
+						</select>
+					</td>
+				</tr>			
+				<tr>
+					<td align=right>购买时间：</td>
+					<td>
+					   <input type="text" id="buy_time" style="WIDTH: 80px">
+					   <select name="buy_type" id="buy_type" style="WIDTH: 42px">
+						   <option value="0">天</option>
+						   <option value="1">周</option>
+						   <option value="2">月</option>
+						   <option value="3">季</option>
+						   <option value="4">年</option>
+					   </select>
+					</td>					
+				</tr>
+				<tr>
+					<td align=right>广告位：</td>
+					<td>
+					   <input type="hidden" id="place_id" name="place_id">
+					   <input type="text" id="place_name" name="place_name" style="WIDTH: 125px" readonly>
+					   <a href="javascript:void(0);" href="javascript:showAffAdPlace();"><IMG style="CURSOR: hand" height="21" border="0" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle">请选择广告位</a>
+					</td>					
+				</tr>
+				<tr>
+					<td align=right>开始时间：</td>
+					<td>
+					    <input name="start_date" type="text" readonly id="start_date" style="WIDTH:102px"><A href="javascript:OpenCalendar('StartDate', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+					    &nbsp;<select name="start_hour" id="send_hour">$start_hour</select>：<select name="start_minute" id="send_minute">$start_minute</select>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>结束时间：</td>
+					<td>
+					   <input name="end_date" type="text" runat="server" readonly id="end_date" style="WIDTH:102px"><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+					   &nbsp;<select name="end_hour" id="send_hour">$end_hour</select>：<select name="end_minute" id="send_minute">$end_minute</select>
+					</td>					
+				</tr>							
+				
+				<tr>
+					<td align=right style="height: 57px">描述：</td>
+					<td colspan=3 style="height: 57px">
+					<textarea id="memo" name="memo" style="Height:81px;Width:300px">$db_advbuyplace[memo]</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" align="center">
+					<input type="submit" runat="server" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+
+ </TABLE>
+  
+ </form>
+
+</body>
+</HTML>
+<script type="text/javascript" language=javascript>
+function checkfrm(){
+	if($("adv_id").value == "0"){
+		alert('所属广告计划不能为空！');
+		$("adv_id").focus();
+        return false;
+	}
+	if(isEmpty($("buy_time").value)){
+		alert('请输入购买时间！');
+		$("buy_time").focus();
+		return false;
+	}else if(isNaN($("buy_time").value)){
+		alert('购买时间必须为数字！');
+		$("buy_time").focus();
+		return false;
+	}
+	if(isEmpty($("place_id").value)){
+		alert('请选择广告位！');
+		$("place_name").focus();
+		return false;
+	}
+    return true;
+}
+</script>
+
+
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>广告计划管理 &gt;&gt;定投广告管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部");
+ showPageLink("status", "0", "申请中"); 
+ showPageLink("status", "1", "正常投放"); 
+ showPageLink("status", "2", "未批准");
+ showPageLink("status", "3", "已停止");
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+            <td><b>快速查询：</b><select name="searchtype" value="">
+								<option value="adplacename" selected>广告位名称</option>
+								<option value="shortname">客户简称</option>
+								<option value="activename">活动名称</option>	
+								<option value="sitename">站点名称</option>
+								<option value="affame">网营商名称</option>						
+							</select>
+							<input type="text" name="searchkey" value="" class="text"/>
+							<input type="button" ID="btnQuery" value="查询" class="text"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr><td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+                                <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" />
+                                <span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canaudit==true){
+		showButton(4,'审核','javascript:ConfirmDel("'.$admin_file.'&action=audit&status=1'.$transtr.'&curpage='.$curpage.'","确认审核通过选定渠道吗？");');
+		showButton(5,'审核不通过','javascript:ConfirmDel("'.$admin_file.'&action=audit&status=2'.$transtr.'&curpage='.$curpage.'","确定不通过选定的渠道吗？");');
+	}
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">广告位名称</td>
+                <td align="middle" class="title" height="20" valign="center">活动名称</td>
+                <td align="middle" class="title" height="20" valign="center">站点名称</td>
+                <td align="middle" class="title" height="20" valign="center">广告主</td>
+                <td align="middle" class="title" height="20" valign="center">开始时间</td>
+                <td align="middle" class="title" height="20" valign="center">结束时间</td>                 
+                <td align="middle" class="title" height="20" valign="center">购买周数</td>               
+                <td align="middle" class="title" height="20" valign="center">状态</td>
+                <td align="middle" class="title" height="20" valign="center">添加日期</td>
+                <td align="middle" class="title" height="20" valign="center">操作</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_advbuyplacelist); 
+foreach($db_advbuyplacelist as $advbuyplace ){
+	$affplace = getAffPlace($advbuyplace[place_id]);
+	$affwebsite = getAffWebSite($advbuyplace[site_id]);
+	$adv = getAdvertise($advbuyplace[adv_id]);
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$advbuyplace[create_time]);
+print <<<EOT
+-->  
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx </td>
+                <td align="middle" valign="center">
+                    <input id="ID" name="ID" type="checkbox" value="$advbuyplace[id]" />
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showUrl($advbuyplace[url],$affplace[name]);
+print <<<EOT
+-->
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showLink("admincp.php?job=advdetail",$advbuyplace[adv_id],$adv[name]);
+print <<<EOT
+-->    
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showLink("$affplace[place_url]",$affwebsite[name]);
+print <<<EOT
+-->        
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;                
+    getAffName($advbuyplace[aff_id]);
+print <<<EOT
+-->				</td>
+                <td align="middle" valign="center">&nbsp;$advbuyplace[start_time]</td>
+                <td align="middle" valign="center">&nbsp;$advbuyplace[end_time]</td>
+                <td align="middle" valign="center">&nbsp;$advbuyplace[buy_time]</td>                
+                <td align="middle" valign="center">&nbsp;$advbuyplace[status]</td> 
+                <td align="middle" valign="center">&nbsp;$cdate</td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showEditButton($advbuyplace[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>&nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+<!--
+EOT;
+}?>-->

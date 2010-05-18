@@ -1,0 +1,305 @@
+<!--<?php
+include_once PrintEot('header');
+if(empty($action)){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>站长管理 &gt;&gt; 站点广告位</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="96%" align=center>
+         <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("aduit", "0", "等待审核");
+ showPageLink("aduit", "1", "已审核");
+ showPageLink("aduit", "2", "审核未通过");
+ showPageLink("status", "0", "空闲");
+ showPageLink("status", "1", "可定向");
+ showPageLink("status", "2", "已设定");
+print <<<EOT
+-->            
+            </td></tr>
+         <tr>
+            <td><b>快速查询：</b><select id="searchtype" name="searchtype">
+<!--
+EOT;
+	if(empty($searchtype) || $searchtype=="name")  echo '<option value="name" selected>广告位名称</option>';
+    else echo '<option value="name">广告位名称</option>';
+	if(empty($searchtype) || $searchtype=="keyword")  echo '<option value="keyword">关键字</option>';
+    else echo '<option value="keyword">关键字</option>';
+	if(empty($searchtype) || $searchtype=="place_url")  echo '<option value="place_url">示例网址</option>';
+    else echo '<option value="place_url">示例网址</option>'; 
+	if(empty($searchtype) || $searchtype=="sitename")  echo '<option value="sitename">站点名称</option>';
+    else echo '<option value="sitename">站点名称</option>';    
+	if(empty($searchtype) || $searchtype=="siteurl")  echo '<option value="siteurl">网址地址</option>';
+    else echo '<option value="siteurl">网址地址</option>';
+	if(empty($searchtype) || $searchtype=="adsize")  echo '<option value="adsize">广告位尺寸</option>';
+    else echo '<option value="siteurl">广告位尺寸</option>';     
+print <<<EOT
+-->				
+							</select>
+							<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>
+						开始时间：<input name="start_date" type="text"  class="text" readonly value="$start_date"/><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_date" type="text" class="text" readonly value="$end_date"/><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<input type="submit" value="查询" class="text"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+                            <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" />
+                            <span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canaudit==true){
+		showButton(4,'审批','javascript:showAudit("'.$admin_file.'&action=audit&status=1'.$transtr.'&curpage='.$curpage.'");');
+	}
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">
+                    序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
+                <td align="middle" class="title" height="20" valign="center">联盟</td>
+                <td align="middle" class="title" height="20" valign="center">网站</td>
+                <td align="middle" class="title" height="20" valign="center">广告位</td>
+                <td align="middle" class="title" height="20" valign="center"> 示例网址</td>
+                <td align="middle" class="title" height="20" valign="center">广告位尺寸</td>              
+                <td align="middle" class="title" height="20" valign="center">状态</td>
+                <td align="middle" class="title" height="20" valign="center">CPC计价</td>    
+                <td align="middle" class="title" height="20" valign="center">每周计价</td>    
+                 <td align="middle" class="title" height="20" valign="center">编辑</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affadplacelist); 
+foreach($db_affadplacelist as $affadplace ){
+	$obj_affwebsite = getAffWebSite($affadplace[site_id]);
+	$affname = getAffName($affadplace[aff_id]);	
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$affadplace[create_time]);
+print <<<EOT
+-->    
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);"
+                onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx </td>
+                <td align="middle" class="hei" valign="center"><input id="ID" name="ID" type="checkbox" value="$affadplace[id]" /></td>
+                <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+	showLink("$admin_file&action=affdetail",$affadplace[aff_id],$affname);
+print <<<EOT
+-->($affadplace[aff_id])</td>
+                <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+	showUrl($obj_affwebsite[url],$obj_affwebsite[name]);
+print <<<EOT
+-->($affadplace[site_id])</td>
+               <td valign="middle" align="center">&nbsp;$affadplace[name]</td>
+               <td valign="middle" align="center">&nbsp;$affadplace[place_url]</td>                 
+               <td valign="middle" align="center">&nbsp;$affadplace[adsize_id]</td>             
+               <td valign="middle" align="center">&nbsp;$affadplace[status]</td>
+               <td valign="middle" align="center">&nbsp;$affadplace[week_price]</td>
+               <td valign="middle" align="center">&nbsp;$affadplace[click_price]</td>
+               <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+	showEditButton($affadplace[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->            
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+<!--
+EOT;
+}else if($action=="edit" || $action=="new"){
+$clickprice = 0;
+$weekprice = 0;
+if($db_advplace){
+	$clickprice = $db_advplace[click_price];
+	$weekprice = $db_advplace[week_price];
+}
+print <<<EOT
+-->
+<form name="form" id="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　站点广告位</strong>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+                <tr>
+					<td align=right width="25%">所属站长(<font color=red>*</font>)：</td>
+					<td><input type="text" id="aff_name" name="aff_name" style="WIDTH: 132px"  readonly/>
+					<a href="javascript:void(0)" onclick="javascript:showAfflist();">
+					    <IMG border="0" align="absmiddle" style="CURSOR: hand" height="21" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle">选择站长
+					</a><input type=hidden id="aff_id" name="aff_id" value="$db_advplace[aff_id]"/>
+					</td>
+				</tr>						
+				<tr>
+					<td align=right>所属站点(<font color=red>*</font>)：</td>
+					<td align="left">
+						<div id="divSite"><select name="site_id" id="site_id" style="WIDTH: 132px"><option value="">请选择...</option>$op_sitelist</select></div>
+					</td>
+				</tr>				
+				<tr>
+					<td align=right>广告位名称(<font color=red>*</font>)：</td>
+					<td><input type="text" id="name" name="name" style="WIDTH: 132px"  value="$db_advplace[name]"/></td>
+				</tr>		
+				<tr>
+					<td align=right>示例网址(<font color=red>*</font>)：</td>
+					<td><input type="text" id="demo_url" name="demo_url" style="WIDTH: 325px"  value="$db_advplace[demo_url]"/></td>
+				</tr>
+                <tr>
+					<td align=right>每周计价(<font color=red>*</font>)：</td>
+					<td><input type="text" id="week_price" name="week_price" style="WIDTH: 50px" value="$weekprice" />元</td>
+				</tr>
+                <tr>
+					<td align=right>点击计价(<font color=red>*</font>)：</td>
+					<td><input type="text" id="click_price" name="click_price" style="WIDTH: 50px" value="$clickprice" />元</td>
+				</tr>
+				<tr>
+					<td align=right>关 键 字：</td>
+					<td><input type="text" id="keyword" name="keyword" style="WIDTH: 132px"  value="$db_advplace[keyword]"/></td>
+				</tr>				
+				<TR id=trClick1>
+                <TD align=right>广告位尺寸：</TD>
+                <TD><select id="adsize" name="adsize" style="WIDTH: 132px">
+                <option value="">请选择...</option>
+                $op_basesizelist
+                	</select>
+                </TD></TR>
+              <TR>
+				<tr>
+					<td align=right style="height: 71px">描述：</td>
+					<td style="height: 71px">
+					    <textarea id="memo" name="memo" style="height:105px;Width:325px">$db_advplace[memo]</textarea>
+					</td>
+				</tr>											
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+</body>
+</HTML>
+<script type="text/javascript">
+function checkfrm(){
+	if(isEmpty($("aff_name").value)){
+		alert('请选择站长！');
+		$("aff_name").focus();
+		return false;
+	}
+	if(isEmpty($('site_name').value)){
+		alert('站点不能为空！');
+		$('site_name').focus();
+		return false;
+	}
+	if(isEmpty($('name').value)){
+		alert('广告位名称不能为空！');
+		$('name').focus();
+		return false;
+	}	
+	if($('demo_url').value == ""){
+		alert('示例网址不能为空！');
+		('demo_url').focus();
+		return false;
+	}
+	if($('week_price').value == ""){
+		alert('每周计价不能为空！');
+		$('week_price').focus();
+		return false;
+	}else if(isNaN($('week_price').value)){
+	    alert('每周计价必须为数字！');
+	    $('week_price').focus();
+		event.returnValue = false;
+		return;
+	}
+	if($('click_price').value == ""){
+		alert('点击计价不能为空！');
+		$('week_price').focus();
+		return false;
+	}else if(isNaN($('click_price').value)){
+	    alert('点击计价必须为数字！');
+	    $('click_price').focus();
+		event.returnValue = false;
+		return;
+	}
+}
+</script>
+<!--
+EOT;
+}?>-->

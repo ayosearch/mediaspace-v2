@@ -1,0 +1,130 @@
+<!--<?php
+include_once PrintEot('header');
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>站长管理 &gt;&gt; 黑名单管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("status", "0", "锁定");
+ showPageLink("status", "1", "释放");
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+            <td><b>快速查询：</b><select id="searchtype">
+                                <option value="user_name" selected>站长名称</option>
+								<option value="lock_user">锁定人</option>	
+								<option value="release_user">释放人</option>						
+							</select>
+							<input type="text" name="searchkey" class="text" value="$searchkey"/>
+							<input type="button" ID="btnQuery" class="text" value="查询"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">登录名称</td>
+                <td align="middle" class="title" height="20" valign="center">锁定人</td>
+                <td align="middle" class="title" height="20" valign="center">锁定时间</td>                     
+                <td align="middle" class="title" height="20" valign="center">释放人</td>
+           		<td align="middle" class="title" height="20" valign="center">释放时间</td>
+                <td align="middle" class="title" height="20" valign="center">说明</td>             		
+                <td align="middle" class="title" height="20" valign="center">状态</td>                                 
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affblacklist); 
+foreach($db_affblacklist as $affblack ){
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$db_status = $cfg_blackstatus[$affblack[status]];
+	$ldate = date('Y/m/d H:i:s',$affblack[lock_time]);
+	$rdate = date('Y/m/d H:i:s',$affblack[release_time]);	
+print <<<EOT
+-->      
+            <tr height="20"onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx</td>
+                <td align="middle" valign="center">
+                <input id="ids" name="ids" type="checkbox" value="$affblack[id]" />
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showLink($basename."job=affmanage&action=detail",$affblock[user_id],$affblack[user_name]);
+print <<<EOT
+-->
+                </td>
+                <td align="middle" valign="center">&nbsp;$affblack[lock_user]</td>
+                <td align="middle" valign="center">&nbsp;$ldate</td>                
+                <td align="middle" valign="center">&nbsp;$affblack[release_user]</td>
+                <td align="middle" valign="center">&nbsp;$rdate</td>
+                <td align="middle" valign="center">&nbsp;$affblack[memo]</td>                    
+                <td align="middle" valign="center" width="55px">$db_status</td>            
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+            
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>&nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+<!--
+EOT;
+?>-->

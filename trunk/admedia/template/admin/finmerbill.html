@@ -1,0 +1,106 @@
+<!--<?php
+include_once PrintEot('header');
+print <<<EOT
+-->
+<form id="form" name="form" action="$admin_file" method="get">
+<input type="hidden" name="job" id="job" value="$job"/>
+<center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>财务管理 &gt;&gt;广告主应付账单</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="97%" align=center>              
+        <tr>
+            <td height="50px" colspan=2>
+            			<b>条件：</b>
+						<select name="mer_id" id="mer_id"><option value="">选择广告主</option>$op_merlist</select>
+						开始时间：<input name="start_time" type="text" class="text" readonly id="start_time" style="WIDTH:80px"><A href="javascript:OpenCalendar('start_time', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_time" type="text" class="text" readonly id="end_time" style="WIDTH:80px"><A href="javascript:OpenCalendar('end_time', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>					
+							<input type="button" ID="btnQuery" value="查询" class="text"/>
+            </td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline"  width="17" /><span style="color: #547054"> 刷新</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>            
+        </tr>
+        <tr>
+            <td height="5">
+            </td>
+        </tr>
+    </table>
+    <div class="tab" id="divData" runat="server">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>   
+                <td align="middle" class="title" height="20" valign="center">日期</td>     
+                <td align="middle" class="title" height="20" valign="center">广告主</td>                                              
+                <td align="middle" class="title" height="20" valign="center">应结算数量</td> 
+                <td align="middle" class="title" height="20" valign="center">应收金额</td>                                         
+                <td align="middle" class="title" height="20" valign="center">创建时间</td>
+                <td align="middle" class="title" height="20" valign="center">更新时间</td>
+                <td align="middle" class="title" height="20" valign="center">审核人</td>
+                <td align="middle" class="title" height="20" valign="center">状态</td>    
+                <td align="middle" class="title" height="20" valign="center">查看</td>                                                                                                                                                                                                                                                                                                                                                                                
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affbillcyclelist); 
+foreach($db_affbillcyclelist as $db_affbillcycle ){
+	$db_affiliate = getAffliate($db_merbill_day[aff_id]);
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$db_repeffectsub[create_time]);
+	$udate = date('Y/m/d H:i:s',$db_repeffectsub[update_time]);	
+print <<<EOT
+-->  
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx </td>   
+                <td align="middle" valign="center">&nbsp;$db_merbill_day[iday]</td> 
+                <td align="middle" valign="center">&nbsp;$db_merbill_day[name]($db_affiliate[id])</td>                       
+                <td align="middle" valign="center">&nbsp;$db_merbill_day[need_count]</td>   
+                <td align="middle" valign="center">&nbsp;$db_merbill_day[need_fee]</td> 
+                <td align="middle" valign="center">&nbsp;$db_merbill_day[profit_rate]</td>                                                           
+                <td align="middle" valign="center">&nbsp;$cdate</td>
+                <td align="middle" valign="center">&nbsp;$udate</td>     
+                <td align="middle" valign="center">&nbsp;$db_merbill_day[audit_user]</td> 
+                <td align="middle" valign="center">&nbsp;$db_merbill_day[status]</td>
+                <td align="middle" valign="center">明细</td> 
+            </tr>
+ <!--
+EOT;
+}
+print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+	<input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+<!--
+EOT;
+?>-->

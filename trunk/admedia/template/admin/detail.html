@@ -1,0 +1,559 @@
+<!--<?php
+include_once PrintEot('header');
+if($action=="affiliate"){
+	$db_gender = $cfg_gender[$db_affiliate[gender]];
+	$db_biztype = $cfg_affbiztype[$db_affiliate[biz_type]];
+	$db_certtype = $cfg_affcerttype[$db_affiliate[cert_type]];
+	$cdate = date('Y/m/d H:i:s',$db_affiliate[create_time]);	
+	$db_status = $cfg_userstatus[$db_affiliate[status]];	
+print <<<EOT
+-->
+<form action="$admin_file" method="get" name="form">
+<center>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR>
+			<TD align=left class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 站长详细资料</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<br/>
+						<table width="98%" border="0" align="center" cellpadding="5" cellspacing="0">
+							<tr>
+								<td bgcolor="#f6f6f6">登录名：<span class="hong12"><strong>$db_affiliate[login_name]</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									注册时间：<span class="hong12"><strong>$cdate</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									状态：<span class="hong12"><strong>$db_status</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									</td>
+
+							 <td align=right bgcolor="#f6f6f6">
+							 <a href="$backurl">返回上一页</a>&nbsp;
+						 </td>   
+							</tr>
+						</table>
+
+
+<table width="98%" border="0" align="center" cellpadding="5" cellspacing="0">
+				<tr>
+					<td valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#d0d0d0">
+							<tr>
+								<td align="center" bgcolor="#ffffff">
+								    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr><td height="10"></td></tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">										
+										<tr>
+											<td height="25" align="right" width="15%"><nobr>姓名：</nobr></td>
+											<td align="left">&nbsp;$db_affiliate[linkman]($db_gender)</td>
+											<td height="25" align="right" class="hei12b">用户类型：</td>
+											<td width="45%">&nbsp;$db_biztype</td>										
+										</tr>
+										<tr>
+											<td height="25" align="right" class="hei12b">营业执照：</td>
+											<td align="left">&nbsp;$db_affiliate[biz_code]</td>																			
+											<td height="25" align="right" >信誉度：</td>
+											<td align="left">&nbsp;$db_affiliate[credit]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">
+									    <tr>
+											<td  height="25" align="right" width="15%"><nobr>证件类型：</nobr></td>
+											<td align="left">&nbsp;$db_certtype</td>
+											<td height="25" align="right" class="hei12b">证件号码：</td>
+											<td width="45%">&nbsp;$db_affiliate[cert_code]</td>
+										</tr>
+										<tr>
+											<td height="25" align="right" class="hei12b">手机号码：</td>
+											<td>&nbsp;$db_affiliate[mobile]</td>
+										
+											<td height="31" align="right" class="hei12b">电子邮件：</td>
+											<td>&nbsp;$db_affiliate[email]</td>
+										</tr>
+										<tr>
+											<td height="31" align="right" class="hei12b">MSN：</td>
+										<td>&nbsp;$db_affiliate[msn]</td>
+										
+											<td height="31" align="right" class="hei12b">QQ号码：</td>
+											<td>&nbsp;$db_affiliate[qq]</td>
+										</tr>
+										<tr>
+											<td height="31" align="right" class="hei12b">办公电话：</td>
+											<td>&nbsp;$db_affiliate[telephone]-$db_affiliate[ext]</td>
+										
+											<td height="25" align="right" class="hei12b">省市地区：</td>
+											<td>&nbsp;$db_affiliate[province_name]-$db_affiliate[city_name]</td>
+										</tr>							
+										<tr>
+											<td  height="25" align="right" class="hei12b">邮政编码：</td>
+											<td  align="left">&nbsp;$db_affiliate[zip]</td>
+										
+											<td align="right" class="hei12b">联系地址：</td>
+											<td align="left" >&nbsp;$db_affiliate[address]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr>
+											<td height="10"></td>
+										</tr>
+										<tr>
+											<td height="25" align="right" width="15%"><nobr>总收入：</nobr></td>
+											<td >&nbsp;$db_affiliate[total_money]</td>
+										
+											<td height="25" align="right">余额：</td>
+											<td width=45%>&nbsp;$db_affiliate[balance]</td>
+										</tr>
+										<tr>
+											<td height="10"></td>
+										</tr>										
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr>
+											<td width="15%" align="right" valign="top">备注说明：</td>
+											<td align="left">&nbsp;$db_affiliate[memo]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td width="45%" valign="top">
+							<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+								 <tr><td bgcolor="#f6f6f6" height="25" colspan="4">
+								 <table width="100%" border="0" cellpadding="0" cellspacing="0">
+								 <tr><td><b>支付信息</b></td>
+								 <td align=right>
+<!--
+EOT;
+	if($canadd==true){
+		showButton(1,'新增','javascript:showModelWin("'.$admin_file.'&action=newpayinfo&aff_id='.$curid.$transtr.'");');
+	}
+print <<<EOT
+-->
+								 &nbsp;</td>
+								 </tr>
+								 </table>
+								  </td></tr>
+								<tr>
+									<td height="25" align="center" bgcolor="#ffffff" class="hei12b"><nobr>开户银行</nobr></td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>开户名称</td>
+									<td width="25%" align="center" bgcolor="#ffffff" class="hei12b"><nobr>银行帐号</td>	
+									<td width="60px" align="center" bgcolor="#ffffff" class="hei12b"><nobr>操作</td>								
+								</tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affpayinfolist); 
+foreach($db_affpayinfolist as $db_affpayinfo ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('Y/m/d H:i:s',$db_affpayinfo[create_time]);
+		$selid = $db_affpayinfo[id];
+print <<<EOT
+-->      
+										<tr>
+											<td height="25" align="center" bgcolor="#ffffff">$db_affpayinfo[open_name]</td>
+											<td bgcolor="#ffffff" align="center"><nobr>$db_affpayinfo[acc_contract]</nobr></td>
+											<td bgcolor="#ffffff" align="center" class="lanh12"><nobr>$db_affpayinfo[account]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>
+<a href="javascript:showModelWin('$admin_file&action=editpayinfo&aff_id=$curid&curid=$selid$transtr');"><img src="$imgpath/admin/view.gif" border="0"/></a>
+&nbsp;
+<!--
+EOT;
+	showDelButton($db_affpayinfo[id],'delpayinfo');
+print <<<EOT
+-->
+											</nobr>
+											</td>
+											
+										</tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+							</table>							
+
+					</td>
+				</tr>
+			</table>
+</center>
+</form>
+</body>
+</html>
+<script language=javascript>
+function ConfirmChange(url,msg){	
+	if(confirm(msg)){
+		window.location = url;
+	}
+}
+</script>
+
+<!--
+EOT;
+}else if($action=="newpayinfo" || $action=="editpayinfo"){
+print <<<EOT
+-->
+<form name="form" method="post" action="$basename" id="form" onsubmit="return checkfrm();" >
+<input type="hidden" name="job" id="job" value="$job" />
+<input type="hidden" name="aff_id" id="aff_id" value="$aff_id" />
+<input type="hidden" name="curid" id="curid" value="$curid" />
+<input type="hidden" name="action" id="action" value="savepayinfo" />
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　支付信息</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+				<tr>
+					<td align=right width="30%">支付方式(<font color=red>*</font>)：</td>
+					<td>
+					<select name="pay_method" id="pay_method" style="WIDTH: 261px" ><option value="">请选择...</option>$op_paymethodlist</select>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>开户帐号(<font color=red>*</font>)：</td>
+					<td><input name="account" type="text" id="account" style="WIDTH: 261px"  value="$db_payinfo[account]"/></td>
+				</tr>
+				<tr>
+					<td align=right>开户人姓名(<font color=red>*</font>)：</td>
+					<td><input name="acc_contract" type="text" id="acc_contract" style="WIDTH: 261px"  value="$db_payinfo[acc_contract]"/></td>
+				</tr>
+				<tr>
+					<td align=right>开户名称：</td>
+					<td><input name="open_name" type="text" id="open_name" style="WIDTH: 261px"  value="$db_payinfo[open_name]"/></td>
+				</tr>
+				<tr>
+					<td align=right>开户地址：</td>
+					<td><input name="open_address" type="text" id="open_address" style="WIDTH: 261px"  value="$db_payinfo[open_address]"/></td>
+				</tr>	
+				<tr>
+					<td align=right>帐户性质：</td>
+					<td>
+<!--
+EOT;
+	if(!isset($db_payinfo) || $db_payinfo[acc_type]==0){
+		echo "<input type='radio' name='acc_type' id='acc_type' value='0' id='acc_type0' checked/><label id='acc_type0'>个人</label>";
+	}else{
+		echo "<input type='radio' name='acc_type' id='acc_type' value='0' id='acc_type0'/><label id='acc_type0'>个人</label>";	
+	}
+	if(isset($db_payinfo) && $db_payinfo[acc_type]==1){
+		echo "<input type='radio' name='acc_type' id='acc_type' value='1' id='acc_type1' checked/><label id='acc_type1'>企业</label>";
+	}else{
+		echo "<input type='radio' name='acc_type' id='acc_type' value='1' id='acc_type1'/><label id='acc_type1'>企业</label>";	
+	}	
+print <<<EOT
+-->
+					
+					</td>
+				</tr>				
+				<tr>
+					<td colspan="2" align="center"><input name="btnSubmit" type="submit" id="btnSubmit" value=" 确定 " />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="window.close();" value=" 取消 ">
+					</td>
+				</tr>
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+</form>
+<script type="text/javascript">
+	function checkfrm(){
+		if(isEmpty($("pay_method").value)==true){
+			alert('请选择支付方式！');
+			$("pay_method").focus();
+			return false;
+		}		
+		if(isEmpty($("account").value)==true){
+			alert('开户帐号不能为空！');
+			$("account").focus();
+			return false;
+		}
+		if(isEmpty($("acc_contract").value)==true){
+			alert('开户人姓名不能为空！');
+			$("acc_contrace").focus();
+			return false;
+		}
+	}
+</script>
+
+<!--
+EOT;
+}else if($action=="merchant"){
+	$cdate = date('Y/m/d H:i:s',$db_merchant[create_time]);	
+	$db_status = $cfg_userstatus[$db_merchant[status]];	
+	$db_clienttype = $cfg_merclienttype[$db_merchant[client_type]];
+print <<<EOT
+-->
+
+<form name="form" method="post" action="$admin_file" id="form" onsubmit="return checkfrm();" >
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR>
+			<TD align=left class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 广告主详细资料</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<br/>
+						<table width="98%" border="0" align="center" cellpadding="5" cellspacing="0">
+							<tr>
+								<td bgcolor="#f6f6f6">登录名：<span class="hong12"><strong>$db_merchant[login_name]</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									注册时间：<span class="hong12"><strong>$cdate</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									状态：<span class="hong12"><strong>$db_status</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									</td>
+							 <td align=right bgcolor="#f6f6f6">&nbsp;
+							 <a href="$backurl">返回上一页</a>&nbsp;
+							 </td>   									
+							</tr>
+						</table>
+
+
+<table width="98%" border="0" align="center" cellpadding="5" cellspacing="0">
+				<tr>
+					<td width="57%" valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#d0d0d0">
+							<tr>
+								<td align="center" bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="2">
+										
+										<tr>
+											<td height="30" align="right" class="hei12b" width="80">公司名称：</td>
+											<td align="left">$db_merchant[company]</td>
+											<td align="right" class="hei12b" width="80">客户来源：</td>
+											<td align="left">$db_merchant[client_source]</td>													
+										</tr>
+										<tr>
+											<td height="30" align="right" class="hei12b" width="80">人员规模：</td>
+											<td align="left">$db_merchant[scale]</td>
+											<td align="right" class="hei12b" width="80">营业执照：</td>
+											<td align="left">$db_merchant[biz_code]</td>													
+										</tr>
+										<tr>
+											<td height="30" align="right" class="hei12b" width="80">主营行业：</td>
+											<td align="left">$db_merchant[trade]</td>
+											<td align="right" class="hei12b" width="80">客户类型：</td>
+											<td align="left">$db_clienttype</td>													
+										</tr>
+										<tr>
+											<td height="30" align="right" class="hei12b" width="80">客户简称：</td>
+											<td align="left">$db_merchant[short_name]</td>
+											<td align="right" class="hei12b" width="80">客户级别：</td>
+											<td align="left">$db_merchant[client_level]</td>											
+										</tr>
+										<tr>
+											<td height="30" align="right" class="hei12b" width="80">信誉度：</td>
+											<td align="left" width="155">$db_merchant[credit]</td>
+											<td align="right" class="hei12b" width="80">销售人员：</td>
+											<td align="left">$db_merchant[seller_name]</td>
+										</tr>
+										<tr>
+											<td height="30" align="right" class="hei12b" width="80">开票台头：</td>
+											<td align="left" colspan="3">$db_merchant[ticket_title]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr>
+											<td width="80" height="30" align="right" class="hei12b">省市地区：</td>
+											<td width="155" align="left">$db_merchant[province_name]-$db_merchant[city_name]</td>
+											<td width="80" align="right" class="hei12b"><nobr>邮政编码：</nobr></td>
+											<td align="left">$db_merchant[zip]</td>
+										</tr>
+										<tr>
+											<td width="80" align="right" class="hei12b">联系地址：</td>
+											<td width="155" align="left">&nbsp;$db_merchant[address]</td>
+											<td width="80"" align="right" class="hei12b">企业网址：</td>
+											<td align="left">$db_merchant[url]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td bgcolor="#ffffff">
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr>
+											<td height="10"></td>
+										</tr>									
+										<tr>
+											<td width="80" align="right" class="hei12b">初次充值：</td>
+											<td width="155" align="left">&nbsp;$db_merchant[init_store]</td>
+											<td width="80"" align="right" class="hei12b">账户余额：</td>
+											<td align="left">$db_merchant[current_store]</td>
+										</tr>
+										<tr>
+											<td width="80" align="right" class="hei12b">提醒额度：</td>
+											<td align="left">&nbsp;$db_merchant[deposit]</td>
+											<td width="80"" align="right" class="hei12b">可透支额度：</td>
+											<td align="left">$db_merchant[over_draft]</td>
+										</tr>
+										<tr>
+											<td height="10"></td>
+										</tr>										
+									</table>
+								</td>
+							</tr>							
+							<tr>
+								<td align="center" bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+									<table width="98%" border="0" cellspacing="0" cellpadding="4">
+										<tr>
+											<td width="72" align="right" valign="top" class="hei12b">备注说明：</td>
+											<td align="left">$db_merchant[memo]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+					</td>
+					<td width="43%" valign="top">
+							<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+								<tr>
+									<td width="30%" height="30" align="center" bgcolor="#ffffff" class="hei12b"><nobr>广告计划</td>
+									<td width="20%" align="center" bgcolor="#ffffff" class="hei12b"><nobr>开始日期</td>
+									<td width="20%" align="center" bgcolor="#ffffff" class="hei12b"><nobr>结束日期</td>									
+									<td width="16%" align="center" bgcolor="#ffffff" class="hei12b"><nobr>状态</td>
+									<td width="16%" align="center" bgcolor="#ffffff" class="hei12b"><nobr>添加日期</td>
+								</tr>
+<!--
+EOT;
+$showcount = count($db_advlist); 
+foreach($db_advlist as $db_adv ){
+	$sdate = date('Y/m/d H:i:s',$db_adv[start_time]);
+	$edate = date('Y/m/d H:i:s',$db_adv[end_time]);
+	$cdate = date('Y/m/d H:i:s',$db_adv[create_time]);
+	$db_status = $cfg_userstatus[$db_adv[status]];
+print <<<EOT
+-->     
+										<tr>
+											<td height="30" align="center" bgcolor="#ffffff">$db_adv[name]</td>
+											<td bgcolor="#ffffff" class="lanh12"><nobr>$sdate</td>
+											<td bgcolor="#ffffff" class="lanh12"><nobr>$edate</td>											
+											<td bgcolor="#ffffff"><nobr>$db_status</td>
+											<td bgcolor="#ffffff" class="lanh12"><nobr>$cdate</td>
+										</tr>
+<!--
+EOT;
+}
+print <<<EOT
+--> 
+							</table>
+							<br>
+						<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#d0d0d0">
+							<tr>
+								<td bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr>
+											<td width="28%" height="30" align="right"><span>默认联系人：</span></td>
+											<td width="72%">$db_defaultman[name]</td>
+										</tr>
+										<tr>
+											<td height="30" align="right"><span class="hei12b">联系人职务：</span></td>
+											<td>$db_defaultman[title]</td>
+										</tr>
+										<tr>
+											<td height="30" align="right" class="hei12b">负责业务：</td>
+											<td>$db_defaultman[function]</td>
+										</tr>
+										<tr>
+											<td height="31" align="right" class="hei12b">手机号码：</td>
+											<td>$db_defaultman[mobile]</td>
+										</tr>
+										<tr>
+											<td height="31" align="right" class="hei12b">电子邮件：</td>
+											<td>$db_defaultman[email]</td>
+										</tr>
+										<tr>
+											<td height="31" align="right" class="hei12b">MSN：</td>
+											<td>$db_defaultman[msn]</td>
+										</tr>
+										<tr>
+											<td height="31" align="right" class="hei12b">QQ号码：</td>
+											<td>$db_defaultman[qq]</td>
+										</tr>
+										<tr>
+											<td height="30" align="right" class="hei12b">办公电话：</td>
+											<td>$db_defaultman[work_tel]</td>
+										</tr>										
+									</table>
+									<br>
+								</td>
+							</tr>
+
+						</table>
+					</td>
+				</tr>
+			</table>
+</form>
+<!--
+EOT;
+}?>-->

@@ -1,0 +1,520 @@
+<?php
+if($action=="selcity"){
+	echo "<select name='province_id' id='province_id' style='WIDTH: 75px' onchange=updateCity(this);>";
+	echo $op_provincelist;
+	echo "</select>";
+	echo "<select name='city_id' id='province_id' style='WIDTH: 75px'>";
+	echo $op_citylist;
+	echo "</select>";
+}else{
+include_once PrintEot('header');
+if(empty($action) || $action=="list"){
+print <<<EOT
+-->
+<form action="$basename" method="get" name="form">
+<input type="hidden" name="job" value="$job"/>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>站长管理 &gt;&gt; 站长基本信息管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+         <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("source", "0", "前台注册");
+ showPageLink("source", "1", "后台添加");
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+        <tr>
+             <td><b>快速查询：</b>
+             				   <select name="searchtype" style="font-size:12px;">
+<!--
+EOT;
+	if(empty($searchtype) || $searchtype=="id")  echo '<option value="id" selected>站长ID</option>';
+    else echo '<option value="id"</option>';
+	if($searchtype=="login_name") echo '<option value="login_name" selected>登录名称</option>';
+	else echo '<option value="login_name">登录名称</option>';
+	if($searchtype=="linkman") echo '<option value="linkman" selected>姓名</option>';
+	else echo '<option value="linkman">姓名</option>';
+	if($searchtype=="telephone") echo '<option value="telephone" selected>固定电话</option>';
+	else echo '<option value="telephone">固定电话</option>';
+	if($searchtype=="email") echo '<option value="email" selected>电子邮件</option>';
+	else echo '<option value="email">电子邮件</option>';
+	if($searchtype=="qq") echo '<option value="qq" selected>QQ</option>';
+	else echo '<option value="qq">QQ</option>';
+	if($searchtype=="service") echo '<option value="service_id" selected>客服ID</option>';
+	else echo '<option value="service_id">客服ID</option>';
+print <<<EOT
+-->
+							</select>
+							<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>
+						开始时间：<input name="start_date" type="text"  class="text" readonly value="$start_date"/><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_date" type="text" class="text" readonly value="$end_date"/><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<input type="submit" value="查询" class="text"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+						if($canaudit==true){
+							showButton(6,'黑名单','javascript:showAudit("'.$admin_file.'&action=black'.$transtr.'&curpage='.$curpage.'");');
+							//showButton(6,'导出','javascript:ConfirmExport("'.$admin_file.'&action=export'.$transtr.'&curpage='.$curpage.'","是否确认导出？（处理耗时受数据量影响很大）");');
+						}
+						if($candel==true){
+							showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","此操作不可恢复,确认删除吗？");');
+						}print <<<EOT
+-->                            
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center"><input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
+                <td align="middle" class="title" height="20" valign="center">站长编号</td>
+                <td align="middle" class="title" height="20" valign="center">登陆名称</td>
+                <td align="middle" class="title" height="20" valign="center">姓名</td>
+                <td align="middle" class="title" height="20" valign="center">QQ</td>
+                <td align="middle" class="title" height="20" valign="center">手机</td>                
+                <td align="middle" class="title" height="20" valign="center">所属客服</td>      
+                <td align="middle" class="title" height="20" valign="center">注册来源</td>   
+                <td align="middle" class="title" height="20" valign="center">注册时间</td>      
+                <td align="middle" class="title" height="20" valign="center">状态</td>
+                <td align="middle" class="title" height="20" valign="center">编辑</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_afflist); 
+foreach($db_afflist as $affuser ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$regsource = $cfg_affsource[$affuser[source]];
+		$status = $cfg_userstatus[$affuser[status]];
+		$cdate = date('Y/m/d H:i:s',$affuser[create_time]);
+		$db_gender = $cfg_gender[$affuser[gender]];
+print <<<EOT
+-->      
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);"
+                onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" width="40px">$curidx</td>
+                <td align="middle" class="hei" valign="center" width="40px"><input id="ids" name="ids" type="checkbox" value="$affuser[id]" />
+                </td>
+                <td valign="middle" align="center" width="40px">&nbsp;$affuser[id]</td>
+                <td valign="middle" align="center">&nbsp;<a href='$basename?job=detail&action=affiliate&curid=$affuser[id]&backurl=$backurl' class=NoLine>$affuser[login_name]</a></td>
+                <td valign="middle" align="center">&nbsp;$affuser[linkman]($db_gender)</td>
+                <td valign="middle" align="center">&nbsp;$affuser[qq]</td>
+                <td valign="middle" align="center">&nbsp;$affuser[mobile]</td>
+                <td align="center" valign="middle">&nbsp;$affuser[service_name]</td>       
+                 <td align="center" valign="middle">&nbsp;$regsource</td> 
+                <td valign="middle" align="center" width="145px">&nbsp;$cdate</td>          
+                <td valign="middle" align="center">&nbsp;$status</td>
+                <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+	showEditButton($affuser[id]);
+print <<<EOT
+-->
+				</td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr> <td> &nbsp;</td> <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+--> 
+&nbsp;</td> </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+    <iframe id="ifrExport" border="0" name="ifrExport" marginWidth="0" marginHeight="0" frameBorder="no" width="0" height="0" scrolling="no"></IFRAME>
+</form>
+
+<!--
+EOT;
+}
+if($action=="new" || $action=="edit"){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>	    
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　站长信息</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="98%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+            <tbody>
+                <tr>
+					<td align="right" width="15%">登陆名称<font color=red>*</font>：</td>
+					<td><input type="text" name="login_name" id='login_name' style="WIDTH: 80px" name="login_name" value="$db_affiliate[login_name]"/>
+					密码：
+					<input type="text" name="login_srcpwd" id='login_srcpwd' style="WIDTH: 80px" name="login_srcpwd" value="$db_affiliate[login_srcpwd]"/>
+					</td>
+                
+					<td align="right">修正比例<font color=red>*</font>：</td>
+					<td><input type="text" name="deduct" id="deduct" style="WIDTH: 60px" value="0" value="$db_affiliate[login_pass]"/></td>
+				</tr>
+				<tr>				
+					<td align="right">站长类型：</td>
+					<td>
+<!--
+EOT;
+	if($db_affilate[biz_type]==0){
+		echo '<input type="radio" name="biz_type" id="biz_type" value="0" checked>个人</input>';
+	}else{
+		echo '<input type="radio" name="biz_type" id="biz_type" value="0">个人</input>';
+	}
+	if($db_affilate[biz_type]==1){
+		echo '<input type="radio" name="biz_type" id="biz_type" value="0" checked>企业</input>';
+	}else{
+		echo '<input type="radio" name="biz_type" id="biz_type" value="1">企业</input>';
+	}
+print <<<EOT
+-->										
+					</td>
+					
+					<td align="right">联系人姓名<font color=red>*</font>：</td>
+					<td><input type="text" style="WIDTH: 150px" name="linkman" id="linkman" value="$db_affiliate[linkman]"/></td>					
+				</tr>
+				<tr>
+					<td align="right">联系人性别：</td>
+					<td>
+<!--
+EOT;
+	if($db_affilate[gender]==0){
+		echo "<input type='radio' name='gender' id='gender' value='0' checked>女</input>";		
+	}else{
+		echo "<input type='radio' name='gender' id='gender' value='0'>女</input>";
+	}
+	if($db_affilate[gender]==1){
+		echo "<input type='radio' name='gender' id='gender' value='1' checked>男</input>";		
+	}else{
+		echo "<input type='radio' name='gender' id='gender' value='1'>男</input>";
+	}	
+print <<<EOT
+-->				
+					</td>
+				
+					<td align="right">邮箱：</td>
+					<td><input type="text" name="email" id="email" style="WIDTH: 150px" value="$db_affiliate[email]"/><font color=red>*</font></td>
+				</tr>
+				<tr>
+					<td align="right">固定电话：</td>
+					<td><input type="text" name="telephone" id="telephone" style="WIDTH: 150px" value="$db_affiliate[telephone]"/>-<input type="text" name="ext" id="ext" style="WIDTH: 50px" value="$db_affiliate[ext]"/></td>
+				
+					<td align="right">手机：</td>
+					<td width="50%"><input type="text" name="mobile" id="mobile" style="WIDTH: 150px" value="$db_affiliate[mobile]"/></td>
+				</tr>
+				<tr>
+					<td align="right">QQ：</td>
+					<td><input type="text" name="qq" id="qq" style="WIDTH: 150px" value="$db_affiliate[qq]"/></td>
+				
+					<td align="right">msn：</td>
+					<td><input type="text" name="msn" id="msn" style="WIDTH: 150px" value="$db_affiliate[msn]"/></td>
+				</tr>
+				
+				<tr>
+					<td align="right">证件类型：</td>
+					<td><div class="select"><div>
+						<select name="cert_type" id="cert_type" style="WIDTH: 150px">
+<!--
+EOT;
+	if($db_affilate[cert_type]==0){
+		echo '<option Value="0" selected>身份证</option>';		
+	}else{
+		echo '<option Value="0">身份证</option>';
+	}
+	if($db_affilate[cert_type]==1){
+		echo '<option Value="1" selected>军官证</option>';		
+	}else{
+		echo '<option Value="1">军官证</option>';
+	}
+	if($db_affilate[cert_type]==2){
+		echo '<option Value="2" selected>护照</option>';		
+	}else{
+		echo '<option Value="2">护照</option>';
+	}		
+print <<<EOT
+-->					
+						</select>
+						</div></div>
+					</td>	
+				
+					<td align="right">证件号码<font color=red>*</font>：</td>
+					<td><input type="text" name="cert_code" id='cert_code' style="WIDTH: 150px" value="$db_affiliate[cert_code]"/></td>
+				</tr>
+				<tr>
+					<td align="right">邮编：</td>
+					<td><input type="text" name="zip" id="zip" style="WIDTH: 150px" value="$db_affiliate[zip]"/></td>
+				
+					<td align="right">传真：</td>
+					<td><input type="text" name="fax" id="fax" style="WIDTH: 150px" value="$db_affiliate[fax]"/></td>
+				</tr>
+				<tr>				
+					<td align="right">所在省市：</td>
+					<td><div id="divCity"><SELECT id="province_id" style="WIDTH: 75px" onchange=updateCity(this); name="province_id">$op_provincelist</SELECT><SELECT id="city_id" style="WIDTH: 75px" name="city_id">$op_citylist</SELECT></div>
+                    </td>
+					<td align="right">联系地址：</td>
+					<td><input type="text" name="address" id="address" value="$db_affiliate[address]" style="WIDTH: 250px" />
+					</td>                    				
+				</tr>				
+				<tr>
+					<td align="right">起付金额<font color=red>*</font>：</td>
+					<td><input type="text" name="pay_limit" id="pay_limit" style="WIDTH: 50px" value="$db_affiliate[pay_limit]"/>元</td>
+				
+					<td align="right">结算税率<font color=red>*</font>：</td>
+					<td><input type="text" name="tax_rate" id="tax_rate" style="WIDTH: 50px" value="$db_affiliate[tax_rate]"/>%</td>
+				</tr>
+				<tr>
+					<td align="right">用户信用度：</td>
+					<td><input type="text" name="credit" id="credit" style="WIDTH: 150px" value="$db_affiliate[credit]"/></td>
+					<td align="right">未结余额：</td>
+					<td><input type="text" name="balance" id="balance" style="WIDTH: 150px" value="$db_affiliate[balance]"/></td>				
+				</tr>
+				<tr>
+					<td align=right>说明：</td>
+					<td colspan="3"><textarea name="memo" id="memo" style="width: 526px; height: 39px">$db_affiliate[memo]</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="4" align="center">
+					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消" />
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+ <IFRAME id="ifrCheckUser" border="0" name="ifrCheckUser" marginWidth="0" marginHeight="0" frameBorder="no" width="0" height="0" scrolling="no" iframe></IFRAME>
+
+<script>
+function checkfrm(){
+	if($("login_name").value == ""){
+		alert('登录名称不能为空！');
+		$("login_name").focus();
+		return false;
+	}
+	if($("login_pass").value == ""){
+		alert('登录名称不能为空！');
+		$("login_pass").focus();
+		return false;
+	}	
+	if($("linkman").value == ""){
+		alert('联系人名称不能为空！');
+		$("linkman").focus();
+		return false;
+	}
+	var re = /^\d{0,16}$/;
+	
+	if($("deduct").value != "" && isNaN($("deduct").value)){
+	    alert('修正比例为数字！');
+	    $("deduct").focus();
+		return false;
+	}
+	
+	if($("pay_limit").value == ""){
+	    alert('请输入起付金额！');
+	    $("pay_limit").focus();
+		return false;
+	}else if(isNaN($("pay_limit").value)){
+	    alert('起付金额必须为数字！');
+	    $("pay_limit").focus();
+		return false;
+	}
+	if($("tax_rate").value == ""){
+	    alert('请输入税率！');
+	    $("tax_rate").focus();
+		return false;
+	}
+	else if(isNaN($("tax_rate").value)){
+	    alert('税率必须为数字！');
+	    $("tax_rate").focus();
+		return false;
+	}
+	return true;
+}
+</script>
+
+
+<!--
+EOT;
+}
+if($action=="select"){
+print <<<EOT
+-->
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>选择站长</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+         <tr>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+ <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center">站长ID</td>
+                <td align="middle" class="title" height="20" valign="center">登录名称</td>
+                <td align="middle" class="title" height="20" valign="center">姓名</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_afflist); 
+foreach($db_afflist as $affuser ){
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;	
+print <<<EOT
+--> 
+            <tr height="20" style="cursor: hand" onclick="javascript:selAffiliate('$affuser[id]','$affuser[login_name]')" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+ 				<input type="hidden" id="ids" name="ids" value="$affuser[id]"/>
+                <td align="middle" valign="center" height="20" width="40px">$curidx</td>                
+                <td align="middle" valign="center" width="40px">&nbsp;$affuser[id]</td>
+                <td align="middle" valign="center">&nbsp;$affuser[login_name]</td>
+                <td align="middle" valign="center">&nbsp;$affuser[linkman]</td>            
+            </tr>
+<!--
+EOT;
+}
+print <<<EOT
+--> 
+            
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>&nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+</form>
+</body>
+
+<!--
+EOT;
+}
+if($action=="black"){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
+<input type="hidden" name="action" value="blacksave"/>
+<input type="hidden" name="ids" value="$ids"/>
+<input type="hidden" name="source" value="$source"/>
+<input type="hidden" name="curpage" value="$curpage"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>	    
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 锁定站长</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="98%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+            <tbody>
+				<tr>
+					<td align=right width="20%">理由简述：</td>
+					<td><textarea name="memo" id="memo" style="width: 90%; height:85px">该站长作弊，暂时屏蔽！</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="window.close();" value=" 取消"/>
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+<script>
+function checkfrm(){
+	if(isEmpty($('memo').value)){
+		alert("请输入理由简述!");
+	}
+}
+</script>
+<!--
+EOT;
+}
+}
+?>

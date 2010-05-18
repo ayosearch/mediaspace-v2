@@ -1,0 +1,133 @@
+<!--<?php
+include_once PrintEot('header');
+print <<<EOT
+-->
+<form id="form" name="form" action="$admin_file" method="post">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>活动管理 &gt;&gt; 效果日志数据查询</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>              
+        <tr>
+            <td height="30px" colspan=2>
+            			<b>设定：</b><select ID="adv_id" name="adv_id" id="adv_id" style="Width:120px">
+            			<option value="0">请选择广告计划</option>
+            			</select>	
+						站长编号：<input type="text" name="aff_oid" id="aff_id" size="8" class="text"/>
+						开始时间：<input name="start_time" type="text" readonly class="text" id="start_time" style="WIDTH:80px"><A href="javascript:OpenCalendar('start_time', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_time" type="text" readonly class="text" id="end_time" style="WIDTH:80px"><A href="javascript:OpenCalendar('end_time', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<b>查询：</b><select id="searchtype" Width="80px">
+								<option value="trans_code">交易编号</option>
+								<option value="recid">记录编号</option>
+								<option value="ip">IP地址</option>
+								<option value="child_id">子站编号</option>	
+								<option value="order_no">订单编号</option>
+								<option value="content">留言内容</option>																			
+							</select>
+							<input type="text" ID="searchkey" name="searchkey" class="text"/>							
+							<input type="button" ID="btnQuery" value="查询" class="text"/>
+            </td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" class="text"/>
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline"  width="17" /><span style="color: #547054"> 刷新</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>            
+        </tr>
+        <tr>
+            <td height="5">
+            </td>
+        </tr>
+    </table>
+    <div class="tab" id="divData" runat="server">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>                
+                <td align="middle" class="title" height="20" valign="center">交易编号</td>
+                <td align="middle" class="title" height="20" valign="center">站长</td>
+                <td align="middle" class="title" height="20" valign="center">广告</td> 
+                <td align="middle" class="title" height="20" valign="center">订单编号</td>   
+                <td align="middle" class="title" height="20" valign="center">订单开始时间</td>     
+                <td align="middle" class="title" height="20" valign="center">订单结束时间</td>                                       
+                <td align="middle" class="title" height="20" valign="center">提交时间</td>
+                <td align="middle" class="title" height="20" valign="center">订单金额</td> 
+                <td align="middle" class="title" height="20" valign="center">送货费用</td>                    
+                <td align="middle" class="title" height="20" valign="center">留言内容</td>
+                <td align="middle" class="title" height="20" valign="center">状态</td>       
+                <td align="middle" class="title" height="20" valign="center">参数</td>                                                                                                                                                                                                                                                                                                                                                                       
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_showlist); 
+foreach($db_repeffectloglist as $db_repeffectlog ){
+	$db_affiliate = getAffliate($db_repeffectlog[aff_id]);
+	$db_adv = getAdvertise($db_repeffectlog[adv_id]);
+	$effstatus = $cfg_effstatus[$db_repeffectlog[status]];
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$db_repeffectlog[create_time]);
+	$sdate = date('Y/m/d H:i:s',$db_repeffectlog[start_time]);
+	$edate = date('Y/m/d H:i:s',$db_repeffectlog[end_time]);		
+print <<<EOT
+-->  
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx </td>               
+                <td align="middle" valign="center">&nbsp;$db_repeffectlog[trans_code]</td>
+                <td align="middle" valign="center">&nbsp;$db_repeffectlog[reckey]</td>
+                <td align="middle" valign="center">&nbsp;$db_affiliate[name]($db_affiliate[id])</td>   
+                <td align="middle" valign="center">&nbsp;$db_adv[name]($db_adv[id])</td>  
+                <td align="middle" valign="center">&nbsp;$db_repeffectlog[order_no]</td>   
+                <td align="middle" valign="center">&nbsp;$sdate</td>
+                <td align="middle" valign="center">&nbsp;$edate</td>     
+                <td align="middle" valign="center">&nbsp;$cdate</td>
+                <td align="middle" valign="center">&nbsp;$db_repeffectlog[order_money]</td> 
+                <td align="middle" valign="center">&nbsp;$db_repeffectlog[send_money]</td>                
+                <td align="middle" valign="center">&nbsp;$db_repeffectlog[content]</td>  
+                <td align="middle" valign="center">&nbsp;$effstatus</td> 
+                <td align="middle" valign="center">&nbsp;$db_repeffectlog[param]</td>
+            </tr>
+<!--
+EOT;
+}
+if($showcount==0){
+print <<<EOT
+-->
+ <tr align="center" valign="middle">
+ 	<td style="color:red;height:50px" colspan="13">请选择或设定查询条件</td>
+ </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+	<input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+<!--
+EOT;
+?>-->

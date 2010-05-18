@@ -1,0 +1,59 @@
+<!--<?php
+include_once PrintEot('header');print <<<EOT
+-->
+<form action="$admin_file&action=save" method="post" name="form" onsubmit="return checkfrm();">
+<input type="hidden" name="id" value="$id"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　系统角色</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+        <tr>
+					<td align=right>角色名称：</td>
+					<td><input type="text" id="name" style="WIDTH: 261px" NAME="name"></td>
+				</tr>
+				
+				<tr>
+					<td align=right>角色说明：</td>
+					<td><textarea id="desc" rows="4" cols="30" NAME="desc"></textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+
+<script>
+	function checkfrm()
+	{
+		if($('name').value == "")
+		{
+			alert('角色名称不能为空！');
+			$('name').focus();
+			return false;
+		}
+		return true;
+	}
+</script>
+<!--
+EOT;
+?>-->

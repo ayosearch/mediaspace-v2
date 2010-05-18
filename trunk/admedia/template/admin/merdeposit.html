@@ -1,0 +1,112 @@
+<!--<?php
+include_once PrintEot('header');print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>广告商管理 &gt;&gt; 阀值使用情况</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td><b>快速查询：</b><select name="searchtype">
+								<option value="short_name">客户简称</option>						
+							</select>
+							<input type="text" name="searchkey" value=""/>
+							<input type="button" name="btnQuery" value="查询" OnClick="btnQuery_Click" />
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+                                <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" />
+                                <span style="color: #547054"> 刷新</span></a>                            
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">
+                    序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">客户名称</td>
+                <td align="middle" class="title" height="20" valign="center">使用钱数</td>
+                <td align="middle" class="title" height="20" valign="center">当前留存</td>
+                <td align="middle" class="title" height="20" valign="center">使用类型</td>
+                <td align="middle" class="title" height="20" valign="center">日期</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_merdepositlist); 
+foreach($db_merdepositlist as $merdeposit ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$sdate = date('Y/m/d',$merdeposit[create_time]);
+print <<<EOT
+--> 
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx </td>
+                <td align="middle" valign="center">
+                    <input id="ID" name="ID" type="checkbox" value="$merdeposit[id]" />
+                </td>               
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;  
+	showLink("admincp.php?job=userdetail&action=merchant",$merdeposit[mer_id],$merchant[short_name]);
+print <<<EOT
+-->                
+                </td>                
+                <td align="middle" valign="center">&nbsp;$merdeposit[use_fee]</td>
+                <td align="middle" valign="center">&nbsp;$merdeposit[current_fee]</td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;                  
+	showDepositUseType($merdeposit[use_type]);
+print <<<EOT
+-->                  
+                </td>
+                <td align="middle" valign="center">&nbsp;$merdeposit[create_time]</td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+<!--
+EOT;
+?>-->
