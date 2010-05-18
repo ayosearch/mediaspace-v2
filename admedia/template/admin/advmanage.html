@@ -21,8 +21,6 @@ EOT;
  showPageLink("audit", "0", "等待审核"); 
  showPageLink("audit", "1", "审核通过"); 
  showPageLink("audit", "2", "审核未通过");
- showPageLink("status", "0", "暂停");
- showPageLink("status", "1", "运营中");  
 print <<<EOT
 -->
             </td></tr>    
@@ -71,14 +69,13 @@ EOT;
                 <td align="middle" class="title" height="20" valign="center">
                     <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
                 </td>
-                <td align="middle" class="title" height="20" valign="center">活动名称</td>
+                <td align="middle" class="title" height="20" valign="center">计划名称</td>
                 <td align="middle" class="title" height="20" valign="center">对应客户</td>
                 <td align="middle" class="title" height="20" valign="center">支付标准</td>
                 <td align="middle" class="title" height="20" valign="center">每日限额</td>                 
                 <td align="middle" class="title" height="20" valign="center">提交申请数</td>               
                 <td align="middle" class="title" height="20" valign="center">添加日期</td>
-                <td align="middle" class="title" height="20" valign="center">审批</td>
-                <td align="middle" class="title" height="20" valign="center">状态</td>                
+                <td align="middle" class="title" height="20" valign="center">审批</td>    
                 <td align="middle" class="title" height="20" valign="center">操作</td>
             </tr>
 <!--
@@ -93,7 +90,6 @@ foreach($db_advlist as $adv ){
 	$cdate = date('Y/m/d H:i:s',$adv[create_time]);
 	$feetype = $cfg_advfeetype[$adv[fee_type]];
 	$advaudit = $cfg_userstatus[$adv[audit]];
-	$advstatus = $cfg_advstatus[$adv[status]];	
 print <<<EOT
 --> 
             <tr height="20"  onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
@@ -106,8 +102,7 @@ print <<<EOT
                 <td align="middle" valign="center">&nbsp;$adv[day_maxmoney]</td>
                 <td align="middle" valign="center">&nbsp;$adv[aff_count]</td>
                 <td align="middle" valign="center">&nbsp;$cdate</td>
-                <td align="middle" valign="center">&nbsp;$advaudit</td>     
-                <td align="middle" valign="center">&nbsp;$advstatus</td>                               
+                <td align="middle" valign="center">&nbsp;$advaudit</td> 
                 <td align="middle" valign="center">&nbsp;
 <!--
 EOT;
@@ -138,7 +133,6 @@ print <<<EOT
     <input type="hidden" id="count" name="count" value="$showcount" />
 
 </form>
-
 
 <!--
 EOT;
@@ -431,8 +425,66 @@ function checkfrm(){
 
 </script>
 
-
-
 <!--
 EOT;
-}?>-->
+}
+if($action=="audit"){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
+<input type="hidden" name="action" value="auditsave"/>
+<input type="hidden" name="ids" value="$ids"/>
+<input type="hidden" name="status" value="$status"/>
+<input type="hidden" name="curpage" value="$curpage"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>	    
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 审批广告计划</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="98%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+            <tbody>
+                <tr>
+					<td align="right" width="15%">审批结果<font color=red>*</font>：</td>
+					<td>
+				 		<input type="radio" name="auditstatus" id='auditstatus1' value="1" checked onclick='javascript:$("content").value="广告计划内容信息准确，情况属实，允许通过！";'/><label for="auditstatus1">审核通过</label> 
+				 		<input type="radio" name="auditstatus" id='auditstatus2' value="2" onclick='javascript:$("content").value="广告计划信息有误，不允许通过！";'/><label for="auditstatus2">审核不通过</label> 
+					</td>
+				</tr>
+				<tr>
+					<td align=right>审核内容：</td>
+					<td><textarea name="content" id="content" style="width: 90%; height:55px">广告计划内容信息准确，情况属实，允许通过！</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="window.close();" value=" 取消"/>
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+<script>
+function checkfrm(){
+	if(isEmpty($('content').value)){
+		alert("请输入审批内容!");
+	}
+}
+</script>
+<!--
+EOT;
+}
+?>-->
