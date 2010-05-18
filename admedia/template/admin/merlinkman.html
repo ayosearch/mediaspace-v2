@@ -1,0 +1,321 @@
+<!--<?php
+include_once PrintEot('header');
+if($action=="new" || $action=="edit"){
+print <<<EOT
+-->
+
+<form id="form" name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　服务商联系人</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+        <tr>
+					<td align=right width=100>联系人姓名：</td>
+					<td><input type="text"  id="name" style="WIDTH: 120px" NAME="name" value="$db_merlinkman[name]">					    
+					</td>
+				
+					<td align=right width=100>所属客户：</td>
+					<td><select ID="mer_id" name="mer_id" style="WIDTH: 120px">$op_merchantlist</select></td>
+				</tr>
+				<tr>
+					<td align=right>类型：</td>
+					<td>
+<!--
+EOT;
+	if($db_merlinkman[is_default]==0){
+		echo '<input type="radio" name="is_default" id="is_default0" Value="0" checked/><label for="is_default0">主联系人</label>';
+	}else{
+		echo '<input type="radio" name="is_default" id="is_default0" Value="0"/><label for="is_default0">主联系人</label>';
+	}
+	if($db_merlinkman[is_default]==1){
+		echo '<input type="radio" name="is_default" id="is_default1" Value="1" checked/><label for="is_default1">一般联系人</label>';
+	}else{
+		echo '<input type="radio" name="is_default" id="is_default1" Value="1"/><label for="is_default1">一般联系人</label>';
+	}	
+print <<<EOT
+-->
+					</td>				
+					<td align=right>性别：</td>
+					<td>
+<!--
+EOT;
+	if($db_merlinkman[is_default]==0){
+		echo '<input type="radio" name="sex" id="sex0" Value="0" checked/><label for="sex0">男</label>';
+	}else{
+		echo '<input type="radio" name="sex" id="sex0" Value="0"/><label for="sex0">男</label>';
+	}
+	if($db_merlinkman[is_default]==1){
+		echo '<input type="radio" name="sex" id="sex1" Value="1" checked/><label for="sex1">女</label>';
+	}else{
+		echo '<input type="radio" name="sex" id="sex1" Value="1"/><label for="sex1">女</label>';
+	}	
+print <<<EOT
+-->
+					</td>
+				</tr>
+				<tr>
+					<td align=right>身份证号：</td>
+					<td><input type="text"  id="idcard_no" style="WIDTH: 120px" name="idcard_no" value="$db_merlinkman[idcard_no]"/></td>
+				
+					<td align=right>复印件：</td>
+					<td><INPUT id="idcard_path" contentEditable="false" type="file" name="idcard_path" style="width: 235px; height: 21px" /></td>
+				</tr>
+				<tr>
+					<td align=right>称谓：</td>
+					<td><input type="text" id="title" style="WIDTH: 120px" name="title" value="$db_merlinkman[title]"/>
+					</td>
+				
+					<td align=right>部门：</td>
+					<td><input type="text"  id="department" name="department" style="WIDTH: 119px" value="$db_merlinkman[department]"/></td>
+				</tr>
+				<tr>
+					<td align=right>工作电话：</td>
+					<td><input type="text"  id="work_tel" style="WIDTH: 69px" name="work_tel" value="$db_merlinkman[work_tel]"/> -
+					<input type="text"  id="ext" style="WIDTH: 35px" name="ext" value="$db_merlinkman[ext]"/>
+					</td>
+				
+					<td align=right>传真：</td>
+					<td><input type="text"  id="fax" name="fax" style="WIDTH: 119px" value="$db_merlinkman[fax]"/></td>
+				</tr>
+				<tr>
+					<td align=right>手机：</td>
+					<td><input type="text"  id="mobile" name="mobile" style="WIDTH: 118px" value="$db_merlinkman[mobile]"/>
+					</td>
+				
+					<td align=right>电子邮件：</td>
+					<td><input type="text"  id="email" name="email" style="WIDTH: 230px" value="$db_merlinkman[email]"/></td>
+				</tr>
+				<tr>
+					<td align=right>MSN：</td>
+					<td><input type="text"  id="msn" name="msn" style="WIDTH: 230px" value="$db_merlinkman[msn]"/>
+					</td>
+				
+					<td align=right>QQ：</td>
+					<td><input type="text"  id="qq" name="qq" style="WIDTH: 120px" value="$db_merlinkman[qq]"/></td>
+				</tr>
+				<tr>
+					<td align=right>家庭电话：</td>
+					<td>
+					   <input type="text"  id="family_tel" name="family_tel" style="WIDTH: 230px" value="$db_merlinkman[family_tel]"/>
+					</td>
+				
+					<td align=right>家庭住址：</td>
+					<td><input type="text"  id="family_address" style="WIDTH: 230px" name="family_address" value="$db_merlinkman[family_address]"/></td>
+				</tr>
+				<tr>
+					<td align=right>生日：</td>
+					<td>
+					    <input name="birthday" type="text"  readonly id="birthday" style="WIDTH:102px" value="$db_merlinkman[birthday]"/><A href="javascript:OpenCalendar('birthday', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+					</td>
+				
+					<td align=right>爱好：</td>
+					<td><input type="text"  id="favorite" name="favorite" style="WIDTH: 230px" value="$db_merlinkman[favorite]"/></td>
+				</tr>
+				<tr>
+					<td align=right style="height: 57px">备注：</td>
+					<td colspan=3 style="height: 57px">
+					<textarea ID="memo" style="Height:51px;Width:431px">$db_merlinkman[memo]</textarea>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="4" align="center"><input type="submit"  id="btnSubmit" value=" 确定 " onclick="Check()"
+							NAME="btnSubmit" onserverclick="btnSubmit_ServerClick">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+
+<script language=javascript>
+function checkfrm(){
+	if(document.all.txtName.value == ""){
+		alert('用户姓名不能为空！');
+		document.all.txtName.focus();
+		event.returnValue = false;
+		return;
+	}
+	if(document.all.txtShortName.value == ""){
+		alert('客户简称不能为空！');
+		document.all.txtShortName.focus();
+		event.returnValue = false;
+		return;
+	}
+    return true;
+}
+
+</script>
+
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>服务商管理 &gt;&gt; 联系人管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部联系人");
+ showPageLink("birthday", "0", "本月生日");
+ showPageLink("sex", "1", "男");
+ showPageLink("sex", "2", "女");
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+            <td><b>快速查询：</b><select id="searchtype">
+								<option value="name" selected>姓名</option>
+								<option value="shortname">客户简称</option>
+								<option value="title">称谓</option>
+								<option value="department">部门</option>
+								<option value="dutyname">职务</option>								
+							</select>
+							<input ID="searchkey" name="searchkey" type="text" class="text"/>
+							<input type="button" ID="btnQuery" value="查询" class="text"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline"  width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">姓名</td>
+                <td align="middle" class="title" height="20" valign="center">客户名称</td>
+                 <td align="middle" class="title" height="20" valign="center">性别</td>
+                <td align="middle" class="title" height="20" valign="center">称谓</td>
+                <td align="middle" class="title" height="20" valign="center">部门</td>
+                <td align="middle" class="title" height="20" valign="center">职务</td>                 
+                <td align="middle" class="title" height="20" valign="center">工作电话</td>               
+                <td align="middle" class="title" height="20" valign="center">手机</td>
+                <td align="middle" class="title" height="20" valign="center">QQ</td>
+                <td align="middle" class="title" height="20" valign="center">添加日期</td>
+                <td align="middle" class="title" height="20" valign="center">操作</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_merlinkmanlist); 
+foreach($db_merlinkmanlist as $merlinkman){
+	$merchant = getMerchant($merlinkman[merchant_id]);
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d',$merlinkman[create_time]);
+print <<<EOT
+-->    
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx </td>
+                <td align="middle" valign="center">
+                    <input id="ID" name="ID" type="checkbox" value="$merlinkman[id]" />
+                </td>
+                <td align="middle" valign="center">&nbsp;$merlinkman[name]</td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showLink("$admin_file&action=merdetail",$merlinkman[merchant_id],$merchant[short_name]);
+print <<<EOT
+-->                  
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;   
+	getSex($merlinkman[sex]);
+print <<<EOT
+-->             
+                </td>
+                <td align="middle" valign="center">&nbsp;$merlinkman[title]</td>
+                <td align="middle" valign="center">&nbsp;$merlinkman[department]</td>
+                <td align="middle" valign="center">&nbsp;$merlinkman[dutyname]</td>
+                <td align="middle" valign="center">&nbsp;$merlinkman[work_tel]-$merlinkman[ext]</td>                
+                <td align="middle" valign="center">&nbsp;$merlinkman[mobile]</td>
+                <td align="middle" valign="center">&nbsp;$merlinkman[qq]</td>
+                <td align="middle" valign="center">&nbsp;$cdate</td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showEditButton($merlinkman[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount"/>
+
+</form>
+
+<!--
+EOT;
+}?>-->

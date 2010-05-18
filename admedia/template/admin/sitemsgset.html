@@ -1,0 +1,278 @@
+<!--<?php
+include_once PrintEot('header');
+if(empty($action)){
+print <<<EOT
+-->
+
+<form action="$admin_file" method="post" name="form">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>网站维护 &gt;&gt; 群发消息设置</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部");
+ showPageLink("send_type", "0", "站内消息"); 
+ showPageLink("send_type", "1", "邮件提醒");
+ showPageLink("send_type", "2", "手机短信");
+print <<<EOT
+-->      </td></tr>
+         <tr>
+            <td><b>快速查询：</b>
+            				<select id="searchtype">
+								<option value="title">标题</option>
+								<option value="send_aim">发送目的</option>														
+							</select>
+							<input type="text" name="searchkey" value=""/>
+							<input type="button" name="btnQuery" value="查询" OnClick="btnQuery_Click" />
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2" colspan=2>
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center" width="40px">序号</td>
+                <td align="middle" class="title" height="20" valign="center" width="50px"><input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
+                <td align="middle" class="title" height="20" valign="center">发送目的</td>  
+                <td align="middle" class="title" height="20" valign="center">标题</td>
+              	<td align="middle" class="title" height="20" valign="center">是否全部</td>
+              	<td align="middle" class="title" height="20" valign="center">设置人</td>
+                <td align="middle" class="title" height="20" valign="center">发送方式</td>
+                <td align="middle" class="title" height="20" valign="center">创建时间</td>
+                <td align="middle" class="title" height="20" valign="center">发送时间</td>
+                <td align="middle" class="title" height="20" valign="center" width="50px">操作</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_sysmsgsetlist); 
+foreach($db_sysmsgsetlist as $sysmsgset ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('Y/m/d H:i:s',$sysmsgset[create_time]);
+		$sdate = date('Y/m/d H:i:s',$sysmsgset[send_time]);		
+		$db_sendtype = $cfg_msgsendtype[$sysmsgset[send_type]];
+		$db_isall = $cfg_yesno[$sysmsgset[is_all]];
+print <<<EOT
+-->
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20" width="30px">$curidx </td>
+                <td align="middle" valign="center" width="50px"><input id="ids" name="ids" type="checkbox" value="$sysmsgset[id]" /></td>
+                <td>&nbsp;$sysmsgset[send_aim]</td>                
+                <td>&nbsp;$sysmsgset[title]</td>
+                <td align="middle" valign="center">&nbsp;$db_isall</td>
+                <td align="middle" valign="center">&nbsp;$sysmsgset[sys_name]</td>
+                <td align="middle" valign="center" width="65px">&nbsp;$db_sendtype</td>
+                <td align="middle" valign="center" width="145px">&nbsp;$cdate</td>
+                <td align="middle" valign="center" width="145px">&nbsp;$sdate</td>                
+                <td align="middle" valign="center" width="50px">&nbsp;
+<!--
+EOT;
+	showEditButton($sysmsgset[id]);
+print <<<EOT
+-->                
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+<!--
+EOT;
+}
+if($action=="new" || $action=="edit"){
+	for($i=0;$i<24;$i++){
+		if($i<10) $si = "0".$i;
+		else $si = "".$i;
+		$send_hour .= "<option value='$i'>$si</option>";
+	}
+	for($i=0;$i<60;$i++){
+		if($i<10) $si = "0".$i;
+		else $si = "".$i;
+		$send_minute .= "<option value='$i'>$si</option>";
+	}
+	if(isset($db_sysmsgset)==false || $db_sysmsgset[is_all]==1){
+		$op_hour = '<input type="radio" id="radisall1" rows="15" cols="50" name="is_all" value="1" onclick="javascript:isAll(1);" checked/><label for="radisall1">是</label>';
+	}else{
+		$op_hour = '<input type="radio" id="radisall1" rows="15" cols="50" name="is_all" value="1" onclick="javascript:isAll(1);"/><label for="radisall1">是</label>';
+	}
+	if(isset($db_sysmsgset) && $db_sysmsgset[is_all]==0){	
+		$op_minute = '<input type="radio" id="radisall0" rows="15" cols="50" name="is_all" value="0" onclick="javascript:isAll(0);" checked/><label for="radisall0">否</label>';
+	}else{
+		$op_minute = '<input type="radio" id="radisall0" rows="15" cols="50" name="is_all" value="0" onclick="javascript:isAll(0);"/><label for="radisall0">否</label>';		
+	}				
+print <<<EOT
+-->
+
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　群发消息设置</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+				<tr>
+					<td align=right width="25%">发送目的：</td>
+					<td><input type="text" id="send_aim" style="width: 261px" name="send_aim" value="$db_sysmsgset[send_aim]"><font color="red">*</font>					
+					</td>
+				</tr>
+				<tr>
+					<td align=right>发送方式：</td>
+					<td>
+<!--
+EOT;
+	if(isset($db_sysmsgset)==false || $db_sysmsgset[send_type]==0){
+		echo '<input type="radio" id="radst0" name="send_type" value="0" checked/><label for="radst0">'.$cfg_msgsendtype[0].'</label>&nbsp;&nbsp;';
+	}else{
+		echo '<input type="radio" id="radst0" name="send_type" value="0"/><label for="radst0">'.$cfg_msgsendtype[0].'</label>&nbsp;&nbsp;';
+	}
+	if(isset($db_sysmsgset) && $db_sysmsgset[send_type]==1){
+		echo '<input type="radio" id="radst1" name="send_type" value="1" checked/><label for="radst1">'.$cfg_msgsendtype[1].'</label>&nbsp;&nbsp;';
+	}else{
+		echo '<input type="radio" id="radst1" name="send_type" value="1"/><label for="radst1">'.$cfg_msgsendtype[1].'</label>&nbsp;&nbsp;';
+	}
+	if(isset($db_sysmsgset) && $db_sysmsgset[send_type]==2){
+		echo '<input type="radio" id="radst2" name="send_type" value="2" checked/><label for="radst2">'.$cfg_msgsendtype[2].'</label>&nbsp;&nbsp;';
+	}else{
+		echo '<input type="radio" id="radst2" name="send_type" value="2"/><label for="radst2">'.$cfg_msgsendtype[2].'</label>&nbsp;&nbsp;';
+	}	
+print <<<EOT
+-->	
+					</td>
+				</tr>
+				<tr>
+					<td align=right width="25%">发送标题：</td>
+					<td><input type="text" id="title" style="width: 261px" name="title" value="$db_sysmsgset[title]"><font color="red">*</font>
+					<img src="$imgpath/admin/image_fdj.gif" align="absmiddle"/><a href="#" onclick="javascript:showMsgTpl();">从模版中选择</a>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>发送内容：</td>
+					<td><textarea id="content" rows="10" cols="50" name="content">$db_sysmsgset[content]</textarea></td>
+				</tr>
+				<tr>
+					<td align=right width="25%">发送时间：</td>
+					<td>
+						<input name="send_date" type="text" style="font-size:12px;WIDTH:120px" readonly><A href="javascript:OpenCalendar('send_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<select name="send_hour" id="send_hour">$send_hour</select>：<select name="send_minute" id="send_minute">$send_minute</select></td>
+				</tr>				
+				<tr>
+					<td align=right>是否全部发送：</td>
+					<td>$op_hour $op_minute</td>
+				</tr>				
+				<tr id="divRecAff" style="display:none">
+					<td align=right>接收站长：</td>
+					<td>
+					<img src="$imgpath/admin/image_fdj.gif" align="absmiddle"/><a href="">选择站长</a><br/>
+					<input type="hidden" name="rec_id" id="rec_id" value="$db_sysmsgset[rec_id]"/>
+					<textarea id="rec_user" rows="5" cols="50" name="rec_user">$db_sysmsgset[rec_user]</textarea>
+					</td>
+				</tr>
+				<tr>
+				<td colspan="2" align="center"><input type="submit" id="btnsubmit" value=" 确定 " name="btnsubmit">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				<input type="button" onclick="history.go(-1);" value=" 取消 ">
+				</td>
+				</tr>	
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+
+<script>
+	function isAll(flag){
+		if(flag==1) $('divRecAff').style.display="none";
+		if(flag==0) $('divRecAff').style.display="block";
+	}
+	function checkfrm(){
+		if(isEmpty($('send_aim').value)==true){
+			alert('发送目的不能为空！');
+			$('send_aim').focus();
+			return false;
+		}
+		if(isEmpty($('title').value)==true){
+			alert('标题不能为空！');
+			$('title').focus();
+			return false;
+		}		
+		if(isEmpty($('content').value)==true){
+			alert('内容不能为空！');
+			$('content').focus();
+			return false;
+		}
+		if(isEmpty($('send_date').value)==true){
+			alert('发送时间不能为空！');
+			return false;
+		}		
+		return true;
+	}
+</script>
+
+<!--
+EOT;
+}?>-->

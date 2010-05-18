@@ -1,0 +1,130 @@
+<!--<?php
+include_once PrintEot('header');
+print <<<EOT
+-->
+<form id="form" name="form" action="$admin_file" method="post">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>数据查询 &gt;&gt; 广告计划显示数据查询</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="96%" align=center>              
+        <tr>
+            <td height="35px" colspan=2>
+            			<b>设定：</b><select ID="adv_id" name="adv_id" id="adv_id" style="Width:120px">
+            			<option value="0">请选择广告计划</option>
+            			</select>	
+						站长编号：<input type="text" name="aff_oid" id="aff_id" size="8" class="text"/>
+						选择日期：<input type="text" id="iday" name="iday" type="text" class="text" readonly id="iday" style="WIDTH:80px"><A href="javascript:OpenCalendar('StartDate', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<b>查询：</b><select id="searchtype" name="searchtype" style="Width:110px">
+								<option value="">选择查询条件</option>
+								<option value="ip">IP地址</option>
+								<option value="real_locas">真实地址</option>
+								<option value="ad_url">页面地址</option>
+								<option value="from_url">来路</option>																			
+							</select>
+							<input type="text" ID="searchkey" name="searchkey" class="text"/>							
+							<input type="button" ID="btnQuery" value="查询" class="text"/>
+            </td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline"  width="17" /><span style="color: #547054"> 刷新</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>            
+        </tr>
+        <tr>
+            <td height="5">
+            </td>
+        </tr>
+    </table>
+    <div class="tab" id="divData" >
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td> 
+                <td align="middle" class="title" height="20" valign="center">手机号</td>                  
+                <td align="middle" class="title" height="20" valign="center">UA信息</td>                  
+                <td align="middle" class="title" height="20" valign="center">IP</td>
+                <td align="middle" class="title" height="20" valign="center">页面地址</td>                 
+                <td align="middle" class="title" height="20" valign="center">地区</td>                                                                      
+                <td align="middle" class="title" height="20" valign="center">站长</td>      
+                <td align="middle" class="title" height="20" valign="center">广告</td> 
+                <td align="middle" class="title" height="20" valign="center">创意</td>   
+                <td align="middle" class="title" height="20" valign="center">站点</td>     
+                <td align="middle" class="title" height="20" valign="center">广告位</td>                                       
+                <td align="middle" class="title" height="20" valign="center">时间</td>
+                <td align="middle" class="title" height="20" valign="center">来路</td>                                                                                                                                                                                                                                                                                                                                                                             
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_showlist); 
+foreach($db_showlist as $db_show ){
+	$db_affiliate = getAffliate($db_show[aff_id]);
+	$db_creative = getAdvCreative($db_show[creative_id]);	
+	$db_affplace = getAffPlace($db_show[place_id]);
+	$db_affwebsite = getAffWebSite($db_show[site_id]);
+	$db_adv = getAdvertise($db_show[adv_id]);
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$db_show[create_time]);
+print <<<EOT
+-->  
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx </td>
+                <td align="middle" valign="center">&nbsp;$db_show[mobile]</td>
+				<td align="middle" valign="center">&nbsp;$db_show[ua]</td>                
+                <td align="middle" valign="center">&nbsp;$db_show[ip]</td>
+                <td align="middle" valign="center">&nbsp;$db_show[ad_url]</td>
+                <td align="middle" valign="center">&nbsp;$db_show[real_locas]</td>
+                <td align="middle" valign="center">&nbsp;<a href='$basename?job=affmanage&action=detail&curid=$db_affiliate[id]'>$db_affiliate[linkman]($db_affiliate[id])</a></td>                
+                <td align="middle" valign="center">&nbsp;<a href='$basename?job=advmanage&action=detail&curid=$db_adv[id]'>$db_adv[name]($db_adv[id])</a></td>
+                <td align="middle" valign="center">&nbsp;<a href='$basename?job=advcreative&action=detail&curid=$db_creative[id]'>$db_creative[name]($db_creative[id])</a></td>
+                <td align="middle" valign="center">&nbsp;<a href='$basename?job=affwebsite&action=detail&curid=$db_affwebsite[id]'>$db_affwebsite[name]($db_affwebsite[id])</a></td>
+                <td align="middle" valign="center">&nbsp;<a href='$basename?job=affadplace&action=detail&curid=$db_affplace[id]'>$db_affplace[name]($db_affplace[id])</a></td>
+                <td align="middle" valign="center">&nbsp;$cdate</td>
+                <td align="middle" valign="center">&nbsp;$db_show[referer]</td>
+            </tr>
+<!--
+EOT;
+}
+if($showcount==0){
+print <<<EOT
+-->
+ <tr align="center" valign="middle">
+ 	<td style="color:red;height:50px" colspan="13">请选择或设定查询条件</td>
+ </tr>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+	<input type="hidden" id="count" name="count" value="$showcount" />
+</form>
+<!--
+EOT;
+?>-->
+

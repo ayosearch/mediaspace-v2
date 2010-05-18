@@ -1,0 +1,52 @@
+<!--<?php print <<<EOT
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html>
+<head>
+<title>top页面</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+<!--
+body, td{ FONT-SIZE: 11px; color:#617C61; font-family:Verdana, Arial;}
+-->
+</style>
+<script>
+function myShowTime(){
+        d=new Date()
+	if(parseInt(d.getSeconds())<10)
+		showtime.innerText=d.getYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+" "+d.getHours()+":"+d.getMinutes()+":0"+d.getSeconds()
+	else	
+		showtime.innerText=d.getYear()+"-"+(d.getMonth()+1)+"-"+d.getDate()+" "+d.getHours()+":"+d.getMinutes()+":"+d.getSeconds()
+	//window.status="感谢使用{$cfg_name}!"
+	setTimeout(myShowTime,'1000')
+}
+function myRefresh(){
+	window.CU.location="Refresh.aspx";
+	setTimeout(myRefresh,'60000')
+}
+
+</script>
+</head>
+
+<body leftmargin="0" topmargin="0" onLoad="myShowTime();">
+<iframe name="CU" height="0" width="0" scrolling="no" border="0" frameborder="0"></iframe>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#B6D3B6" background="$imgpath/admin/logo_title_1.jpg">
+  <tr>
+    <td width="80%"><img src="$imgpath/admin/logo.jpg"></td>
+    <td><table border="0" cellpadding="0" cellspacing="0" background="$imgpath/admin/time_bg.gif">
+      <tr>
+        <td align="left"><img src="$imgpath/admin/time_left.gif" width="25" height="24"></td>
+		<td id="showtime" align="center" style="color:#ffffff"></td>
+        <td align="right"><img src="$imgpath/admin/time_right.gif" width="7" height="24"></td>
+      </tr>
+    </table></td>
+  </tr>
+  <tr>
+    <td height="2" colspan="2" bgcolor="#9CBA9D"></td>
+  </tr>
+</table>
+</body>
+</html>
+<!--
+EOT;
+?>-->

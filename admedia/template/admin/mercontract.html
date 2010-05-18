@@ -1,0 +1,348 @@
+<!--<?php
+include_once PrintEot('header');
+if($action=="new" || $action=="edit"){
+print <<<EOT
+-->
+<form id="form" name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　服务商合同</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+        <tr>
+					<td align=right width="15%">合同主题：</td>
+					<td style="width: 20%">
+						<input type="text" id="title" style="WIDTH: 202px" name="title" value="$db_mercontract[title]">					    
+					</td>
+				
+					<td align=right>所属客户：</td>
+					<td><select ID="mer_id" name="mer_id" style="WIDTH:202px"><option value="">请选择...</option>$op_merchantlist</select></td>
+				</tr>
+				<tr>
+					<td align=right>合同类型：</td>
+					<td style="width: 20%">
+<!-- 
+EOT;
+	if(!isset($db_mercontract) || $db_mercontract[itype]==0){
+		echo '<input type="radio" id="itype" name="itype" value="0" checked/><label for="itype">纸张</label>';
+	}else{
+		echo '<input type="radio" id="itype" name="itype" value="0"/><label for="itype">纸张</label>';
+	}
+	if($db_mercontract[itype]==1){
+		echo '<input type="radio" id="itype" name="itype" value="1" checked/><label for="itype">传真</label>';
+	}else{
+		echo '<input type="radio" id="itype" name="itype" value="1"/><label for="itype">传真</label>';
+	}
+	if($db_mercontract[itype]==2){
+		echo '<input type="radio" id="itype" name="itype" value="2" checked/><label for="itype">电子合同</label>';
+	}else{
+		echo '<input type="radio" id="itype" name="itype" value="2"/><label for="itype">电子合同</label>';
+	}	
+print <<<EOT
+-->
+					</td>				
+					<td align=right>销售机会：</td>
+					<td>
+					    <select id="chance_id" name="chance_id" style="WIDTH:202px"><option value="">请选择...</option>$op_merchancelist</select>	
+					</td>
+				</tr>
+				<tr>
+					<td align=right>付款方式：</td>
+					<td>
+<!-- 
+EOT;
+	if(!isset($db_mercontract) || $db_mercontract[paytype]==0){
+		echo '<input type="radio" id="paytype0" name="paytype" Value="0" checked/><label for="paytype0">支票</label>';
+	}else{
+		echo '<input type="radio" id="paytype0" name="paytype" Value="0"/><label for="paytype0">支票</label>';
+	}
+	if($db_mercontract[paytype]==1){
+		echo '<input type="radio" id="paytype1" name="paytype" Value="1" checked/><label for="paytype1">现金</label>';
+	}else{
+		echo '<input type="radio" id="paytype1" name="paytype" Value="1"/><label for="paytype1">现金</label>';
+	}
+	if($db_mercontract[paytype]==2){
+		echo '<input type="radio" id="paytype2" name="paytype" Value="2" checked/><label for="paytype2">邮政汇款</label>';
+	}else{
+		echo '<input type="radio" id="paytype2" name="paytype" Value="2"/><label for="paytype2">邮政汇款</label>';
+	}
+	if($db_mercontract[paytype]==3){
+		echo '<input type="radio" id="paytype3" name="paytype" Value="3" checked/><label for="paytype3">电汇</label>';
+	}else{
+		echo '<input type="radio" id="paytype3" name="paytype" Value="3"/><label for="paytype3">电汇</label>';
+	}
+	if($db_mercontract[paytype]==4){
+		echo '<input type="radio" id="paytype4" name="paytype" Value="4" checked/><label for="paytype4">网上银行</label>';
+	}else{
+		echo '<input type="radio" id="paytype4" name="paytype" Value="4"/><label for="paytype4">网上银行</label>';
+	}
+	if($db_mercontract[paytype]==5){
+		echo '<input type="radio" id="paytype5" name="paytype" Value="5" checked/><label for="paytype5">线上充值</label>';
+	}else{
+		echo '<input type="radio" id="paytype5" name="paytype" Value="5"/><label for="paytype5">线上充值</label>';
+	}			
+print <<<EOT
+-->
+					</td>
+					<td align=right>合同编号：</td>
+					<td><input type="text" id="contract_no" name="contract_no" style="WIDTH: 101px" value="$db_mercontract[contract_no]"></td>					
+				</tr>
+				<tr>				
+					<td align=right>合同金额：</td>
+					<td style="width: 322px">
+						<input type="text" id="fee" name="fee" style="WIDTH: 101px" value="$db_mercontract[fee]"> 千元
+					</td>
+					<td align=right>签约时间：</td>
+					<td>
+					    <input name="sign_date" type="text" readonly id="sign_date" style="WIDTH:102px" value="$db_mercontract[sign_date]"><A href="javascript:OpenCalendar('sign_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"/></A>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>开始时间：</td>
+					<td style="width: 322px">
+						<input name="start_date" type="text" readonly id="start_date" style="WIDTH:102px" value="$db_mercontract[start_date]"><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A></td>
+				    <td align=right>结束时间：</td>
+					<td>
+						<input name="end_date" type="text" readonly id="end_date" style="WIDTH:102px" value="$db_mercontract[end_date]"><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"/></A></td>
+				</tr>
+				<tr>				
+					<td align=right>合同文件：</td>
+					<td style="width: 322px">
+						<INPUT id="contract_file" contentEditable="false" type="file" name="contract_file" tyle="width: 235px; height: 21px" />
+					</td>
+					<td align=right>销售代表：</td>
+					<td>
+						<select ID="seller_id" name="sell_id" style="WIDTH:102px">$op_sellerlist</select>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>合同状态：</td>
+					<td colspan=3>
+<!-- 
+EOT;
+	if(!isset($db_mercontract) || $db_mercontract[status]==0){
+		echo '<input type="radio" id="status0" name="status" Value="0" checked/><label for="status0">暂停执行</label>';
+	}else{
+		echo '<input type="radio" id="status0" name="status" Value="0"/><label for="status0">暂停执行</label>';
+	}
+	if($db_mercontract[status]==1){
+		echo '<input type="radio" id="status1" name="status" Value="1" checked/><label for="status1">执行中</label>';
+	}else{
+		echo '<input type="radio" id="status1" name="status" Value="1"/><label for="status1">执行中</label>';
+	}
+	if($db_mercontract[status]==2){
+		echo '<input type="radio" id="status2" name="status" Value="2" checked/><label for="status2">已过期</label>';
+	}else{
+		echo '<input type="radio" id="status2" name="status" Value="2"/><label for="status2">已过期</label>';
+	}
+print <<<EOT
+-->	
+					</td>
+				</tr>
+				<tr>
+					<td align=right style="height: 57px">合同描述：</td>
+					<td colspan=3 style="height: 57px">
+					<textarea ID="memo" name="memo" style="Height:51px;Width:431px">$db_mercontract[memo]</textarea>
+					</td>
+				</tr>
+				
+				<tr>
+					<td colspan="4" align="center">
+					<input type="submit" id="btnSubmit" value=" 确定 " name="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+
+ </TABLE>
+ </div>
+ 
+ </form>
+
+<script language=javascript>
+function checkfrm(){
+	if($('title').value == ""){
+		alert('合同主题不能为空！');
+		$('title').focus();
+		return false;
+	}
+	if($("mer_id").value == "0"){
+		alert('请选择合同所属客户！');
+		$("mer_id").focus();
+		return false;
+	}
+	if($("fee").value == ""){
+		alert('合同金额不能为空！');
+		$("fee").focus();
+		return false;
+	}
+	else if(isNaN($("fee").value)){
+	    alert('合同金额必须为数字！');
+	    $("fee").focus();
+		return false;
+	}
+    return true;
+}
+</script>
+
+<!--
+EOT;
+}else{
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>服务商管理 &gt;&gt; 合同管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部");
+ showPageLink("itype", "0", "纸张");
+ showPageLink("itype", "1", "传真");
+ showPageLink("itype", "2", "电子合同");
+ showPageLink("status", "0", "暂停执行");
+ showPageLink("status", "1", "执行中");
+ showPageLink("status", "2", "已到期");
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+            <td><b>快速查询：</b><select name="searchtype">
+								<option value="contract_no" selected>合同编号</option>
+								<option value="shortname">客户简称</option>
+								<option value="title">合同主题</option>
+								<option value="desc">合同描述</option>							
+							</select>
+							<input type="text" name="searchkey" class="text"/>
+							<input type="button" type="btnQuery" value="查询" class="text"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+                                <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline"
+                                    width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">编号</td>
+                <td align="middle" class="title" height="20" valign="center">对应客户</td>
+                <td align="middle" class="title" height="20" valign="center">合同主题</td>
+                <td align="middle" class="title" height="20" valign="center">合同类型</td>
+                <td align="middle" class="title" height="20" valign="center">付款方式</td>
+                <td align="middle" class="title" height="20" valign="center">合同金额</td>
+                <td align="middle" class="title" height="20" valign="center">销售</td>                 
+                <td align="middle" class="title" height="20" valign="center">状态</td>               
+                <td align="middle" class="title" height="20" valign="center">签约时间</td>
+                <td align="middle" class="title" height="20" valign="center">附件</td>
+                <td align="middle" class="title" height="20" valign="center">操作</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_mercontractlist); 
+foreach($db_mercontractlist as $mercontract){
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$paytype = $cfg_merccpay[$mercontract[paytype]];
+	$itype = $cfg_mercctype[$mercontract[itype]];
+	$ccstatus = $cfg_merccstatus[$mercontract[status]];
+print <<<EOT
+-->   
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20" width="40px">$curidx </td>
+                <td align="middle" valign="center" width="40px">
+                    <input id="ID" name="ID" type="checkbox" value="$mercontract[id]" />
+                </td>
+                <td align="middle" valign="center">&nbsp;$mercontract[contract_no]</td>
+                <td align="middle" valign="center">&nbsp;
+				<a href="$basename?job=detail&action=merchant&curid=$mercontract[mer_id]$transtr">$mercontract[mer_name]</a></td>
+                <td align="middle" valign="center">&nbsp;$mercontract[title]</td>
+                <td align="middle" valign="center">&nbsp;$itype</td>
+                <td align="middle" valign="center">&nbsp;$paytype</td>
+                <td align="middle" valign="center">&nbsp;$mercontract[fee]</td>
+                <td align="middle" valign="center">&nbsp;$mercontract[seller_name]</td>
+                <td align="middle" valign="center">&nbsp;$ccstatus</td>
+                <td align="middle" valign="center">&nbsp;$mercontract[sign_date]</td>
+                <td align="middle" valign="center">&nbsp;[<a href='$mercontract[file_path]'>查看附件</a>]</td>
+                 <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showEditButton($mercontract[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+<!--
+EOT;
+}?>-->
+

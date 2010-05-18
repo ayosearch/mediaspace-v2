@@ -1,0 +1,151 @@
+<!--<?php print <<<EOT
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>欢迎使用{$cfg_name}!</title>
+<style type="text/css">
+<!--
+body {
+	background-color: #A60002;
+	font-family: '宋体', '新宋体', Arial, Helvetica, verdana, sans-serif;
+	font-size: 12px;
+	margin:0px 0px 0px 0px;
+	color: #525252;
+	line-height: 180%;
+}
+.htable4b {
+	border: 1px solid #D9D9D9;
+}
+.hinput4b 
+{
+	font-family:Microsoft Sans Serif;
+	border: 1px solid #999999;
+	font-size: 13px;
+	font-weight: normal;
+	color: #000000;
+	text-decoration: none;
+	height:17px;
+	width:170px;
+}
+.hinput4c
+{
+	font-family:Microsoft Sans Serif;
+	border: 1px solid #999999;
+	font-size: 13px;
+	font-weight: normal;
+	color: #000000;
+	text-decoration: none;
+	height:17px;
+	width:75px;
+}
+td{
+    font-size: 12px;
+	color: #525252;
+	line-height: 180%;
+}
+        .login_in3 {height:22px; width:76px; background:url($imgpath/admin/ht_11.gif); border:0; padding:4px 0 0 5px; font-size:12px; color:#FBF5C6; font-weight:bold;}
+        .login_in4 {height:22px; width:76px; background:url($imgpath/admin/ht_13.gif); border:0; padding:4px 0 0 5px; font-size:12px; color:#ffffff; font-weight:bold;}
+
+input{
+	font-size:12px;
+}
+select{	
+	font-size:12px;
+}
+
+textarea{	
+	font-size:12px;
+}
+-->
+</style></head>
+
+<body>
+<form action="$REQUEST_URI" method="post" name="login" onsubmit="javascript:return CheckLogin();">
+<input type="hidden" name="ts" value="$timestamp"/>
+<table width="720" border="0" align="center" cellpadding="0" cellspacing="0">
+  <tr>
+    <td height="94">&nbsp;</td>
+  </tr>
+</table>
+<table width="540" height="272" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" class="htable4b">
+  <tr>
+    <td height="139" valign="top"><table width="540" border="0" cellspacing="0" cellpadding="0">
+      <tr>
+        <td width="428" background="$imgpath/admin/ht_4.gif"><img src="$imgpath/admin/ht_3.gif" /></td>
+        <td width="112" background="$imgpath/admin/ht_23.gif"><img src="$imgpath/admin/ht_6.gif" /></td>
+      </tr>
+    </table>
+        <table width="540" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td>&nbsp;</td>
+          </tr>
+        </table>
+      <table width="400" border="0" align="center" cellpadding="0" cellspacing="0">
+          <tr>
+            <td valign="top"><table border="0" align="center" cellpadding="3" cellspacing="0" style="width: 319px">
+                <tr>
+                  <td height="25" align="right">帐　户：</td>
+                  <td style="width: 244px"><input type="text" name="admin_name" Width="140px" class="hinput4b" Height="17px"/></td>
+                </tr>
+                <tr>
+                  <td height="25" align="right">密　码：</td>
+                  <td style="width: 244px"><input type="password" name="admin_pass" Width="140px" class="hinput4b" Height="17px"/></td>
+                </tr>
+                <tr>
+                  <td height="25" align="right">验证码：</td>
+                  <td style="width: 244px"><input type="text" size="6" name="admin_code" class="hinput4c"/> <a href="javascript:changeImg();" title="看不清？点击换一张！"><IMG src="valicode.php?ts=$timestamp" align="absMiddle" border="0" name="imageshow" id="imageshow"/></a></td>
+                </tr>
+                <tr>
+                  <td height="25">&nbsp;</td>
+                  <td style="width: 244px"><input type="submit" name="btnLogin" class="login_in3" value=""/> <INPUT type=reset value="" name=reset ID="reset" class="login_in4"></td>
+                </tr>
+            </table></td>
+          </tr>
+        </table>
+      <table width="540" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td width="429" height="46">&nbsp;</td>
+            <td width="111"><img src="$imgpath/admin/ht_18.gif" /></td>
+          </tr>
+      </table></td>
+  </tr>
+</table>
+</form>
+
+<script>
+function CheckLogin()
+{
+	if(document.all.admin_name.value == '')
+	{
+		alert('请输入您的用户名！')		
+		document.all.admin_name.focus();
+		
+		return false;
+	}
+	if(document.all.admin_pass.value == "")
+	{
+		alert('请输入您的登录密码！');		
+		document.all.admin_pass.focus();		
+		return false;
+	}	
+	return true;
+}
+
+	function changeImg(){
+	 var Imgobj=eval("document.all.imageshow");
+	     if(typeof(Imgobj)!="undefined"){
+	     Imgobj.src="valicode.php?ts="+document.all.ts.value;
+	 }
+	}
+</script>
+</body>
+</html>
+<!--
+EOT;
+$output = trim(str_replace(array('<!--<!--<!---->','<!--<!---->','<!---->',"\r"),'',ob_get_contents())," \n");
+ob_end_clean();
+$db_obstart && function_exists('ob_gzhandler') ? ob_start('ob_gzhandler') : ob_start();
+echo $output;
+?>-->

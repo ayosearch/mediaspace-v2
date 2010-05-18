@@ -1,0 +1,215 @@
+<!--<?php
+include_once PrintEot('header');
+if(empty($action) || $action=='list'){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>系统管理 &gt;&gt; 角色管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="100%" align=center>
+        <tr>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+                                <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del&curpage='.$curpage.$transtr.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center" width="30px">序号</td>
+                <td align="middle" class="title" height="20" valign="center" width="50px"><input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
+                <td align="middle" class="title" height="20" valign="center">自定义角色名称</td>
+                <td align="middle" class="title" height="20" valign="center">内置角色类型</td>
+                <td align="middle" class="title" height="20" valign="center">自定义角色描述</td>         
+                <td align="middle" class="title" height="20" valign="center" width="50px">编辑</td>
+                <td align="middle" class="title" height="20" valign="center" width="50px">权限分配</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_sysrolelist); 
+foreach($db_sysrolelist as $sysrole ){
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$sysrolename = $cfg_sysrole[$sysrole[itype]];
+	$cdate = date('Y/m/d H:i:s',$sysuser[create_time]);
+print <<<EOT
+-->
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx </td>
+                <td align="middle" class="hei" valign="center">
+                    <input id="ids" name="ids" type="checkbox" value="$sysrole[id]" />
+                </td>
+                <td align="middle" valign="center">&nbsp;$sysrole[name]</td>
+                <td align="middle" valign="center">&nbsp;$sysrolename</td>
+                <td align="middle" valign="center">&nbsp;$sysrole[memo]</td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showEditButton($sysrole[id]);
+print <<<EOT
+-->
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showDisString($sysrole[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+<!--
+EOT;
+}
+
+if($action=="new" || $action=="edit"){
+print <<<EOT
+-->
+
+<form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
+<input type="hidden" name="curid" value="$curid"/>
+<input type="hidden" name="action" value="save"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　系统角色</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+        		<tr>
+					<td align=right>自定义角色名称：</td>
+					<td><input type="text" id="name" style="WIDTH: 261px" name="name" value="$db_sysrole[name]"></td>
+				</tr>
+				<tr>
+					<td align=right>内置角色类型：</td>
+					<td>
+<!--
+EOT;
+	if($db_sysrole[itype]==0){
+		echo '<input type="radio" id="itype" name="itype" value="0" checked/>超级管理员';
+	}else{
+		echo '<input type="radio" id="itype" name="itype" value="0"/>超级管理员';
+	}
+	if($db_sysrole[itype]==1){
+		echo '<input type="radio" id="itype" name="itype" value="1" checked/>站长客服';
+	}else{
+		echo '<input type="radio" id="itype" name="itype" value="1"/>站长客服';
+	}
+	if($db_sysrole[itype]==2){
+		echo '<input type="radio" id="itype" name="itype" value="2" checked/>广告编辑(AE)';
+	}else{
+		echo '<input type="radio" id="itype" name="itype" value="2"/>广告编辑(AE)';
+	}
+	if($db_sysrole[itype]==3){
+		echo '<input type="radio" id="itype" name="itype" value="3" checked/>广告销售';
+	}else{
+		echo '<input type="radio" id="itype" name="itype" value="3"/>广告销售';
+	}
+	if($db_sysrole[itype]==4){
+		echo '<input type="radio" id="itype" name="itype" value="4" checked/>其它';
+	}else{
+		echo '<input type="radio" id="itype" name="itype" value="4"/>其它';
+	}	
+print <<<EOT
+-->
+					</td>
+				</tr>
+				<tr>
+					<td align=right>自定义角色说明：</td>
+					<td><textarea id="memo" rows="4" cols="30" name="memo">$db_sysrole[memo]</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+
+<script>
+function checkfrm(){
+	if($('name').value == ""){
+		alert('角色名称不能为空！');
+		$('name').focus();
+		return false;
+	}
+	return true;
+}
+</script>
+
+<!--
+EOT;
+}print <<<EOT
+-->
+
+<!--
+EOT;
+?>-->
+

@@ -1,0 +1,269 @@
+<!--<?php
+include_once PrintEot('header');
+if(empty($action) || $action=="list"){
+print <<<EOT
+-->
+
+<form action="$admin_file" method="post" name="form">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>网站维护 &gt;&gt; 系统公告</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all","1","全部公告");
+ showPageLink("status", "0", "未发布"); 
+ showPageLink("status", "1", "已发布");
+ showPageLink("status", "2", "禁止发布");
+ showPageLink("itype", "0", "系统公告");
+ showPageLink("itype", "1", "活动公告"); 
+ showPageLink("is_top", "1", "置顶公告");
+ showPageLink("is_red", "1", "加红公告");
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+            <td><b>快速查询：</b>
+            				<select id="searchtype">
+								<option value="title" selected>标题</option>
+								<option value="content">内容</option>						
+							</select>
+							<input type="text" name="searchkey" value=""/>
+							<input type="button" name="btnQuery" value="查询" OnClick="btnQuery_Click" />
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" id="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canaudit==true){		
+		showButton(4,'发布','javascript:ConfirmDel("'.$admin_file.'&action=audit&auditstatus=1'.$transtr.'&curpage='.$curpage.'","确认审核通过选定的公告吗？");');
+		showButton(5,'禁止发布','javascript:ConfirmDel("'.$admin_file.'&action=audit&auditstatus=2'.$transtr.'&curpage='.$curpage.'","确定禁止发布选定的公告吗？");');				
+	}
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2" colspan=2>
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" >
+            <tr>
+                <td align="middle" class="title" height="20" valign="center" width="50px">序号</td>
+                <td align="middle" class="title" height="20" valign="center" width="50px"><input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
+                <td align="middle" class="title" height="20" valign="center">标题</td>  
+                <td align="middle" class="title" height="20" valign="center">类型</td>                             
+                <td align="middle" class="title" height="20" valign="center">添加日期</td>                                         
+                <td align="middle" class="title" height="20" valign="center" width="30px">置顶</td>
+                <td align="middle" class="title" height="20" valign="center" width="30px">加红</td>                
+                <td align="middle" class="title" height="20" valign="center" width="50px">状态</td>                
+                <td align="middle" class="title" height="20" valign="center">操作</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_sysnewslist); 
+foreach($db_sysnewslist as $sysnew ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('Y/m/d H:i:s',$sysnew[create_time]);
+		$db_itype = $cfg_newstype[$sysnew[itype]];
+		$db_status = $cfg_newstatus[$sysnew[status]];
+		$db_top = $cfg_yesno[$sysnew[is_top]];
+		$db_red = $cfg_yesno[$sysnew[is_red]];		
+		$db_pop = $cfg_yesno[$sysnew[is_pop]];			
+print <<<EOT
+-->
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx </td>
+                <td align="middle" valign="center"><input id="ids" name="ids" type="checkbox" value="$sysnew[id]" /></td>
+                <td align="left">&nbsp;$sysnew[title]</td>
+                <td align="middle" valign="center">&nbsp;$db_itype</td>
+                <td align="middle" valign="center">&nbsp;$cdate</td>                
+                <td align="middle" valign="center">&nbsp;$db_top</td>
+                <td align="middle" valign="center">&nbsp;$db_red</td>                 
+           		<td align="middle" valign="center">&nbsp;$db_status</td>                
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showEditButton($sysnew[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+<!--
+EOT;
+}
+if($action=="new" || $action=="edit"){
+print <<<EOT
+-->
+
+
+<form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<input type="hidden" name="is_top" id="is_top" value="$db_sysnews[is_top]"/>
+<input type="hidden" name="is_red" id="is_red" value="$db_sysnews[is_red]"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　系统公告</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+        <tr>			
+					<td align=right width=120>标题：</td>
+					<td colspan=3><input type="text" name="title" id="title" style="WIDTH: 343px" value="$db_sysnews[title]"></td>
+				</tr>
+				<tr>
+					<td align=right>公告类型：</td>
+					<td>
+<!--
+EOT;
+if(isset($db_sysnews)==false || $db_sysnews[itype]==0) {
+	echo "<input type='radio' id='itype' name='itype' value='0' checked>系统公告</input>";
+}else{
+	echo "<input type='radio' id='itype' name='itype' value='0'>系统公告</input>";
+}
+if(isset($db_sysnews) && $db_sysnews[itype]==1) {
+	echo "<input type='radio' id='itype' name='itype' value='1' checked>活动公告</input>";
+}else{
+	echo "<input type='radio' id='itype' name='itype' value='1'>活动公告</input>";
+}
+if(isset($db_sysnews) && $db_sysnews[itype]==2) {
+	echo "<input type='radio' id='itype' name='itype' value='2' checked>作弊公示</input>";
+}else{
+	echo "<input type='radio' id='itype' name='itype' value='2'>作弊公示</input>";
+}
+if(isset($db_sysnews) && $db_sysnews[itype]==3) {
+	echo "<input type='radio' id='itype' name='itype' value='3' checked>汇款招领</input>";
+}else{
+	echo "<input type='radio' id='itype' name='itype' value='3'>汇款招领</input>";
+}
+print <<<EOT
+-->			
+					</td>					
+				</tr>				
+				<tr>				
+					<td align=right>公告内容：</td>
+					<td colspan=3>
+						<textarea id="content" name="content" rows="15" cols="60" style="width: 60%">$db_sysnews[content]</textarea>
+					</td>
+					</tr>
+				
+				<tr>
+					<td>&nbsp;</td><td colspan=3>
+<!--
+EOT;
+if(isset($db_sysnews) && $db_sysnews[is_top]==1) {
+	echo "<input type='checkbox' nane='cktop' id='cktop' checked/>置顶";
+}else{
+	echo "<input type='checkbox' nane='cktop' id='cktop'/>置顶";
+}
+if(isset($db_sysnews) && $db_sysnews[is_red]==1) {
+	echo "<input type='checkbox' nane='ckred' id='ckred' checked/>加红";
+}else{
+	echo "<input type='checkbox' nane='ckred' id='ckred'/>加红";
+}
+print <<<EOT
+-->	
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" align="center">
+					<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+
+ </TABLE>
+  
+ </form>
+
+<script type="text/javascript" language=javascript>
+function checkfrm()
+{
+	if($('title').value == ""){
+		alert('请输入公告标题！');
+		$('title').focus();
+		return false;
+	}
+
+	if($('content').value == ""){
+		alert('请输入公告内容！');
+		$('content').focus();
+		return false;
+	}
+
+	if($('cktop').checked) $('is_top').value="1";
+	else $('is_top').value = "0";
+	
+	if($('ckred').checked) $('is_red').value="1";
+	else $('is_red').value = "0";
+
+    return true;
+}
+
+</script>
+<!--
+EOT;
+}print <<<EOT
+-->
+
+<!--
+EOT;
+?>-->

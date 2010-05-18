@@ -1,0 +1,235 @@
+<!--<?php
+include_once PrintEot('header');
+if(empty($action)){
+print <<<EOT
+-->
+
+<form action="$admin_file" method="post" name="form">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>网站维护 &gt;&gt; 系统帮助</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部帮助");
+ showPageLink("platform", "aff", "站长前台"); 
+ showPageLink("platform", "sys", "管理后台");
+ showPageLink("itype", "0", "常规问题");
+ showPageLink("itype", "1", "FAQ");
+print <<<EOT
+-->      </td></tr>
+         <tr>
+            <td><b>快速查询：</b>
+            				<select id="searchtype">
+								<option value="title" selected>标题</option>
+								<option value="content">内容</option>						
+							</select>
+							<input type="text" name="searchkey" value=""/>
+							<input type="button" name="btnQuery" value="查询" OnClick="btnQuery_Click" />
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2" colspan=2>
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center"><input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
+                <td align="middle" class="title" height="20" valign="center">标题</td>  
+                <td align="middle" class="title" height="20" valign="center">所属系统</td>
+                <td align="middle" class="title" height="20" valign="center">模块</td>
+                <td align="middle" class="title" height="20" valign="center">类型</td>                                                      
+                <td align="middle" class="title" height="20" valign="center">点击次数</td>
+                <td align="middle" class="title" height="20" valign="center">添加日期</td>
+                <td align="middle" class="title" height="20" valign="center">操作</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_syshelplist); 
+foreach($db_syshelplist as $syshelp ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('Y/m/d H:i:s',$syshelp[create_time]);
+		$db_platform = $cfg_platform[$syshelp[platform]];
+		$db_helptype = $cfg_helptype[$syshelp[itype]];
+print <<<EOT
+-->
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx </td>
+                <td align="middle" valign="center"><input id="ids" name="ids" type="checkbox" value="$syshelp[id]" /></td>
+                <td>&nbsp;$syshelp[title]</td>
+                <td align="middle" valign="center">&nbsp;$db_platform</td>
+                <td align="middle" valign="center">&nbsp;$syshelp[module]</td>
+                <td align="middle" valign="center">&nbsp;$db_helptype</td>
+                <td align="middle" valign="center">&nbsp;$syshelp[hit_count]</td>
+                <td align="middle" valign="center">&nbsp;$cdate</td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showEditButton($syshelp[id]);
+print <<<EOT
+-->                
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+<!--
+EOT;
+}
+if($action=="new" || $action=="edit"){
+print <<<EOT
+-->
+
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　系统栏目</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+				<tr>
+					<td align=right width="25%">帮助标题：</td>
+					<td><input type="text" id="title" style="width: 261px" name="title" value="$db_syshelp[title]"><font color="red">*</font></td>
+				</tr>
+				<tr>
+					<td align=right>所属系统：</td>
+					<td>
+<!--
+EOT;
+	if(isset($db_syshelp)==false || $db_syshelp[platform]=='aff'){
+		echo '<input type="radio" id="radaff" name="platform" value="aff" checked/><label for="radaff">站长前台</label>&nbsp;&nbsp;';
+	}else{
+		echo '<input type="radio" id="radaff" name="platform" value="aff"/><label for="radaff">站长前台</label>&nbsp;&nbsp;';
+	}
+	if(isset($db_syshelp) && $db_syshelp[platform]=='sys'){
+		echo '<input type="radio" id="radsys" name="platform" value="sys" checked/><label for="radsys">管理后台</label>&nbsp;&nbsp;';
+	}else{
+		echo '<input type="radio" id="radsys" name="platform" value="sys"/><label for="radsys">管理后台</label>&nbsp;&nbsp;';
+	}	
+print <<<EOT
+-->	
+					</td>
+				</tr>
+				<tr>
+					<td align=right>所属模块：</td>
+					<td><select id="module" name="module">$op_helpmodule</select></td>
+				</tr>
+				<tr>
+					<td align=right>公告类型：</td>
+					<td>
+<!--
+EOT;
+	if(isset($db_syshelp)==false || $db_syshelp[itype]==0){
+		echo '<input type="radio" id="radtype0" name="itype" value="0" checked/><label for="radtype0">常见问题</label>&nbsp;&nbsp;';
+	}else{
+		echo '<input type="radio" id="radtype0" name="itype" value="0"/><label for="radsys"><label for="radtype0">常见问题</label>&nbsp;&nbsp;';
+	}
+	if(isset($db_syshelp) && $db_syshelp[itype]==1){
+		echo '<input type="radio" id="radtype1" name="itype" value="1" checked/><label for="radtype1">FAQ</label>&nbsp;&nbsp;';
+	}else{
+		echo '<input type="radio" id="radtype1" name="itype" value="1"/><label for="radtype1">FAQ</label>&nbsp;&nbsp;';
+	}
+print <<<EOT
+-->					
+					</td>
+				</tr>
+				<tr>
+					<td align=right>帮助内容：</td>
+					<td><textarea id="content" rows="15" cols="50" NAME="content">$db_syshelp[content]</textarea></td>
+				</tr>
+				<tr>
+					<td align=right width="25%">检索标签：</td>
+					<td><input type="text" id="tags" style="width: 261px" name="tags" value="$db_syshelp[tags]"></td>
+				</tr>				
+				<tr>
+				<td colspan="2" align="center"><input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">
+				&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				<input type="button" onclick="history.go(-1);" value=" 取消 ">
+				</td>
+				</tr>	
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+
+<script>
+	function checkfrm(){
+		if(isEmpty($('title').value)==true){
+			alert('帮助标题不能为空！');
+			$('title').focus();
+			return false;
+		}
+		return true;
+	}
+</script>
+
+<!--
+EOT;
+}?>-->

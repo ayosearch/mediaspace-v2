@@ -1,0 +1,428 @@
+<?php
+if($action=="selsite"){
+	$op_sitelist = "";
+	foreach($db_sitelist as $db_site){
+		$op_sitelist = "<option value='".$db_site[id]."'>".$db_site[name]."</option>";
+	}
+print <<<EOT
+
+<select name="site_id" id="site_id">$op_sitelist</select>
+
+EOT;
+}else{
+include_once PrintEot('header');
+if(empty($action)){
+print <<<EOT
+
+<form action="$basename" method="get" name="form">
+<input type="hidden" name="job" value="$job"/>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>站长管理 &gt;&gt; 站点信息</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+         <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("status", "0", "等待审核");
+ showPageLink("status", "1", "已审核");
+ showPageLink("status", "2", "审核未通过");
+ showPageLink("status", "3", "冻结");
+ showPageLink("enablecpc", "0", "不允许投放CPC");
+ showPageLink("enablecpc", "1", "允许投放CPC");
+print <<<EOT
+
+            </td></tr>
+         <tr>
+        <tr>
+             <td><b>快速查询：</b><select name="searchtype">
+
+EOT;
+	if(empty($searchtype) || $searchtype=="aff_id")  echo '<option value="aff_id" selected>站长ID</option>';
+    else echo '<option value="aff_id">站长ID</option>';
+	if(empty($searchtype) || $searchtype=="name")  echo '<option value="name">站点名称</option>';
+    else echo '<option value="name">站点名称</option>';
+	if(empty($searchtype) || $searchtype=="url")  echo '<option value="url">站点地址</option>';
+    else echo '<option value="url">站点地址</option>'; 
+print <<<EOT
+
+							</select>
+							<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>
+						开始时间：<input name="start_date" type="text"  class="text" readonly value="$start_date"/><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_date" type="text" class="text" readonly value="$end_date"/><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<input type="submit" value="查询" class="text"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+                                <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline"
+                                    width="17" /><span style="color: #547054"> 刷新</span></a>
+
+EOT;
+	if($canaudit==true){
+		showButton(4,'审批','javascript:showAudit("'.$admin_file.'&action=audit'.$transtr.'&curpage='.$curpage.'");');
+		showButton(5,'冻结','javascript:ConfirmDel("'.$admin_file.'&action=lock'.$transtr.'&curpage='.$curpage.'","确定冻结选中的站点吗？冻结后该站点无法投放广告");');
+	}
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">
+                    序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                
+                <td align="middle" class="title" height="20" valign="center">站长名称</td>
+                <td align="middle" class="title" height="20" valign="center">站点类型</td>
+                <td align="middle" class="title" height="20" valign="center">站点名称</td>
+                <td align="middle"  class="title" height="20" valign="center">站点地址</td>
+                <td align="middle" class="title" height="20" valign="center">日访问量</td>
+                <td align="middle" class="title" height="20" valign="center">日独立IP</td>
+                <td align="middle" class="title" height="20" valign="center">允许CPC</td>
+                <td align="middle" class="title" height="20" valign="center">允许轮播</td>
+                <td align="middle" class="title" height="20" valign="center">站点状态</td>
+                <td align="middle" class="title" height="20" valign="center">编辑</td>
+            </tr>
+
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affwebsitelist); 
+foreach($db_affwebsitelist as $affwebsite ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('Y/m/d H:i:s',$affwebsite[create_time]);
+print <<<EOT
+  
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx </td>
+                <td align="middle" class="hei" valign="center">
+                    <input id="ids" name="ids" type="checkbox" value="$affwebsite[id]" />
+                </td>
+                <td valign="middle" align="center">&nbsp;<a href="$basename?job=detail&action=affiliate&curid=$affwebsite[id]&backurl=$backurl">$affwebsite[aff_name]($affwebsite[aff_id])</a></td>
+                <td valign="middle" align="center">&nbsp;$affwebsite[sitetype]</td>
+                <td valign="middle" align="center">&nbsp;$affwebsite[name]</td>
+                <td valign="middle" align="center">&nbsp;<a href="$affwebsite[url]" target=_blank class=NoLine>$affwebsite[url]</a></td>                
+                <td valign="middle" align="center">&nbsp;$affwebsite[day_pv]</td>
+                <td valign="middle" align="center">&nbsp;$affwebsite[day_ip]</td>
+                <td valign="middle" align="center">&nbsp;
+
+EOT;
+	if($affwebsite[enable_cpc]=="0"){
+		echo "<font color=red>不允许</font>";
+	}else{
+		echo "<font color=green>允许</font>";
+	}
+print <<<EOT
+
+				</td>
+                <td valign="middle" align="center">&nbsp;
+
+EOT;
+	if($affwebsite[enable_roll]=="0"){
+		echo "<font color=red>不允许</font>";
+	}else{
+		echo "<font color=green>允许</font>";
+	}
+print <<<EOT
+
+				</td>				
+                <td valign="middle" align="center">&nbsp;
+
+EOT;
+	showStatus($affwebsite[status]);
+print <<<EOT
+
+                 </td>                   
+                <td valign="middle" align="center">&nbsp;
+
+EOT;
+	showEditButton($affwebsite[id]);
+print <<<EOT
+
+                </td>
+            </tr>
+
+EOT;
+}print <<<EOT
+
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+EOT;
+}else if($action=="new" || $action=="edit"){
+print <<<EOT
+
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong>
+			<img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　站点管理</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+                <tr>
+					<td align=right>站长：</td>
+					<td>
+					<input type="text"  id="aff_name" style="WIDTH: 150px"  value="$db_affsite[aff_name]"/>
+					<a href="javascript:void(0)" onclick="javascript:showAfflist()">
+					    <IMG border="0" align="absmiddle" style="CURSOR: hand" height="21" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle">选择站长
+					</a>
+					    <input type=hidden id="aff_id" name="aff_id" value="$db_affsite[aff_id]"/></td>
+				
+					<td align=right>站点类型：</td>
+					<td>
+						<select ID="sitetype" name="sitetype" style="WIDTH: 150px" >
+							$op_sortlist
+						</select>
+					</td>
+				</tr>
+				
+				<tr>
+					<td width="25%" align=right>站点名称：</td>
+					<td><input type="text" id="name" name="name" style="WIDTH: 150px"  value="$db_affsite[name]"/></td>
+				
+					<td align=right>站点地址：</td>
+					<td width="40%"><input type="text"  id="url" name="url" style="WIDTH: 150px"  value="$db_affsite[url]"/></td>
+				</tr>
+				<tr>
+					<td align=right>标签：</td>
+					<td><input type="text"  id="tags" name="tags" style="WIDTH: 150px" value="$db_affsite[tags]" /></td>
+					<td align=right>关键字：</td>
+					<td><input type="text"  id="keyword" name="keyword" style="WIDTH: 150px"  value="$db_affsite[keyword]"/></td>
+				</tr>
+				
+				<tr>
+					<td align=right>IP地址：</td>
+					<td><input type="text"  id="ip" name="ip" style="WIDTH: 150px"  value="$db_affsite[ip]"/></td>
+				
+					<td align=right>icp证号：</td>
+					<td><input type="text"  id="icp_code" name="icp_code" style="WIDTH: 150px" value="$db_affsite[icp_code]"/></td>
+				</tr>
+				
+				<tr>
+					<td align=right>日访问量：</td>
+					<td><input type="text"  id="day_pv" name="day_pv" style="WIDTH: 150px" value="0"  value="$db_affsite[day_pv]"/></td>
+				
+					<td align=right>日独立IP：</td>
+					<td><input type="text"  id="day_ip" name="day_ip" style="WIDTH: 150px" value="0" value="$db_affsite[day_ip]" /></td>
+				</tr>							
+				
+				<tr>
+					<td align=right>是否使用了广告代码：</td>
+					<td colspan=3>
+
+EOT;
+	if(!isset($db_affsite[ad_used]) || $db_affsite[ad_used]==0){
+		echo '<input type="radio" name="ad_used" id="ad_used" value="0" checked/>否 ';
+	}else{
+		echo '<input type="radio" name="ad_used" id="ad_used" value="0"/>否 ';
+	}
+	if(isset($db_affsite[ad_used]) && $db_affsite[ad_used]==1){
+		echo '<input type="radio" id="ad_used" name="ad_used" value="1" checked/>是 	';
+	}else{
+		echo '<input type="radio" id="ad_used" name="ad_used" value="1"/>是 	';	
+	}
+print <<<EOT
+&nbsp;&nbsp;是否允许投放CPC：
+
+EOT;
+	if(!isset($db_affsite[enable_cpc]) || $db_affsite[enable_cpc]==0){
+		echo '<input type="radio" name="enable_cpc" id="enable_cpc" value="0" checked/>否 ';
+	}else{
+		echo '<input type="radio" name="enable_cpc" id="enable_cpc" value="0"/>否 ';
+	}
+	if(isset($db_affsite[enable_cpc]) && $db_affsite[enable_cpc]==1){
+		echo '<input type="radio" id="enable_cpc" name="enable_cpc" value="1" checked/>是 	';
+	}else{
+		echo '<input type="radio" id="enable_cpc" name="enable_cpc" value="1"/>是 	';	
+	}
+print <<<EOT
+&nbsp;&nbsp;是否允许投放轮播：
+
+EOT;
+	if(!isset($db_affsite[enable_roll]) || $db_affsite[enable_roll]==0){
+		echo '<input type="radio" name="enable_roll" id="enable_roll" value="0" checked/>否 ';
+	}else{
+		echo '<input type="radio" name="enable_roll" id="enable_roll" value="0"/>否 ';
+	}
+	if(isset($db_affsite[enable_roll]) && $db_affsite[enable_roll]==1){
+		echo '<input type="radio" id="enable_roll" name="enable_roll" value="1" checked/>是 	';
+	}else{
+		echo '<input type="radio" id="enable_roll" name="enable_roll" value="1"/>是 	';	
+	}
+print <<<EOT
+
+					</td>
+				</tr>
+				<tr>
+					<td align=right>站点描述：</td>
+					<td colspan=3 style="height: 57px">
+						<textarea ID="memo" name="memo" cols="80" rows="10">$db_affsite[memo]</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" align="center">
+						<input type="submit"  id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+						<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+</body>
+</HTML>
+<script type="text/javascript">
+function checkfrm(){
+	if(isEmpty($('name').value)){
+		alert('网站名称不能为空！');
+		$('name').focus();		
+		return false;
+	}
+	if(isEmpty($('url').value)){
+		alert('网站地址不能为空！');
+		$('url').focus();
+		return false;
+	}
+	if(isEmpty($('day_pv').value)){
+	    alert('日访问量不能为空！');
+		document.all.day_pv.focus();
+		return false;
+	}
+	else if(!isInteger($('day_pv').value)){
+	    alert('日访问量必须为数字！');
+	    $('day_pv').focus();
+		return false;
+	}
+	if(isEmpty($('day_ip').value)){
+	    alert('日独立ip不能为空！');
+	    $('day_ip').focus();
+		return false;
+	}else if(isInteger($('day_ip').value)==false){
+	    alert('日独立ip必须为数字！');
+	    $('day_ip').focus();
+		return false;
+	}
+}
+</script>
+
+EOT;
+}else if($action=="audit"){
+print <<<EOT
+
+<form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
+<input type="hidden" name="action" value="auditsave"/>
+<input type="hidden" name="ids" value="$ids"/>
+<input type="hidden" name="enablecpc" value="$enablecpc"/>
+<input type="hidden" name="status" value="$status"/>
+<input type="hidden" name="curpage" value="$curpage"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>	    
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 审批站点</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="98%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+            <tbody>
+                <tr>
+					<td align="right" width="15%">审批结果<font color=red>*</font>：</td>
+					<td>
+				 		<input type="radio" name="auditstatus" id='auditstatus1' value="1" checked onclick='javascript:$("content").value="站点内容信息完整，情况属实，允许通过！";'/><label for="auditstatus1">审核通过</label> 
+				 		<input type="radio" name="auditstatus" id='auditstatus2' value="2" onclick='javascript:$("content").value="站点内容信息虚假，不允许通过！";'/><label for="auditstatus2">审核不通过</label> 
+					</td>
+				</tr>
+				<tr>
+					<td align=right>审核内容：</td>
+					<td><textarea name="content" id="content" style="width: 90%; height:55px">内容信息完整，站点情况属实，允许通过！</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="window.close();" value=" 取消"/>
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+<script>
+function checkfrm(){
+	if(isEmpty($('content').value)){
+		alert("请输入审批内容!");
+		$('content').focus();
+	}
+}
+</script>
+
+EOT;
+}}?>

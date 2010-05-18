@@ -1,0 +1,299 @@
+<!--<?php
+include_once PrintEot('header');
+if(empty($action)){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+<center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>广告主管理 &gt;&gt; 广告页面管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="97%" align=center>
+         <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("status", "0", "停止");
+ showPageLink("status", "1", "使用中");
+print <<<EOT
+-->            
+            </td></tr>    
+         <tr>
+            <td><b>快速查询：</b><select id="searchtype" name="searchtype">
+								<option value="activename" selected>活动名称</option>
+								<option value="shortname">客户简称</option>
+								<option value="name">页面名称</option>						
+							</select>
+							<input type="text" ID="searchkey" name="searchkey" class="text"/>
+							<input type="button" ID="btnQuery" class="text" value="查询" />
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canaudit==true){
+		showButton(4,'审批','javascript:showAudit("'.$admin_file.'&action=audit&status=1'.$transtr.'&curpage='.$curpage.'");');
+	}
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">
+                    序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">页面名称</td>
+                <td align="middle" class="title" height="20" valign="center">广告名称</td>
+                <td align="middle" class="title" height="20" valign="center">对应客户</td>
+                <td align="middle" class="title" height="20" valign="center">页面地址</td>
+                <td align="middle" class="title" height="20" valign="center">计划日期</td>
+                <td align="middle" class="title" height="20" valign="center">投放时间</td>
+                <td align="middle" class="title" height="20" valign="center">状态</td>
+                <td align="middle" class="title" height="20" valign="center">添加日期</td>
+                <td align="middle" class="title" height="20" valign="center">操作</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_advpagelist); 
+foreach($db_advpagelist as $db_advpage ){
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$db_advpage[create_time]);
+	$sdate = date('Y/m/d',$db_advpage[start_date]);	
+	$edate = date('Y/m/d',$db_advpage[end_date]);	
+	$shour = date('Y/m/d',$db_advpage[start_hour]);	
+	$ehour = date('Y/m/d',$db_advpage[end_hour]);
+	$db_status = $cfg_advpagestatus[$db_advpage[status]];
+print <<<EOT
+-->    
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx</td>
+                <td align="middle" valign="center">
+                    <input id="ids" name="ids" type="checkbox" value="$db_advpage[id]" />
+                </td>
+                <td align="middle" valign="center">&nbsp;$db_advpage[name]</td>
+                <td align="middle" valign="center">&nbsp;$db_advpage[adv_name]</td>
+                <td align="middle" valign="center">&nbsp;$db_advpage[mer_name]($db_advpage[mer_id])</td>
+                <td align="middle" valign="center">&nbsp;$db_advpage[url]</td>
+                <td align="middle" valign="center">&nbsp;$sdate-edate</td>
+                <td align="middle" valign="center">&nbsp;$shour-$edate</td>
+                <td align="middle" valign="center">&nbsp;$db_status</td>               
+                <td align="middle" valign="center">&nbsp;$cdate</td>
+                 <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showEditButton($db_advpage[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+<!-- 
+EOT;
+}
+if($action=="new" || $action=="edit"){
+	$op_starthour = "";
+	$op_endhour = "";
+	for($i=0;$i<24;$i++){
+		if($i<10) $hour = "0".$i;
+		else $hour = $i;
+		if(isset($db_advpage) && $db_advpage[start_hour]==$i)
+			$op_starthour .= "<option value='".$i."' selected>".$hour."</option>";
+		else
+			$op_starthour .= "<option value='".$i."'>".$hour."</option>";
+	}
+	for($i=0;$i<24;$i++){
+		if($i<10) $hour = "0".$i;
+		else $hour = $i;
+		if(isset($db_advpage) && $db_advpage[end_hour]==$i)
+			$op_endhour .= "<option value='".$i."' selected>".$hour."</option>";
+		else
+			$op_endhour .= "<option value='".$i."'>".$hour."</option>";
+	}	
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　活动页面排期</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+        <tr>			
+					<td align=right width="20%">所属广告计划：</td>
+					<td><select id="adv_id" name="adv_id" style="width:135px">$op_advlist</select></td>
+				</tr>
+				<tr>
+					<td align=right>页面名称：</td>
+					<td>
+					   <input type="text" name="name" id="name" style="WIDTH: 135px" value="$db_advpage[name]"/>
+					</td>					
+				</tr>
+				<tr>
+					<td align=right>页面地址：</td>
+					<td>
+					   <input type="text" name="url" id="url" style="WIDTH: 292px" value="$db_advpage[url]"/>
+					</td>					
+				</tr>
+				<tr>
+					<td align=right>开始时间：</td>
+					<td style="width: 322px">
+					    <input name="start_date" type="text" readonly id="start_date" value="$db_advpage[start_date]" style="WIDTH:102px" value="$db_advpage[start_date]"><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>结束时间：</td>
+					<td>
+					   <input name="end_date" type="text" readonly id="end_date"  value="$db_advpage[end_date]" style="WIDTH:102px" value="$db_advpage[end_date]"><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+					  
+					</td>					
+				</tr>				
+				<tr>
+					<td align=right>投放时段：</td>
+					<td>
+					   <select ID="start_hour" name="start_hour">$op_starthour</select>
+					   ˉ<select ID="end_hour" name="end_hour">$op_endhour</select>
+					</td>					
+				</tr>	
+				<tr>				
+					<td align=right>状态：</td>
+					<td style="width: 322px">
+<!--
+EOT;
+	if(!isset($db_advpage) || $db_advpage[status]==0){
+		echo '<input type="radio" name="status" id="status0" Value="0" checked/><label for="status0">停止</label>';
+	}else{
+		echo '<input type="radio" name="status" id="status0" Value="0"/><label for="status0">停止</label>';
+	}
+	if(isset($db_advpage) && $db_advpage[status]==1){
+		echo '<input type="radio" name="status" id="status1" Value="1" checked/><label for="status1">启用</label>';
+	}else{
+		echo '<input type="radio" name="status" id="status1" Value="1"/><label for="status1">启用</label>';
+	}	
+print <<<EOT
+-->
+					</td>
+					</tr>
+				<tr>
+					<td align=right style="height: 57px">描述：</td>
+					<td colspan=3 style="height: 57px">
+					<textarea ID="memo"  name="memo" cols="35" rows="12">$db_advpage[memo]</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" align="center">
+						<input type="submit" id="btnSubmit" value=" 确定 "  NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+
+ </TABLE>  
+ </form>
+<iframe name="hidfrm" id="hidfrm" marginWidth="0" marginHeight="0" style="display:none" ></iframe>
+</body>
+</HTML>
+<script type="text/javascript" language=javascript>
+function checkfrm()
+{
+	if(document.all.ddlMerActive.value == "0"){
+		alert('所属活动不能为空！');
+		document.all.ddlMerActive.focus();
+		event.returnValue = false;
+        return;
+	}
+	if(document.all.txtName.value == "")
+	{
+		alert('请输入页面名称！');
+		document.all.txtName.focus();
+		event.returnValue = false;
+		return;
+	}
+	if(document.all.txtUrl.value == "")
+	{
+		alert('请输入页面地址！');
+		document.all.txtUrl.focus();
+		event.returnValue = false;
+		return;
+	}
+    return true;
+}
+
+function DoCopy()
+{
+	document.all.txtCode.createTextRange().select();
+	document.selection.createRange().execCommand("Copy");
+}
+
+function CheckDate()
+{
+	document.getElementById("hidfrm").src = "../Common/getActive.aspx?ActiveID="+document.getElementById("ddlMerActive").value;
+}
+</script>
+
+
+<!--
+EOT;
+}?>-->

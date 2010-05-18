@@ -1,0 +1,386 @@
+<!--<?php
+include_once PrintEot('header');print <<<EOT
+-->
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="pay_day" id="pay_day" value="$db_sysconfig[pay_day]"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　系统全局信息</strong>
+			</TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<br/>
+<table cellspacing=0 cellpadding=0 width="98%" border=0 id="Table23" align=center>  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+        <tbody>
+              <tr>
+					<td align=left colspan=4 bgcolor="#eeeeee"><b>基本设置</b></td>
+				</tr>		        
+                <tr>
+					<td align=right>网站审核策略<font color=red>*</font>：</td>
+					<td>
+<!--
+EOT;
+	if($db_sysconfig[site_audit]=="0"){
+		echo '<input type="radio" name="site_audit" id="site_audit" value="0" checked/>自动通过 <input type="radio" id="site_audit" name="site_audit" value="1"/>人工审核';
+	}
+	if($db_sysconfig[site_audit]=="1"){
+		echo '<input type="radio" name="site_audit" id="site_audit" value="0"/>自动通过 <input type="radio" id="site_audit" name="site_audit" value="1" checked/>人工审核';
+	}
+print <<<EOT
+-->					
+						
+					</td>
+					<td align=right>广告最低单价<font color=red>*</font>：</td>
+					<td>
+						CPC-<input type="text" name="low_cpc_price" id="low_cpc_price" style="width:30px" value='$db_sysconfig[low_cpc_price]'/> 
+						CPM-<input type="text" name="low_cpm_price" id="low_cpm_price" style="width:30px" value='$db_sysconfig[low_cpm_price]'/> 
+						CPA-<input type="text" name="low_cpa_price" id="low_cpa_price" style="width:30px" value='$db_sysconfig[low_cpa_price]'/>
+						CPD-<input type="text" name="low_cpd_price" id="low_cpd_price" style="width:30px" value='$db_sysconfig[low_cpd_price]'/>
+					</td>					
+				</tr>         				
+                <tr>
+					<td align=right>每日最低限额<font color=red>*</font>：</td>
+					<td>
+						<input type="text" name="day_low_limit" id="day_low_limit" value='$db_sysconfig[day_low_limit]'/>
+					</td>
+					<td align=right>域名限制<font color=red>*</font>：</td>
+					<td>
+<!--
+EOT;
+	if($db_sysconfig[domain_audit]=="0"){
+		echo '<input type="radio" name="domain_audit" id="domain_audit" value="0" checked/>不启用 <input type="radio" id="domain_audit" name="domain_audit" value="1"/>启用';
+	}
+	if($db_sysconfig[domain_audit]=="1"){
+		echo '<input type="radio" name="domain_audit" id="domain_audit" value="0"/>不启用 <input type="radio" id="domain_audit" name="domain_audit" value="1" checked/>启用';
+	}	
+print <<<EOT
+-->				
+						
+					</td>					
+				</tr>			
+                 <tr>
+					<td align=left colspan=4 bgcolor="#eeeeee"><b>注册管理</b></td>					
+				</tr>	
+                <tr>
+					<td align=right>禁止站长注册<font color=red>*</font>：</td>
+					<td>
+<!--
+EOT;
+	if($db_sysconfig[aff_reg]=="0"){
+		echo '<input type="radio" name="aff_reg" id="aff_reg" value="0" checked/>否 <input type="radio" id="aff_reg" name="aff_reg" value="1"/>是';
+	}
+	if($db_sysconfig[aff_reg]=="1"){
+		echo '<input type="radio" name="aff_reg" id="aff_reg" value="0"/>否 <input type="radio" id="aff_reg" name="aff_reg" value="1" checked/>是';
+	}	
+print <<<EOT
+-->						
+						
+					</td>
+					<td align=right>站长注册验证<font color=red>*</font>：</td>
+					<td>
+<!--
+EOT;
+	if($db_sysconfig[aff_vcreg]=="0"){
+		echo '<input type="radio" name="aff_vcreg" id="aff_vcreg" value="0" checked/>手动审核 <input type="radio" id="aff_vcreg" name="aff_vcreg" value="1"/>EMAIL验证 <input type="radio" name="aff_vcreg" value="2"/>自动通过 ';
+	}
+	if($db_sysconfig[aff_vcreg]=="1"){
+		echo '<input type="radio" name="aff_vcreg" id="aff_vcreg" value="0"/>手动审核 <input type="radio" id="aff_vcreg" name="aff_vcreg" value="1" checked/>EMAIL验证 <input type="radio" name="aff_vcreg" value="2"/>自动通过 ';
+	}
+	if($db_sysconfig[aff_vcreg]=="2"){
+		echo '<input type="radio" name="aff_vcreg" id="aff_vcreg" value="0"/>手动审核 <input type="radio" id="aff_vcreg" name="aff_vcreg" value="1"/>EMAIL验证 <input type="radio" name="aff_vcreg" value="2" checked/>自动通过 ';
+	}	
+print <<<EOT
+-->						
+						
+					</td>							
+				</tr>
+                <tr>
+					<td align=right>站长找回密码<font color=red>*</font>：</td>
+					<td colspan="3">
+<!--
+EOT;
+	if($db_sysconfig[get_pass]=="0"){
+		echo '<input type="radio" name="get_pass" id="get_pass" value="0" onclick="javscript:showPassQuestion(0);" checked/>关闭 <input type="radio" id="get_pass" name="get_pass" value="1" onclick="javscript:showPassQuestion(1);"/>打开';
+	}
+	if($db_sysconfig[get_pass]=="1"){
+		echo '<input type="radio" name="get_pass" id="get_pass" value="0" onclick="javscript:showPassQuestion(0);"/>关闭 <input type="radio" id="get_pass" name="get_pass" value="1" checked onclick="javscript:showPassQuestion(1);"/>打开';
+	}	
+print <<<EOT
+-->
+					</td>
+				</tr>
+				<tr id="tdPassQuestion" style="display:none">
+					<td align=right>站长密码问题<font color=red>*</font>：</td>
+					<td colspan=3>
+						<textarea name="pass_question" id="pass_question" style="width:400px" rows="3"></textarea>(多个用,分开)
+					</td>					
+				</tr>				
+
+                 <tr>
+					<td align=left colspan=4 bgcolor="#eeeeee"><b>财务结算设置</b></td>					
+				</tr>	
+                <tr>
+					<td align=right>最低结算额<font color=red>*</font>：</td>
+					<td>
+						<input type="text" name="pay_low_price" id="pay_low_price" value="$db_sysconfig[pay_low_price]"/>				
+					</td>
+					<td align=right>税<font color=red>*</font>：</td>
+					<td>
+						<input type="text" name="pay_tax" id="pay_tax" style="WIDTH: 30px" value="$db_sysconfig[pay_tax]"/>%
+						手续费<font color=red>*</font>：<input type="text" id="pay_manual_fee" name="pay_manual_fee" style="WIDTH: 30px" value="$db_sysconfig[pay_manual_fee]""/>%
+					</td>					
+				</tr>													
+                <tr>
+					<td align=right>结算周期<font color=red>*</font>：</td>
+					<td colspan="3">
+<!--
+EOT;
+	if($db_sysconfig[pay_cycle]=="1"){
+		echo '<input type="radio" name="pay_cycle" id="pay_cycle" value="1" checked onclick="javscript:showPayDate(1);"/>周结 <input type="radio" id="pay_cycle" name="pay_cycle" value="2" onclick="javscript:showPayDate(2);"/>月结 <input type="radio" id="pay_cycle" name="pay_cycle" value="3" onclick="javscript:showPayDate(3);"/>季结 ';
+	}
+	if($db_sysconfig[pay_cycle]=="2"){
+		echo '<input type="radio" name="pay_cycle" id="pay_cycle" value="1" onclick="javscript:showPayDate(1);"/>周结 <input type="radio" id="pay_cycle" name="pay_cycle" value="2" checked onclick="javscript:showPayDate(2);"/>月结 <input type="radio" id="pay_cycle" name="pay_cycle" value="3" onclick="javscript:showPayDate(3);"/>季结 ';
+	}
+	if($db_sysconfig[pay_cycle]=="3"){
+		echo '<input type="radio" name="pay_cycle" id="pay_cycle" value="1" onclick="javscript:showPayDate(1);"/>周结 <input type="radio" id="pay_cycle" name="pay_cycle" value="2" onclick="javscript:showPayDate(2);"/>月结 <input type="radio" id="pay_cycle" name="pay_cycle" value="3" checked onclick="javscript:showPayDate(3);"/>季结 ';
+	}	
+print <<<EOT
+-->							
+						
+					</td>					
+				</tr>			
+                <tr id="tdPayDate1"
+<!--
+EOT;
+	if($db_sysconfig[pay_cycle]=="1") echo 'style="display:block"';
+	else echo 'style="display:none"';
+print <<<EOT
+-->				>
+					<td align=right>周结日期<font color=red>*</font>：</td>
+					<td colspan=3>
+						<select name="pay_week_day" id="pay_week_day" style="WIDTH: 120px">
+<!--
+EOT;
+	$cfg_week = array('星期一','星期二','星期三','星期四','星期五','星期六','星期日');
+	for($i=0;$i<7;$i++){
+		if("$i"==$db_sysconfig[pay_day]){
+			echo "<option value='$i' selected>".$cfg_week[$i]."</option>";
+		}else{
+			echo "<option value='$i'>".$cfg_week[$i]."</option>";
+		}
+	}
+print <<<EOT
+-->
+							</select>
+					</td>				
+				</tr>
+                <tr id="tdPayDate2"
+<!--
+EOT;
+	if($db_sysconfig[pay_cycle]=="2") echo 'style="display:block"';
+	else echo 'style="display:none"';
+print <<<EOT
+-->
+                >
+					<td align=right>月结日期<font color=red>*</font>：</td>
+					<td colspan=3><select name="pay_month_day" id="pay_month_day" style="width:80px">
+<!--
+EOT;
+	for($i=1;$i<=28;$i++){
+		if("$i"==$db_sysconfig[pay_day]){
+			echo "<option value='$i' selected>$i</option>";
+		}else{
+			echo "<option value='$i'>$i</option>";		
+		}
+	}
+print <<<EOT
+--></select>
+					</td>				
+				</tr>
+                <tr id="tdPayDate3"
+<!--
+EOT;
+	if($db_sysconfig[pay_cycle]=="3") echo 'style="display:block"';
+	else echo 'style="display:none"';	
+print <<<EOT
+-->                
+>
+					<td align=right>季结日期<font color=red>*</font>：</td>
+					<td colspan=3>
+						<input type="text" id="pay_season_day_0" name="pay_season_day_0" style="WIDTH: 80px" readonly value="$pay_season_day[0]"/><A href="javascript:OpenCalendar('pay_season_day_0', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>,
+						<input type="text" id="pay_season_day_1" name="pay_season_day_1" style="WIDTH: 80px" readonly value="$pay_season_day[1]"//><A href="javascript:OpenCalendar('pay_season_day_1', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>,
+						<input type="text" id="pay_season_day_2" name="pay_season_day_2" style="WIDTH: 80px" readonly value="$pay_season_day[2]"//><A href="javascript:OpenCalendar('pay_season_day_2', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>,
+						<input type="text" id="pay_season_day_3" name="pay_season_day_3" style="WIDTH: 80px" readonly value="$pay_season_day[3]"//><A href="javascript:OpenCalendar('pay_season_day_3', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+					</td>				
+				</tr>
+                <tr>
+					<td align=left colspan=4 bgcolor="#eeeeee"><b>默认修正设置</b></td>					
+				</tr>
+				<tr>
+					<td align=right>&nbsp;</td>
+					<td colspan=3>
+						CPC<font color=red>*</font>：<input type="text" id="cpc_deduct" name="cpc_deduct" style="WIDTH: 50px" value="$db_sysconfig[cpc_deduct]"/>%					
+						CPM<font color=red>*</font>：<input type="text" id="cpm_deduct" name="cpm_deduct" style="WIDTH: 50px" value="$db_sysconfig[cpm_deduct]"/>%
+						CPA<font color=red>*</font>：<input type="text" id="cpa_deduct" name="cpa_deduct" style="WIDTH: 50px" value="$db_sysconfig[cpa_deduct]"/>%
+						CPD<font color=red>*</font>：<input type="text" id="cpd_deduct" name="cpd_deduct" style="WIDTH: 50px" value="$db_sysconfig[cpd_deduct]"/>%
+					</td>					
+				</tr>
+                <tr>
+					<td align=left colspan=4 bgcolor="#eeeeee"><b>系统安全设置</b></td>					
+				</tr>
+                <tr>
+					<td align=right>后台登录IP限制<font color=red>*</font>：</td>
+					<td colspan=3>
+<!--
+EOT;
+	if($db_sysconfig[admin_ip_limit]=="0"){
+		echo '<input type="radio" name="admin_ip_limit" id="admin_ip_limit" value="0" checked onclick="javscript:showIpLimit(0);"/>无限制 <input type="radio" id="admin_ip_limit" name="admin_ip_limit" value="1" onclick="javscript:showIpLimit(1);"/>有限制 ';
+	}
+	if($db_sysconfig[admin_ip_limit]=="1"){
+		echo '<input type="radio" name="admin_ip_limit" id="admin_ip_limit" value="0" onclick="javscript:showIpLimit(0);"/>无限制 <input type="radio" id="admin_ip_limit" name="admin_ip_limit" value="1" checked onclick="javscript:showIpLimit(1);"/>有限制 ';
+	}
+print <<<EOT
+-->						
+								
+					</td>
+				</tr>
+				<tr id="tdIpList" style="display:none">
+					<td align=right>后台允许IP列表<font color=red>*</font>：</td>
+					<td colspan=3>
+						<textarea name="admin_ip_list" id="admin_ip_list" style="width:400px" rows="3">$db_sysconfig[admin_ip_list]</textarea>(多个用,分开)
+					</td>					
+				</tr>								
+				<tr>
+					<td colspan="4" align="center">
+					<input type="submit" id="btnSubmit" value=" 保存 ">
+					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+<script>
+
+function checkfrm(){
+	if(isEmpty($("low_cpc_price").value)==true || isInteger($("low_cpc_price").value)==false){
+		alert("广告最低单价-CPC不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("low_cpm_price").value)==true || isInteger($("low_cpm_price").value)==false){
+		alert("广告最低单价-CPM不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("low_cpa_price").value)==true || isInteger($("low_cpa_price").value)==false){
+		alert("广告最低单价-CPA不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("low_cpd_price").value)==true || isInteger($("low_cpd_price").value)==false){
+		alert("广告最低单价-CPD不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("day_low_limit").value)==true || isInteger($("day_low_limit").value)==false){
+		alert("最低结算额不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("pay_tax").value)==true || isInteger($("pay_tax").value)==false){
+		alert("税不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("pay_manual_fee").value)==true || isInteger($("pay_manual_fee").value)==false){
+		alert("手续费不能为空且为数字");
+		return false;
+	}
+	var flag = false;
+	$$('input[type="radio"][name="get_pass"]').each(function(node){
+		if(node.checked==true && node.value=="1" && isEmpty($("pass_question").value)==true){
+			alert("请输入站长密码问题，多个问题请用逗号分隔");
+			$("pass_question").focus();
+			flag = true;
+		}
+	});
+	if(flag) return false;
+	$$('input[type="radio"][name="pay_cycle"]').each(function(node){
+		if(node.checked==true && node.value=="3"){
+			flag = true;
+		}
+	});
+	if(flag){
+		if(isEmpty($("pay_season_day_0").value) || isEmpty($("pay_season_day_1").value) || isEmpty($("pay_season_day_2").value) || isEmpty($("pay_season_day_3").value)){
+			alert("季结日期必须输入完整");
+			return false;
+		}else{
+			$("pay_day").value=$("pay_season_day_0").value+","+$("pay_season_day_1").value+","+$("pay_season_day_2").value+","+$("pay_season_day_3").value;
+			flag = false;
+		}
+	}
+	if(isEmpty($("cpc_deduct").value)==true || isInteger($("cpc_deduct").value)==false){
+		alert("CPC默认修正不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("cpm_deduct").value)==true || isInteger($("cpm_deduct").value)==false){
+		alert("CPM默认修正不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("cpa_deduct").value)==true || isInteger($("cpa_deduct").value)==false){
+		alert("CPA默认修正不能为空且为数字");
+		return false;
+	}
+	if(isEmpty($("cpd_deduct").value)==true || isInteger($("cpd_deduct").value)==false){
+		alert("CPD默认修正不能为空且为数字");
+		return false;
+	}
+	$$('input[type="radio"][name="admin_ip_limit"]').each(function(node){
+		if(node.checked==true && node.value=="1") flag = true;
+	});
+	if(flag){
+		if(isEmpty($("admin_ip_list").value)==true){
+			alert("请输入管理后台允许登陆IP列表");
+			$("admin_ip_list").focus();			
+			return false;
+		}
+	}		
+}
+function showIpLimit(val){
+	if(val==1){
+		$("tdIpList").style.display="block";
+	}else{
+		$("tdIpList").style.display="none";
+	}
+}
+function showPayDate(val){
+	for(var i=1;i<=3;i++){
+		if(i==val){
+			$("tdPayDate"+i).style.display="block";
+		}else{
+			$("tdPayDate"+i).style.display="none";
+		}
+	}
+}
+function showPassQuestion(val){
+	if(val==1){
+		$("tdPassQuestion").style.display="block";
+	}else{
+		$("tdPassQuestion").style.display="none";
+	}
+	$("get_pass").value=""+val;
+}
+
+</script>
+<!--
+EOT;
+?>-->

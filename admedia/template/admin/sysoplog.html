@@ -1,0 +1,125 @@
+<!--<?php
+include_once PrintEot('header');print <<<EOT
+-->
+
+<form action="$admin_file" method="post" name="form">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>系统管理 &gt;&gt; 操作记录</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+         <tr>
+			<td width="8px">&nbsp;</td>
+            <td height=30 class="zmenu">
+				<select name="platform">
+				<option value="-1" selected>显示全部模块</option>
+				<option value="aff">站长前台</option>
+				<option value="sys">系统后台</option>
+				</select>
+				<select id='selectQuery'>
+				<option value='user_id' selected>按用户编号查询</option>
+				<option value='user_name'>按用户名查询</option>
+				<option value='op_name'>按操作名查询</option>
+				<option value='op_content'>按操作内容查询</option>
+				</select>
+				<input type="text" name="querystr" Width="107px" class="text"/>
+				<input type="button" ID="btnQuery" value="查询" class="text"/>
+			</td>
+            <td align="right" valign="center" class="zmenu">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+                                <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+						if($candel==true){
+							showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","此操作不可恢复,确认删除吗？");');
+						}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="5">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">
+                    序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">用户编号</td>
+                <td align="middle" class="title" height="20" valign="center">用户名称</td>
+                <td align="middle" class="title" height="20" valign="center">所属系统</td>
+                <td align="middle" class="title" height="20" valign="center">操作类型</td>
+                <td align="middle" class="title" height="20" valign="center">操作名称</td>    
+                <td align="middle" class="title" height="20" valign="center">
+                  <input type="button" id=allref onClick=AllWidthCss($curpage,$totalnum) value="+" /> 操作内容</td>               
+                <td align="middle" class="title" height="20" valign="center">
+                   时间</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_sysoploglist); 
+foreach($db_sysoploglist as $sysoplog ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('Y/m/d H:i:s',$sysoplog[create_time]);
+print <<<EOT
+-->
+            <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);"
+                onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx</td>
+                <td align="middle" valign="center"><input id="ids" name="ids" type="checkbox" value="$sysoplog[id]" /></td>
+                <td align="middle" valign="center">&nbsp;$sysoplog[user_id]</td>
+                <td align="middle" valign="center">&nbsp;$sysoplog[user_name]</td>
+                <td align="middle" valign="center">&nbsp;$sysoplog[platform]</td>
+                <td align="middle" valign="center">&nbsp;$sysoplog[op_type]</td>
+                <td align="middle" valign="center">&nbsp;$sysoplog[op_name]</td>
+                <td align="middle" valign="center">
+				<div id="a$curidx" style='width: 100px; overflow: hidden; text-overflow:ellipsis'>
+				<input type='button' id="b$curidx" onClick="WidthCss('a$curidx','b$curidx')" value='+' />$sysoplog[op_content]
+                </div>
+                </td>
+                <td align="middle" valign="center">&nbsp;$cdate</td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+            
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+<!--
+EOT;
+?>-->

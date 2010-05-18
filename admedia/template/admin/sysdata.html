@@ -1,0 +1,866 @@
+<!--<?php
+include_once PrintEot('header');
+if(empty($action)){
+print <<<EOT
+-->
+
+<form name="form" action="$admin_file" method="post">
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>系统管理 &gt;&gt; 数据字典</strong>
+            </td>
+        </tr>
+    </table>
+    <table cellSpacing="0" cellPadding="0" width="100%" border="0"><tr><td height="10"></td></tr></table>
+	<table cellSpacing="0" cellPadding="0" width="100%" border="0">
+		<tr>
+			<td width="10" height="30"><IMG height="8" src="$imgpath/admin/spacer.gif" width="10"></td>
+			<td valign="top" width="200">
+				<table cellspacing="8" cellpadding="0" border="0">
+					<tr><td height="1"></td></tr>
+					<tr><td>
+						<input type="radio" value="area" id="radarea" name="radList" onclick="ChangeType()"><label for="radarea">大区维护</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="province" id="radprovince" name="radList" onclick="ChangeType()"><label for="radprovince">省份维护</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="city" id="radcity" name="radList" onclick="ChangeType()"><label for="radcity">城市维护</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="sitetype" id="radsitetype" name="radList" onclick="ChangeType()"><label for="radsitetype">网站类型</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="channeltype" id="radchanneltype" name="radList" onclick="ChangeType()"><label for="radchanneltype">网站频道分类</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="advtype" id="radadvtype" name="radList" onclick="ChangeType()"><label for="radadvtype">广告分类</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="trade" id="radtrade" name="radList" onclick="ChangeType()"><label for="radtrade">行业类型</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="companyscale" id="radcompanyscale" name="radList" onclick="ChangeType()"><label for="radcompanyscale">企业规模</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="clientphase" id="radclientphase" name="radList" onclick="ChangeType()"><label for="radclientphase">客户合作阶段</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="bank" id="radbank" name="radList" onclick="ChangeType()"><label for="radbank">支付方式</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="clientsource" id="radclientsource" name="radList" onclick="ChangeType()"><label for="radclientsource">客户来源</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="unit" id="radunit" name="radList" onclick="ChangeType()"><label for="radunit">计价单位</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="advformat" id="radadvformat" name="radList" onclick="ChangeType()"><label for="radadvformat">广告格式</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="advsize" id="radadvsize" name="radList" onclick="ChangeType()"><label for="radadvsize">广告尺寸</label>
+					</td></tr>
+					<tr><td>
+						<input type="radio" value="helpmodule" id="radhelpmodule" name="radList" onclick="ChangeType()"><label for="radhelpmodule">帮助模块</label>
+					</td></tr>						
+				</table>
+			</td>
+			<td noWrap align="left" valign="top">&nbsp;&nbsp;&nbsp;&nbsp;
+			<input id="Hidden1" name="allSelect" type="hidden" value="all" />
+			<a href="javascript:DoRefresh()">
+				<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" />
+				<span style="color: #547054"> 刷新</span>
+			</a>
+<!--
+EOT;
+			if($canadd==true){
+				showButton(1,'新增','javascript:doNew("'.$admin_file.'");');
+			}
+print <<<EOT
+-->
+			<br>
+			<div id="divList"></div>
+			</td>
+			</tr>
+			</table>
+			<input id="txtID" type="hidden" name="txtID">
+			<input id="txtType" type="hidden" value="area" name="txtType">
+			<script language=javascript>
+			$('rad' + $('txtType').value).checked = true;
+			new Ajax.Updater($('divList'),"$basename", {method: 'get', parameters: "job=sysdata&action=inner&itype="+$("txtType").value+"&d="+d.getSeconds()});
+			</script>
+</form>
+
+<script language=javascript>
+function ChangeType(){	
+	var dd= new Date();
+	$('txtType').value = event.srcElement.value;
+	GetHTML("$basename?job=sysdata&action=inner&itype="+$("txtType").value+"&d="+dd.getMilliseconds(),'divList');
+}
+
+function DoRefresh(){
+	var dd= new Date();	
+	GetHTML("$basename?job=sysdata&action=inner&itype="+$("txtType").value+"&curpage="+$('curpage').value+"&d="+dd.getMilliseconds(),'divList');
+}
+
+function goPage(page){
+	var dd= new Date();	
+	GetHTML(page+"&d="+dd.getMilliseconds(),'divList');	
+}
+
+function doNew(){
+	var dd= new Date();	
+	var url = '$admin_file&action=new&itype=' + $('txtType').value+"&curpage="+$('curpage').value+"&d="+dd.getMilliseconds();
+    var JsOrder = window.showModalDialog(url,'','dialogHeight: 250px; dialogWidth: 400px; dialogTop: ' + (screen.availHeight - 250 - 30)/2
+                   + 'px; dialogLeft: ' + (screen.availWidth - 400 - 10) / 2 + 'px; edge: Raised; center: Yes; help: Yes; resizable: Yes; '
+                   + 'status: Yes;'); 
+    if(JsOrder == null){
+    	GetHTML("$basename?job=sysdata&action=inner&curpage="+$('curpage').value+"&itype="+$("txtType").value+"&d="+dd.getMilliseconds(),'divList'); 
+    }else eval(JsOrder);
+}
+
+function doEdit(id,itype){
+	var dd= new Date();	
+	var url = "$admin_file&action=edit&curid="+id+"&curpage="+$('curpage').value+"&itype="+itype+"&d="+dd.getMilliseconds();
+	var JsOrder = window.showModalDialog(url,"","dialogHeight: 180px; dialogWidth: 400px; dialogTop: " + (screen.availHeight - 380 - 30) / 2 
+					+ "px; dialogLeft:" + (screen.availWidth - 400 - 10) / 2 + "px; edge: Raised; center: Yes; help: Yes; resizable: Yes; status: Yes;");
+	if(JsOrder != null) eval(JsOrder); 
+	else{
+		GetHTML("$basename?job=sysdata&action=inner&itype="+itype+"&curpage="+$('curpage').value+"&d="+dd.getMilliseconds(),'divList');
+	} 
+}
+
+function doDel(id,itype){
+	if(confirm("确认删除吗？")){
+		var dd= new Date();	
+		var url = "$admin_file&action=del&curid="+id+"&curpage="+$('curpage').value+"&itype="+itype+"&d="+dd.getMilliseconds();
+		GetHTML(url,'divList');
+	}
+}
+
+</script>
+
+<!--
+EOT;
+}
+if($action=="inner"){
+	if($itype=="area"){
+print <<<EOT
+-->
+<div class="tab">
+<input type="hidden" id="curpage" value="$curpage"/>
+<table border="0" cellpadding="3" cellspacing="0" align=center>
+<tr>
+	<td align="middle" class="title" height="20" width="50px" valign="center">序号</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;区域名称</td>
+	<td align="middle" class="title" height="20" width="60px" valign="center">操作</td>
+</tr>
+<!--
+EOT;
+		$curidx = ($curpage-1)*$perpage;
+		$curpageidx = 0;
+		$showcount = count($db_sysdatalist); 
+		foreach($db_sysdatalist as $basearea){
+			$curidx = $curidx+1;
+			$curpageidx = $curpageidx+1;
+print <<<EOT
+-->
+<tr height="30" style="cursor: hand">
+	<td align="middle" class="hei" valign="center">$curidx</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$basearea[name]</td>
+	<td align="middle" valign="center" width="60px">&nbsp;&nbsp;
+		<a class=lanh12 href="#" onclick="javascript:doEdit('$basearea[id]','$itype');"><img align="absMiddle" alt="查看/编辑" border="0" src="$imgpath/admin/view.gif" /></a>
+		&nbsp;&nbsp;
+		<a class=lanh12 href="javascript:doDel('$basearea[id]','$itype');"><img align="absMiddle" alt="删除" border="0" src="$imgpath/admin/del.gif" /></a>
+	</td>
+</tr>
+<!--
+EOT;
+		}
+print <<<EOT
+-->
+</table>
+</div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr><td>&nbsp;</td><td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount,"goPage");
+print <<<EOT
+-->&nbsp;</td>
+        </tr>
+    </table>
+<input type="hidden" id="count" name="count" value=$showcount"/>
+
+<!--
+EOT;
+	}
+	if($itype=="province"){
+print <<<EOT
+-->
+<div class="tab">
+<input type="hidden" id="curpage" value="$curpage"/>
+<table border="0" cellpadding="3" cellspacing="0" align=center>
+<tr>
+	<td align="middle" class="title" height="20" width="50px" valign="center">序号</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;省份名称</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;大区</td>	
+	<td align="middle" class="title" height="20" valign="center">操作</td>
+</tr>
+<!--
+EOT;
+		$curidx = ($curpage-1)*$perpage;
+		$curpageidx = 0;
+		$showcount = count($db_sysdatalist); 
+		foreach($db_sysdatalist as $baseprovince ){
+			$curidx = $curidx+1;
+			$curpageidx = $curpageidx+1;
+print <<<EOT
+-->
+<tr height="30" style="cursor: hand">
+	<td align="middle" class="hei" valign="center">$curidx</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$baseprovince[name]</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$baseprovince[area_name]</td>	
+	<td align="middle" valign="center" width="60px">
+		<a class=lanh12 href='#' onclick="javascript:doEdit('$baseprovince[id]','$itype');"><img align="absMiddle" alt="查看/编辑" border="0" src="$imgpath/admin/view.gif" /></a>
+		&nbsp;<a class=lanh12 href="javascript:doDel('$baseprovince[id]','$itype');"><img align="absMiddle" alt="删除" border="0" src="$imgpath/admin/del.gif" /></a>
+	</td>
+</tr>
+<!--
+EOT;
+		}
+print <<<EOT
+-->
+</table>
+</div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr><td>&nbsp;</td><td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount,"goPage");
+print <<<EOT
+-->&nbsp;</td>
+        </tr>
+    </table>
+<input type="hidden" id="count" name="count" value=$showcount"/>
+
+<!--
+EOT;
+	}
+	if($itype=="city"){
+print <<<EOT
+-->
+<div class="tab">
+<input type="hidden" id="curpage" value="$curpage"/>
+<table border="0" cellpadding="3" cellspacing="0" align=center>
+<tr>
+	<td align="middle" class="title" height="20" width="50px" valign="center">序号</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;城市名称</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;省份</td>	
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;邮编</td>	
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;区号</td>			
+	<td align="middle" class="title" height="20" valign="center">操作</td>
+</tr>
+<!--
+EOT;
+		$curidx = ($curpage-1)*$perpage;
+		$curpageidx = 0;
+		$showcount = count($db_sysdatalist); 
+		foreach($db_sysdatalist as $basecity ){
+			$curidx = $curidx+1;
+			$curpageidx = $curpageidx+1;
+print <<<EOT
+-->
+<tr height="30"  style="cursor: hand">
+	<td align="middle" class="hei" valign="center">$curidx</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$basecity[name]</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$basecity[province_name]</td>	
+	<td align="middle" valign="center">&nbsp;&nbsp;$basecity[zip]</td>		
+	<td align="middle" valign="center">&nbsp;&nbsp;$basecity[code]</td>			
+	<td align="middle" valign="center" width="60px" >
+		<a class=lanh12 href='#' onclick="javascript:doEdit('$basecity[id]','$itype');"><img align="absMiddle" alt="查看/编辑" border="0" src="$imgpath/admin/view.gif" /></a>
+		&nbsp;<a class=lanh12 href="javascript:doDel('$basecity[id]','$itype');"><img align="absMiddle" alt="删除" border="0" src="$imgpath/admin/del.gif" /></a>
+	</td>
+</tr>
+<!--
+EOT;
+		}
+print <<<EOT
+-->
+</table></div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr><td>&nbsp;</td><td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount,"goPage");
+print <<<EOT
+-->&nbsp;</td>
+        </tr>
+    </table>
+<input type="hidden" id="count" name="count" value=$showcount"/>
+
+<!--
+EOT;
+	}
+
+	if($itype=="sitetype" || $itype=="channeltype" || $itype=="clientphase" || $itype=="clientsource" 
+		|| $itype=="companyscale" || $itype=="duty" || $itype=="sitetype" || $itype=="trade" || $itype=="unit" 
+		|| $itype=="bank" || $itype=="clientlevel" || $itype=="advtype"|| $itype=="helpmodule"|| $itype=="msgtype"){
+
+print <<<EOT
+-->
+<div class="tab">
+<input type="hidden" id="curpage" value="$curpage"/>
+<table border="0" cellpadding="3" cellspacing="0" align=center>
+<tr>
+	<td align="middle" class="title" height="20" width="50px" valign="center">序号</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;
+<!--
+EOT;
+		echo $cfg_basesort[$itype];
+print <<<EOT
+-->名称</td>	
+	<td align="middle" class="title" height="20" valign="center" width="60px">操作</td>
+</tr>
+<!--
+EOT;
+		$curidx = ($curpage-1)*$perpage;
+		$curpageidx = 0;
+		$showcount = count($db_sysdatalist); 
+		foreach($db_sysdatalist as $basesort ){
+			$curidx = $curidx+1;
+			$curpageidx = $curpageidx+1;
+print <<<EOT
+-->
+<tr height="30"  style="cursor: hand">
+	<td align="middle" class="hei" valign="center">$curidx</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$basesort[val]</td>		
+	<td align="middle" valign="center" width="60px"><a class=lanh12 href='#' onclick="javascript:doEdit('$basesort[id]','$itype');"><img align="absMiddle" alt="查看/编辑" border="0" src="$imgpath/admin/view.gif" /></a>
+		&nbsp;<a class=lanh12 href="javascript:doDel('$basesort[id]','$itype');"><img align="absMiddle" alt="删除" border="0" src="$imgpath/admin/del.gif" /></a>
+	</td>
+</tr>
+<!--
+EOT;
+		}
+print <<<EOT
+-->
+</table></div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr><td>&nbsp;</td><td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount,"goPage");
+print <<<EOT
+-->&nbsp;</td>
+        </tr>
+    </table>
+<input type="hidden" id="count" name="count" value=$showcount"/>
+
+<!--
+EOT;
+	}
+	if($itype=="advformat"){
+print <<<EOT
+-->
+<div class="tab">
+<input type="hidden" id="curpage" value="$curpage"/>
+<table border="0" cellpadding="3" cellspacing="0" align=center>
+<tr>
+	<td align="middle" class="title" height="20" width="50px" valign="center">序号</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;格式名称</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;格式说明</td>	
+	<td align="middle" class="title" height="20" width="40px" valign="center">操作</td>
+</tr>
+<!--
+EOT;
+		$curidx = ($curpage-1)*$perpage;
+		$curpageidx = 0;
+		$showcount = count($db_sysdatalist); 
+		foreach($db_sysdatalist as $baseadvformat ){
+			$curidx = $curidx+1;
+			$curpageidx = $curpageidx+1;
+print <<<EOT
+-->
+<tr height="30" style="cursor: hand">
+	<td align="middle" class="hei" valign="center">$curidx</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$baseadvformat[format]</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$baseadvformat[memo]</td>		
+	<td align="middle" valign="center">&nbsp;&nbsp;
+		<a class=lanh12 href='#' onclick="javascript:doEdit('$baseadvformat[id]','$itype');"><img align="absMiddle" alt="查看/编辑" border="0" src="$imgpath/admin/view.gif" /></a>
+		&nbsp;&nbsp;
+		<a class=lanh12 href="javascript:doDel('$baseadvformat[id]','$itype');"><img align="absMiddle" alt="删除" border="0" src="$imgpath/admin/del.gif" /></a>
+	</td>
+</tr>
+<!--
+EOT;
+		}
+print <<<EOT
+-->
+</table></div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr><td>&nbsp;</td><td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount,"goPage");
+print <<<EOT
+-->&nbsp;</td>
+        </tr>
+    </table>
+<input type="hidden" id="count" name="count" value=$showcount"/>
+
+<!--
+EOT;
+	}
+	if($itype=="advsize"){
+print <<<EOT
+-->
+<div class="tab">
+<input type="hidden" id="curpage" value="$curpage"/>
+<table border="0" cellpadding="3" cellspacing="0" align=center>
+<tr>
+	<td align="middle" class="title" height="20" width="50px" valign="center">序号</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;宽度</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;高度</td>
+	<td align="middle" class="title" height="20" valign="center">&nbsp;&nbsp;说明</td>	
+	<td align="middle" class="title" height="20" valign="center">操作</td>
+</tr>
+<!--
+EOT;
+		$curidx = ($curpage-1)*$perpage;
+		$curpageidx = 0;
+		$showcount = count($db_sysdatalist); 
+		foreach($db_sysdatalist as $baseadvsize ){
+			$curidx = $curidx+1;
+			$curpageidx = $curpageidx+1;
+print <<<EOT
+-->
+<tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+	<td align="middle" class="hei" valign="center">$curidx</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$baseadvsize[width]</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$baseadvsize[height]</td>
+	<td align="middle" valign="center">&nbsp;&nbsp;$baseadvsize[memo]</td>			
+	<td align="middle" valign="center" width="60px">
+		<a class=lanh12 href='#' onclick="javascript:doEdit('$baseadvsize[id]','$itype');"><img align="absMiddle" alt="查看/编辑" border="0" src="$imgpath/admin/view.gif" /></a>
+		&nbsp;&nbsp;
+		<a class=lanh12 href="javascript:doDel('$baseadvsize[id]','$itype');"><img align="absMiddle" alt="删除" border="0" src="$imgpath/admin/del.gif" /></a>
+	</td>
+</tr>
+<!--
+EOT;
+		}
+print <<<EOT
+-->
+</table></div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr><td>&nbsp;</td><td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount,"goPage");
+print <<<EOT
+-->&nbsp;</td>
+        </tr>
+    </table>
+<input type="hidden" id="count" name="count" value=$showcount"/>
+
+<!--
+EOT;
+	}
+}
+if($action=="new" || $action=="edit"){
+	if($itype=="area"){
+print <<<EOT
+-->
+<table cellspacing="0" cellpadding="0" width="100%" border=0 id="table22">
+	<tbody>
+		<tr >
+			<td class="tittab" background="$imgpath/admin/menu_bg.gif"><strong>
+			<img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑 大区</strong></td>
+		</tr>
+	</tbody>
+</table>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="itype" value="$itype"/>
+<input type="hidden" name="curid" value="$curid"/>
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+			<tr>
+				<td align=right>大区名称：</td>
+				<td colspan=3><input type="text" id="name" style="WIDTH: 261px" name="name" value="$db_basearea[name]"/></td>
+			</tr>
+			<tr>
+				<td colspan="4" align="center">
+				<input type="submit" id="btnSubmit" value=" 确定 " name="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				<input type="button" onclick="window.close();" value=" 取消 ">
+				</td>
+			</tr>			     
+    	</tbody>
+ 		</table>
+ 		</div>
+ 		</td>
+  	  </tr>
+ 	</tbody>
+</form>
+</table>
+<script>
+function checkfrm(){
+	if(isEmpty($("name").value)==true){
+		alert("请输入大区名称！");
+		$("name").focus();
+		return false;
+	}
+	return true;
+}
+</script>
+<!--
+EOT;
+	}
+	if($itype=="province"){
+print <<<EOT
+-->
+
+<table cellspacing="0" cellpadding="0" width="100%" border=0 id="table22">
+	<tbody>
+		<tr >
+			<td class="tittab" background="$imgpath/admin/menu_bg.gif"><strong>
+			<img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑 省份</strong></td>
+		</tr>
+	</tbody>
+</table>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="itype" value="$itype"/>
+<input type="hidden" name="curid" value="$curid"/>
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+			<tr>
+				<td align=right>省份名称：</td>
+				<td colspan=3><input type="text" id="name" style="WIDTH: 261px" name="name" value="$db_baseprovince[name]"/></td>
+			</tr>
+			<tr>
+				<td align=right>所属大区：</td>
+				<td colspan=3>
+				<select id="area_id" style="WIDTH: 261px" name="area_id">
+<!--
+EOT;				
+				echo $op_arealist;
+print <<<EOT
+-->				
+				</select>
+				</td>
+			</tr>			
+			<tr>
+				<td colspan="4" align="center">
+				<input type="submit" id="btnSubmit" value=" 确定 " name="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				<input type="button" onclick="window.close();" value=" 取消 ">
+				</td>
+			</tr>			     
+    	</tbody>
+ 		</table>
+ 		</div>
+ 		</td>
+  	  </tr>
+ 	</tbody>
+ </form> 	
+</table>
+<script>
+function checkfrm(){
+	if(isEmpty($("name").value)==true){
+		alert("请输入省份名称！");
+		$("name").focus();
+		return false;
+	}
+	if(isEmpty($("area_id").value)==true){
+		alert("请选择大区！");
+		$("area_id").focus();
+		return false;
+	}	
+	return true;
+}
+</script>
+ <!--
+EOT;
+	}
+	if($itype=="city"){
+print <<<EOT
+-->
+<table cellspacing="0" cellpadding="0" width="100%" border=0 id="table22">
+	<tbody>
+		<tr >
+			<td class="tittab" background="$imgpath/admin/menu_bg.gif"><strong>
+			<img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑 城市</strong></td>
+		</tr>
+	</tbody>
+</table>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="itype" value="$itype"/>
+<input type="hidden" name="curid" value="$curid"/> 
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+			<tr>
+				<td align=right>城市名称：</td>
+				<td colspan=3><input type="text" id="name" style="WIDTH: 261px" name="name" value="$db_basecity[name]"/><font color="red">*</font></td>
+			</tr>
+			<tr>
+				<td align=right>所属省份：</td>
+				<td colspan=3>
+				<select id="province_id" style="WIDTH: 261px" name="province_id">
+<!--
+EOT;				
+				echo $op_provincelist;
+print <<<EOT
+--></select><font color="red">*</font></td>
+			</tr>
+			<tr>
+				<td align=right>邮政编码：</td>
+				<td colspan=3><input type="text" id="zip" style="WIDTH: 261px" name="zip" value="$db_basecity[zip]"/></td>
+			</tr>
+			<tr>
+				<td align=right>城市区号：</td>
+				<td colspan=3><input type="text" id="code" style="WIDTH: 261px" name="code" value="$db_basecity[code]"/></td>
+			</tr>			
+			<tr>
+				<td colspan="4" align="center">
+				<input type="submit" id="btnSubmit" value=" 确定 " name="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				<input type="button" onclick="window.close();" value=" 取消 ">
+				</td>
+			</tr>			     
+    	</tbody>
+ 		</table>
+ 		</div>
+ 		</td>
+  	  </tr>
+ 	</tbody>
+ </form> 	
+</table>
+<script>
+function checkfrm(){
+	if(isEmpty($("name").value)==true){
+		alert("请输入城市名称！");
+		$("name").focus();
+		return false;
+	}
+	if(isEmpty($("province_id").value)==true){
+		alert("请选择省份！");
+		$("province_id").focus();
+		return false;
+	}	
+	return true;
+}
+</script>
+ <!--
+EOT;
+	}
+	if($itype=="advformat"){
+print <<<EOT
+-->
+<table cellspacing="0" cellpadding="0" width="100%" border=0 id="table22">
+	<tbody>
+		<tr >
+			<td class="tittab" background="$imgpath/admin/menu_bg.gif"><strong>
+			<img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑 广告格式</strong></td>
+		</tr>
+	</tbody>
+</table>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="itype" value="$itype"/>
+<input type="hidden" name="curid" value="$curid"/>
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+			<tr>
+				<td align=right>格式名称：</td>
+				<td colspan=3><input type="text" id="format" style="WIDTH: 261px" name="format" value="$db_baseadvformat[format]"/></td>
+			</tr>
+			<tr>
+				<td colspan="4" align="center">
+				<input type="submit" id="btnSubmit" value=" 确定 " name="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				<input type="button" onclick="window.close();" value=" 取消 ">
+				</td>
+			</tr>
+    	</tbody>
+ 		</table>
+ 		</div>
+ 		</td>
+  	  </tr>
+ 	</tbody>
+ </form> 	
+</table>
+<script>
+function checkfrm(){
+	if(isEmpty($("format").value)==true){
+		alert("请输入格式名称！");
+		$("format").focus();
+		return false;
+	}
+	return true;
+}
+</script>
+ <!--
+EOT;
+	}
+	if($itype=="advsize"){
+print <<<EOT
+-->
+<table cellspacing="0" cellpadding="0" width="100%" border=0 id="table22">
+	<tbody>
+		<tr >
+			<td class="tittab" background="$imgpath/admin/menu_bg.gif"><strong>
+			<img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑 广告尺寸</strong></td>
+		</tr>
+	</tbody>
+</table>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="itype" value="$itype"/>
+<input type="hidden" name="curid" value="$curid"/>
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+			<tr>
+				<td align=right>宽度：</td>
+				<td colspan=3><input type="text" id="width" style="WIDTH: 261px" name="width" value="$db_baseadvsize[width]"/><font color="red">*</font></td>
+			</tr>
+			<tr>
+				<td align=right>高度：</td>
+				<td colspan=3><input type="text" id="height" style="WIDTH: 261px" name="height" value="$db_baseadvsize[height]"/><font color="red">*</font></td>
+			</tr>	
+			<tr>
+				<td align=right>说明：</td>
+				<td colspan=3><input type="text" id="memo" style="WIDTH: 261px" name="memo" value="$db_baseadvsize[memo]"/></td>
+			</tr>						
+			<tr>
+				<td colspan="4" align="center">
+				<input type="submit" id="btnSubmit" value=" 确定 " name="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				<input type="button" onclick="window.close();" value=" 取消 ">
+				</td>
+			</tr>
+    	</tbody>
+ 		</table>
+ 		</div>
+ 		</td>
+  	  </tr>
+ 	</tbody>
+ </form> 	
+</table>
+<script>
+function checkfrm(){
+	if(isEmpty($("width").value)==true){
+		alert("请输入宽度！");
+		$("width").focus();
+		return false;
+	}
+	if(isEmpty($("height").value)==true){
+		alert("请输入高度！");
+		$("height").focus();
+		return false;
+	}		
+	return true;
+}
+</script>
+ <!--
+EOT;
+	}
+	if($itype=="sitetype" || $itype=="channeltype" || $itype=="clientphase" || $itype=="clientsource" 
+		|| $itype=="companyscale" || $itype=="duty" || $itype=="sitetype" || $itype=="trade" || $itype=="unit" 
+		|| $itype=="bank" || $itype=="clientlevel" || $itype=="advtype" || $itype=="helpmodule"|| $itype=="msgtype"){
+print <<<EOT
+-->
+<table cellspacing="0" cellpadding="0" width="100%" border=0 id="table22">
+	<tbody>
+		<tr >
+			<td class="tittab" background="$imgpath/admin/menu_bg.gif"><strong>
+			<img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑
+<!--
+EOT;
+		echo $cfg_basesort[$itype];
+print <<<EOT
+-->			 
+		</strong></td>
+		</tr>
+	</tbody>
+</table>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="itype" value="$itype"/>  
+<input type="hidden" name="ikey" value="$itype"/> 
+<input type="hidden" name="curid" value="$curid"/> 
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+			<tr>
+				<td align=right>
+<!--
+EOT;
+	$sortname = $cfg_basesort[$itype];
+	echo $sortname;
+print <<<EOT
+-->名称：</td>
+				<td colspan=3><input type="text" id="val" style="WIDTH: 261px" name="val" value="$db_basesort[val]"/></td>
+			</tr>
+			<tr>
+				<td colspan="4" align="center">
+				<input type="submit" id="btnSubmit" value=" 确定 " name="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+				<input type="button" onclick="window.close();" value=" 取消 ">
+				</td>
+			</tr>
+    	</tbody>
+ 		</table>
+ 		</div>
+ 		</td>
+  	  </tr>
+ 	</tbody>
+ </form> 	
+</table>
+<script>
+function checkfrm(){
+	if(isEmpty($("val").value)==true){
+		alert("请输入$sortname名称！");
+		$("val").focus();
+		return false;
+	}
+	return true;
+}
+</script>
+
+<!-- 
+EOT;
+	}
+}
+print <<<EOT
+-->
+ 
+
+<!--
+EOT;
+?>-->

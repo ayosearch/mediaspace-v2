@@ -1,0 +1,374 @@
+<!--<?php
+include_once PrintEot('header');
+if($action=="new" || $action=="edit"){
+print <<<EOT
+-->
+<form name="form" id="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　服务商</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+				<tr>
+					<td align=right>公司名称<font color=red>*</font>：</td>
+					<td><input type="text" id="company" style="WIDTH: 230px" NAME="company" value="$db_merchant[company]"></td>
+				
+					<td align=right>企业规模<font color=red>*</font>：</td>
+					<td>
+					    <select ID="scale" name="scale">$op_scalelist</select>			
+					</td>
+				</tr>
+				<tr>
+					<td align=right>客户简称<font color=red>*</font>：</td>
+					<td><input type="text" id="short_name" style="WIDTH: 120px" NAME="short_name" value="$db_merchant[short_name]"></td>
+				
+					<td align=right>客户Logo：</td>
+					<td><INPUT id="logo_file" contentEditable="false" type="file" name="logo_file" style="width: 235px; height: 21px" /></td>
+				</tr>
+				<tr>
+					<td align=right>营业执照号码：</td>
+					<td><input type="text" id="biz_code" style="WIDTH: 120px" NAME="biz_code" value="$db_merchant[biz_code]">
+					</td>
+				
+					<td align=right>网站地址：</td>
+					<td><input type="text" id="url" name="url" style="WIDTH: 230px" value="$db_merchant[url]"></td>
+				</tr>
+				<tr>
+					<td align=right>开票抬头：</td>
+					<td><input type="text" id="ticket_title" name="ticket_title" style="WIDTH: 230px" value="$db_merchant[ticket_title]"></td>
+				
+					<td align=right>所在地区：</td>
+					<td><div id="divCity"><SELECT id="province_id" style="WIDTH: 75px" onchange=updateCity(this); name="province_id">$op_provincelist</SELECT><SELECT id="city_id" style="WIDTH: 75px" name="city_id">$op_citylist</SELECT></div>
+				</tr>
+				<tr>
+					<td align=right>邮政编码：</td>
+					<td><input type="text" id="zip" name="zip" style="WIDTH: 120px" value="$db_merchant[zip]">
+					</td>
+				
+					<td align=right>详细地址：</td>
+					<td><input type="text" id="address" name="address" style="WIDTH: 230px" value="$db_merchant[address]"></td>
+				</tr>
+				<tr>
+					<td align=right>所属行业：</td>
+					<td><div class="select">
+					    <select ID="trade" name="trade">$op_tradelist</select>
+						</div>
+					</td>
+				
+					<td align=right>客户来源：</td>
+					<td><div class="select">
+						<select ID="client_source" name="client_source" style="WIDTH: 120px">$op_sourcelist</select>
+						</div>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>当前阶段：</td>
+					<td><div class="select">
+					    <select ID="phase" name="phase" style="WIDTH: 120px">$op_phaselist</select>
+						</div>
+					</td>
+				
+					<td align=right>信誉度：</td>
+					<td><input type="text" id="credit" name="credit" value="100" style="WIDTH: 120px" value="$db_merchant[credit]"/></td>					
+				</tr>
+				<tr>
+					<td align=right>客户种类：</td>
+					<td><div class="select">
+<!--
+EOT;
+	if(!isset($db_merchant) && $db_merchant[client_type]==0){
+		echo '<input type="radio" ID="client_type" name="client_type" value="0" checked/><label for="client_type">潜在客户</lable>';
+	}else{
+		echo '<input type="radio" ID="client_type" name="client_type" value="0"/><label for="client_type">潜在客户</lable>';
+	}
+	if($db_merchant[client_type]==1){
+		echo '<input type="radio" ID="client_type" name="client_type" value="1" checked/><label for="client_type">正常客户</lable>';
+	}else{
+		echo '<input type="radio" ID="client_type" name="client_type" value="1"/><label for="client_type">正常客户</lable>';
+	}
+	if($db_merchant[client_type]==2){
+		echo '<input type="radio" ID="client_type" name="client_type" value="2" checked/><label for="client_type">失效客户</lable>';
+	}else{
+		echo '<input type="radio" ID="client_type" name="client_type" value="2"/><label for="client_type">失效客户</lable>';
+	}	
+print <<<EOT
+-->
+					    </div>
+					</td>
+					<td align=right>销售人员：</td>
+					<td>
+					    <select ID="seller" name="seller" style="WIDTH: 120px">$op_sellerlist</select>
+					</td>
+				</tr>
+				<tr>
+					<td align=right style="height: 57px">备注：</td>
+					<td colspan=3 style="height: 57px">
+					<textarea ID="memo" name="memo" style="Height:51px;Width=431px">$db_merchant[memo]</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td colspan="4" align="center">
+						<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+						<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+
+ </form>
+<script language=javascript>
+function checkfrm(){
+	if(isEmpty($('company').value)){
+		alert('公司名称不能为空！');
+		$('company').focus();
+		return false;
+	}	
+	if(isEmpty($('short_name').value)){
+		alert('客户简称不能为空！');
+		$('short_name').focus();
+		return false;
+	}
+    return true;
+}
+</script>
+<!--
+EOT;
+}else if(empty($action)){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>广告主管理 &gt;&gt; 用户管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+        <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("itype", "0", "潜在客户");
+ showPageLink("itype", "1", "正常客户");
+ showPageLink("itype", "2", "失效客户");
+ showPageLink("status", "0", "等待审核");
+ showPageLink("status", "1", "已审核");
+ showPageLink("status", "2", "审核未通过");
+ showPageLink("status", "3", "黑名单"); 
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+            <td><b>快速查询：</b><select id="searchtype">
+                                <option value="login_name" selected>用户名</option>
+								<option value="company">公司名称</option>
+								<option value="short_name">客户简称</option>
+								<option value="url">网站地址</option>
+								<option value="seller_name">销售代表</option>						
+							</select>
+							<input type="text" name="searchkey" class="text" value="$searchkey"/>
+							<input type="button" ID="btnQuery" class="text" value="查询"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+	<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canaudit==true){
+		showButton(4,'审批','javascript:showAudit("'.$admin_file.'&action=audit'.$transtr.'&curpage='.$curpage.'");');
+	}
+	if($canadd==true){
+		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">用户简称</td>
+                <td align="middle" class="title" height="20" valign="center">用户种类</td>
+                <td align="middle" class="title" height="20" valign="center">地区</td>
+                <td align="middle" class="title" height="20" valign="center">所属行业</td>
+                <td align="middle" class="title" height="20" valign="center">网址</td>                               
+                <td align="middle" class="title" height="20" valign="center">销售</td>
+                <td align="middle" class="title" height="20" valign="center">添加日期</td>
+                <td align="middle" class="title" height="20" valign="center">状态</td>                  
+                <td align="middle" class="title" height="20" valign="center">操作</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_merlist); 
+foreach($db_merlist as $merchant ){
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$merchant[create_time]);
+print <<<EOT
+-->      
+            <tr height="20"onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" height="20">$curidx </td>
+                <td align="middle" valign="center">
+                <input id="ids" name="ids" type="checkbox" value="$merchant[id]" />
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showLink($basename."?job=detail&action=merchant",$merchant[id],$merchant[short_name]);
+print <<<EOT
+-->                
+                </td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showClientType($merchant[client_type]);
+print <<<EOT
+-->                     
+                </td>
+                <td align="middle" valign="center">&nbsp;$merchant[province_name]-$merchant[city_name]</td>
+                <td align="middle" valign="center">&nbsp;$merchant[trade]</td>
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showUrl($merchant[url]);
+print <<<EOT
+-->                
+                </td>             
+                <td align="middle" valign="center">&nbsp;$merchant[seller_name]</td>
+                <td align="middle" valign="center" width="145px">&nbsp;$cdate</td>
+                <td align="middle" valign="center" width="55px">    
+<!--
+EOT;
+	showStatus($merchant[status]);
+print <<<EOT
+-->                               
+                </td>                   
+                <td align="middle" valign="center">&nbsp;
+<!--
+EOT;
+	showEditButton($merchant[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+            
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>&nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+<!--
+EOT;
+}else if($action=="audit"){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
+<input type="hidden" name="action" value="auditsave"/>
+<input type="hidden" name="ids" value="$ids"/>
+<input type="hidden" name="source" value="$source"/>
+<input type="hidden" name="status" value="$status"/>
+<input type="hidden" name="curpage" value="$curpage"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>	    
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 审批广告主</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="98%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+            <tbody>
+                <tr>
+					<td align="right" width="15%">审批结果<font color=red>*</font>：</td>
+					<td>
+				 		<input type="radio" name="auditstatus" id='auditstatus1' value="1" checked onclick='javascript:$("content").value="广告主内容信息完整，情况属实，信用良好，允许通过！";'/><label for="auditstatus1">审核通过</label> 
+				 		<input type="radio" name="auditstatus" id='auditstatus2' value="2" onclick='javascript:$("content").value="广告主内容信息虚假，口碑恶劣，不允许通过！";'/><label for="auditstatus2">审核不通过</label> 
+					</td>
+				</tr>
+				<tr>
+					<td align=right>审核内容：</td>
+					<td><textarea name="content" id="content" style="width: 90%; height:55px">广告主内容信息完整，情况属实，信用良好，允许通过！</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="window.close();" value=" 取消"/>
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+<script>
+function checkfrm(){
+	if(isEmpty($('content').value)){
+		alert("请输入审批内容!");
+	}
+}
+</script>
+<!--
+EOT;
+}
+?>
