@@ -20,9 +20,6 @@ if($action=="del"){
 	}else if($itype=="advsize"){	
 		$objCommData = LOAD::loadDB("CommonData");
 		$objCommData->deleteBaseAdvSize($curid);
-	}else if($itype=="advsize"){	
-		$objCommData = LOAD::loadDB("CommonData");
-		$objCommData->deleteBaseAdvSize($curid);
 	}else{
 		$objCommData = LOAD::loadDB("CommonData");
 		$objCommData->deleteBaseSort($curid,$itype);
