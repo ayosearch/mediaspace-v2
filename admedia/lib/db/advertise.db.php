@@ -109,9 +109,9 @@ class PM_AdvertiseDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$sql = "SELECT * FROM pm_advcreative";
+		$sql = "SELECT a.*,b.name as adv_name,c.short_name as mer_name FROM pm_advcreative a,pm_advertise b,pm_merchant c where a.mer_id=c.id and a.adv_id=b.id ";
 		if($stwhere!=null)
-			$sql = $sql." where ".$stwhere;
+			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
 		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
@@ -127,11 +127,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}		
 	
 	function getAdvCreativeStruct() {
-		return array('id','mer_id','name','memo','contract_id','advtype_id','aff_count','status','spread_id','money_state',
-		'day_maxmoney','pay_cycle','audit_type','layer','sitetype_ids','sel_sitetype','cust_link','start_time','end_time',
-		'creative_count','create_time','bill_url','sys_correct','use_gateway','fee_type','clicked_show','max_crt','rec_cookie',
-		'filter_linkip','filter_agentip','filter_foreignip','is_view','is_click','is_rolling','mer_onlyfee','is_weal','page_id',
-		'logo','area_list','site_level','append_icon','deduct','is_selector');
+		return array('id','mer_id','adv_id','name','content_type','res_content','adsort','adsize','create_time','update_time','page_id','creator_id','creator_user','sysaudit_id','memo','status');
 	}
 	
 	function _checkAdvCreativeData($data){
