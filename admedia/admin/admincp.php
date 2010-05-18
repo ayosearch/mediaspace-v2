@@ -519,6 +519,36 @@ function loadBaseSortList($key,$selval=null){
 	return $op_basesortlist;
 }
 
+function loadBaseAdvFormat($format=null){
+	global $objCommData;
+	$db_advformatlist = $objCommData->getBaseAdvFormatAll();
+	$op_advformatlist = "";
+	foreach($db_advformatlist as $db_advformat){
+		if($format==$db_advformat[format]){
+			$op_advformatlist .= "<option value='$db_advformat[format]' selected>$db_advformat[format]</option>";
+		}else{
+			$op_advformatlist .= "<option value='$db_advformt[format]'>$db_advformat[format]</option>";
+		}
+	}
+	unset($db_advformatlist,$db_advformat);
+	return $op_advformatlist;
+}
+
+function loadBaseAdvSize($adsize=null){
+	global $objCommData;
+	$db_advsizelist = $objCommData->getBaseAdvSizeAll();
+	$op_advsizelist = "";
+	foreach($db_advsizelist as $db_advsize){
+		if($adsize==$db_advsize[height].'X'.$db_advsize[width]){
+			$op_advsizelist .= "<option value='".$db_advsize[height]."X".$db_advsize[width]."' selected>".$db_advsize[height]."X".$db_advsize[width]."</option>";
+		}else{
+			$op_advsizelist .= "<option value='".$db_advsize[height]."X".$db_advsize[width]."'>".$db_advsize[height]."X".$db_advsize[width]."</option>";
+		}
+	}
+	unset($objCommData,$db_advsizelist,$db_advsize);
+	return $op_advsizelist;
+}
+
 function showEditButton($curid){
 	global $canedit,$admin_file,$curpage,$transtr,$imgpath;
 	if($canedit){
