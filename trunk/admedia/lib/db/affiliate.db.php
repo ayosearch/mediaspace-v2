@@ -21,7 +21,7 @@ class  PM_AffiliateDB extends BaseDB{
 		if($sysaudit_id==0)
 			$sql = "update pm_affiliate set status=".intval($status).",audit_time=$timestamp where id in (".$id.")";
 		else
-			$sql = "update pm_affiliate set status=".intval($status).",audit_time=$timestamp, sysaudit_id=".intval($sysaudit_id)." where id in (".$id.")";		
+			$sql = "update pm_affiliate set status=".intval($status).",audit_time=$timestamp, sysaudit_id=".intval($sysaudit_id)." where id in (".$id.")";
 		$this->_db->update($sql);
 		return $this->_db->affected_rows();
 	}
