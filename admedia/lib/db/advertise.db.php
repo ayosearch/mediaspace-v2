@@ -18,6 +18,28 @@ class PM_AdvertiseDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function updateAdvertiseStatus($id,$sysaudit_id=0,$status){
+		global $timestamp;
+		if($sysaudit_id==0)
+			$sql = "update pm_advertise set audit=".intval($status).",audit_time=$timestamp where id in (".$id.")";
+		else
+			$sql = "update pm_advertise set audit=".intval($status).",audit_time=$timestamp, sysaudit_id=".intval($sysaudit_id)." where id in (".$id.")";
+		$this->_db->update($sql);
+		return $this->_db->affected_rows();
+	}
+	
+	function updateAdvertiseShow($curid){
+		$sql = "update pm_advertise set log_v_created=1 where id=".intval($curid);
+		$this->_db->update($sql);
+		return $this->_db->affected_rows();
+	}
+	
+	function updateAdvertiseClick($curid){
+		$sql = "update pm_advertise set log_c_created=1 where id=".intval($curid);
+		$this->_db->update($sql);
+		return $this->_db->affected_rows();
+	}
+	
 	function deleteAdvertise($id){
 		$this->_db->update("DELETE FROM pm_advertise WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -127,7 +149,8 @@ class PM_AdvertiseDB extends BaseDB{
 	}		
 	
 	function getAdvCreativeStruct() {
-		return array('id','mer_id','adv_id','name','content_type','res_content','adsort','adsize','create_time','update_time','page_id','creator_id','creator_user','sysaudit_id','memo','status');
+		return array('id','mer_id','adv_id','name','content_type','res_content','adsort','adsize','create_time','update_time','page_id','creator_id',
+		'creator_user','sysaudit_id','memo','status');
 	}
 	
 	function _checkAdvCreativeData($data){

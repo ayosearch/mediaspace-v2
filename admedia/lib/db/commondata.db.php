@@ -342,6 +342,12 @@ class PM_CommonDataDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function getBaseAdvFormatAll(){
+		$sql = "select * from pm_baseadvformat";
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);	
+	}
+	
 	function getBaseAdvFormat($id){
 		$data = $this->_db->get_one("SELECT * FROM pm_baseadvformat WHERE id=".intval($id));
 		if (!$data) return null;
