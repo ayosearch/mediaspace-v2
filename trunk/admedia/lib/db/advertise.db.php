@@ -107,15 +107,16 @@ class PM_AdvertiseDB extends BaseDB{
 	
 	//广告创意----------------------------------------------------------------------------------------------------
 	function insertAdvCreative($fieldsData){
-		$fieldsData = $this->_checkAdvertiseData($fieldsData);
+		$fieldsData = $this->_checkAdvCreativeData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_advcreative SET " . $this->_getUpdateSqlString($fieldsData));
+		$sql = "INSERT INTO pm_advcreative SET " . $this->_getUpdateSqlString($fieldsData);
+		$this->_db->update($sql);
 		$insertId = $this->_db->insert_id();
 		return $insertId;
 	}
 	
 	function updateAdvCreative($id,$updateData){
-		$updateData = $this->_checkAdvertiseData($updateData);
+		$updateData = $this->_checkAdvCreativeData($updateData);
 		if (!$updateData) return null;
 		$this->_db->update("UPDATE pm_advcreative SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -155,8 +156,8 @@ class PM_AdvertiseDB extends BaseDB{
 	}		
 	
 	function getAdvCreativeStruct() {
-		return array('id','mer_id','adv_id','name','content_type','res_content','adsort','adsize','create_time','update_time','page_id','creator_id',
-		'creator_user','sysaudit_id','memo','status');
+		return array('mer_id','adv_id','name','content_type','res_content','adformat','adsize','create_time','update_time','page_id','creator_id',
+		'creator_user','sysaudit_id','memo','status','audit');
 	}
 	
 	function _checkAdvCreativeData($data){
@@ -175,7 +176,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}
 	
 	function updateAdvPages($id,$updateData){
-		$updateData = $this->_checkAdvertiseData($updateData);
+		$updateData = $this->_checkAdvPagesData($updateData);
 		if (!$updateData) return null;
 		$this->_db->update("UPDATE pm_advpages SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -191,6 +192,11 @@ class PM_AdvertiseDB extends BaseDB{
 		if (!$data) return null;
 		return $data;
 	}
+	
+	function getAdvPagesList($status){
+		$query = $this->_db->query("SELECT * FROM pm_advpages WHERE status=".intval($status));
+		return $this->_getAllResultFromQuery($query);	
+	}	
 	
 	function getAdvPagesPageList($page, $perPage,$stwhere=null,$storderby=null){
 		$page = intval($page);
