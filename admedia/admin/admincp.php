@@ -504,6 +504,21 @@ function loadAdvertiseList($status,$selid=null){
 	return $op_advlist;
 }
 
+function loadAdvPagesList($status,$selid=null){
+	global $objAdvertise;
+	$db_advpagelist = $objAdvertise->getAdvPagesList($status);
+	$op_advpagelist = "";
+	foreach($db_advpagelist as $db_advpage){
+		if($selid==$db_advpage[val]){
+			$op_advpagelist .= "<option value='$db_advpage[id]' selected>$db_advpage[name]</option>";
+		}else{
+			$op_advpagelist .= "<option value='$db_advpage[id]'>$db_advpage[name]</option>";
+		}
+	}
+	unset($db_advpagelist,$db_advpage);
+	return $op_advpagelist;
+}
+
 function loadBaseSortList($key,$selval=null){
 	global $objCommData;
 	$db_basesortlist = $objCommData->getBaseSortKeyList($key);
@@ -527,7 +542,7 @@ function loadBaseAdvFormat($format=null){
 		if($format==$db_advformat[format]){
 			$op_advformatlist .= "<option value='$db_advformat[format]' selected>$db_advformat[format]</option>";
 		}else{
-			$op_advformatlist .= "<option value='$db_advformt[format]'>$db_advformat[format]</option>";
+			$op_advformatlist .= "<option value='$db_advformat[format]'>$db_advformat[format]</option>";
 		}
 	}
 	unset($db_advformatlist,$db_advformat);

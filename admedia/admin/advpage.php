@@ -24,8 +24,8 @@ if($action=="new"){
 		$objAdvertise = LOAD::loadDB("Advertise");
 		$_POST[update_time] = $timestamp;
 		$db_adv = $objAdvertise->getAdvertise($_POST[adv_id]);
-		$_POST[$db_adv[mer_id]];		
-		$objAdvertise->updaeAdvPages($curid,$_POST);
+		$_POST[mer_id]=$db_adv[mer_id];	
+		$objAdvertise->updateAdvPages($curid,$_POST);
 		ObHeader("$basename?job=advpage$tranastr");		
 	}
 	exit;
