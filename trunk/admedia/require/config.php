@@ -69,7 +69,7 @@ $cfg_sysrole = array("超级管理员","站长客服","广告编辑(AE)","广告
 $cfg_affsource = array("前台注册","后台添加");
 $cfg_blackstatus = array("<font color=red>锁定</font>","<font color=green>释放</font>");
 $cfg_merclienttype = array("潜在客户","正常客户","失效客户");
-$cfg_advpagestatus = array("停止","使用中");
+$cfg_advpagestatus = array("<font color='red'>停止</font>","<font color='green'>使用中</font>");
 $cfg_merchtype = array("不明确","CPC","CPM","CPA","CPD","多种形式");
 $cfg_merccpay = array("支票","现金","邮政汇款","电汇","网上银行","线上充值 ");
 $cfg_mercctype = array("纸张","传真","电子合同");

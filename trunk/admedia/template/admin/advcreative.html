@@ -167,46 +167,62 @@ print <<<EOT
 		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
         <tbody>
 				<tr>
-					<td align=right width=20%>所属广告计划：</td>
+					<td align=right width=20%>所属广告计划(<font color="red">*</font>)：</td>
 					<td>
 						<select id="adv_id" name="adv_id" style="width:235px"><option value="">请选择...</option>$op_advlist</select>
 					</td>
 				</tr>
 				<tr>
-					<td align=right width=20%>创意名称：</td>
+					<td align=right width=20%>创意名称(<font color="red">*</font>)：</td>
 					<td>
-					    <input type="text" id="name" name="name" style="width:235px"/>
+					    <input type="text" id="name" name="name" style="width:235px" value="$db_advpage[name]"/>
 					</td>
 				</tr>
 				<tr>			
-					<td align=right>广告格式：</td>
+					<td align=right>广告格式(<font color="red">*</font>)：</td>
 					<td>
-					    <select id="adformat" name="adformat" style="width:235px><option value="">请选择...</option>$op_advformatlist</select>
+					    <select id="adformat" name="adformat" style="width:235px"><option value="">请选择...</option>$op_advformatlist</select>
 					</td>
 				</tr>
 				<tr>					
-					<td align=right>内容类型：</td>
+					<td align=right>内容类型(<font color="red">*</font>)：</td>
 					<td>
-					    <input type="radio" id="content_type0" name="content_type" value="0" onclick="showHideDiv(0)"/><label for="content_type0" onclick="showHideDiv(0)">文字</label>
-					    <input type="radio" id="content_type1" name="content_type" value="1" onclick="showHideDiv(1)/><label for="content_type1" onclick="showHideDiv(1)">图片</label>
-					    <input type="radio" id="content_type2" name="content_type" value="2" onclick="showHideDiv(2)"/><label for="content_type2" onclick="showHideDiv(2)">原始代码</label>
+<!--
+EOT;
+	if(!isset($db_advpage) || $db_advpage[content_type]==0){
+		echo '<input type="radio" id="content_type0" name="content_type" value="0" onclick="showHideDiv(0)" checked/><label for="content_type0" onclick="showHideDiv(0)">文字</label>';
+	}else{
+		echo '<input type="radio" id="content_type0" name="content_type" value="0" onclick="showHideDiv(0)"/><label for="content_type0" onclick="showHideDiv(0)">文字</label>';
+	}
+	if(isset($db_advpage) && $db_advpage[content_type]==1){
+		echo '<input type="radio" id="content_type1" name="content_type" value="1" onclick="showHideDiv(1)" checked/><label for="content_type1" onclick="showHideDiv(1)">图片</label>';
+	}else{
+		echo '<input type="radio" id="content_type1" name="content_type" value="1" onclick="showHideDiv(1)"/><label for="content_type1" onclick="showHideDiv(1)">图片</label>';
+	}
+	if(isset($db_advpage) && $db_advpage[content_type]==2){
+		echo '<input type="radio" id="content_type2" name="content_type" value="2" onclick="showHideDiv(2)" checked/><label for="content_type2" onclick="showHideDiv(2)">原始代码</label>';
+	}else{
+		echo '<input type="radio" id="content_type2" name="content_type" value="2" onclick="showHideDiv(2)"/><label for="content_type2" onclick="showHideDiv(2)">原始代码</label>';
+	}
+print <<<EOT
+-->
 					</td>
 				</tr>
 				<tr>							
-					<td align=right>创意内容：</td>
+					<td align=right>创意内容(<font color="red">*</font>)：</td>
 					<td><div id="div0"><input id="txt_word" name="txt_word" style="width:235px"/></div>
-						<div id="div1" style="display:none"><input type="file" name="imgfile" style="width:235px"/></div>
-						<div id="div2" style="display:none"><textarea name="txt_code" id="txt_code" style="width:235px"></textarea></div>	
+						<div id="div1" style="display:none"><input type="file" id="img_file" name="img_file" style="width:235px"/></div>
+						<div id="div2" style="display:none"><textarea name="txt_code" id="txt_code" style="width:235px;height:60px"></textarea></div>	
 					</td>
-				</tr>				
+				</tr>
 				<tr>							
 					<td align=right>导向页面：</td>
 					<td>
-					    <select id="page_id" name="page_id" style="width:235px">$op_advpagelist</select>
+					    <select id="page_id" name="page_id" style="width:235px"><option value="">请选择...</option>$op_advpagelist</select>
 					</td>
 				</tr>
 				<tr>
-					<td align=right>广告尺寸：</td>
+					<td align=right>广告尺寸(<font color="red">*</font>)：</td>
 					<td>
 					    <select id="adsize" name="adsize" style="width:235px"><option value="">请选择...</option>$op_advsizelist</select>
 					</td>	
@@ -233,21 +249,51 @@ print <<<EOT
 
 <script type="text/javascript" language=javascript>
 function checkfrm(){
+	if(isEmpty($('adv_id').value)==true){
+		alert('请选择广告计划！');
+		$('adv_id').focus();
+		return false;
+	}	
 	if(isEmpty($('name').value)==true){
 		alert('请输入创意名称！');
 		$('name').focus();
 		return false;
 	}
+	if(isEmpty($('adformat').value)==true){
+		alert('请选择广告格式！');
+		$('adformat').focus();
+		return false;
+	}
+	if($('content_type0').checked && isEmpty($('txt_word').value)){
+		alert('请输入文字内容！');
+		$('txt_word').focus();
+		return false;
+	}
+	if($('content_type1').checked && isEmpty($('img_file').value)){
+		alert('请上传图片内容！');
+		$('img_file').focus();
+		return false;
+	}
+	if($('content_type2').checked && isEmpty($('txt_code').value)){
+		alert('请输入原始代码内容！');
+		$('txt_code').focus();
+		return false;
+	}
+	if(isEmpty($('adsize').value)==true){
+		alert('请选择广告尺寸！');
+		$('adsize').focus();
+		return false;
+	}
     return true;
 }
 function showHideDiv(selidx){
-		for(var i=0;i<3;i++){
-			if(selidx==i){
-				$('div'+i).style.display='block';
-			}else{
-				$('div'+selidx).style.display='block';
-			}
+	for(var i=0;i<3;i++){
+		if(selidx==i){
+			$('div'+i).style.display='block';
+		}else{
+			$('div'+i).style.display='none';
 		}
+	}
 }
 </script>
 
