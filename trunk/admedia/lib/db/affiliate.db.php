@@ -16,6 +16,13 @@ class  PM_AffiliateDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function updateBatchAffiliates($ids,$updateData){
+		$updateData = $this->_checkAffiliateData($updateData);
+		if (!$updateData) return null;
+		$this->_db->update("UPDATE pm_affiliate SET " . $this->_getUpdateSqlString($updateData) . " WHERE id in (".$ids .")");
+		return $this->_db->affected_rows();
+	}	
+	
 	function updateAffiliateStatus($id,$sysaudit_id=0,$status){
 		global $timestamp;
 		if($sysaudit_id==0)
@@ -509,6 +516,13 @@ class  PM_AffiliateDB extends BaseDB{
 		return $insertId;
 	}
 	
+	function updateBatchAffBlacks($ids,$updateData){
+		$updateData = $this->_checkAffBlackData($updateData);
+		if (!$updateData) return null;
+		$this->_db->update("UPDATE pm_sysblacklist SET " . $this->_getUpdateSqlString($updateData) . " WHERE platform='aff' and id in (".$ids .")");
+		return $this->_db->affected_rows();
+	}	
+	
 	function updateAffBlack($id,$updateData){
 		$updateData = $this->_checkAffBlackData($updateData);
 		if (!$updateData) return null;
@@ -541,6 +555,11 @@ class  PM_AffiliateDB extends BaseDB{
 		return $data;
 	}
 	
+	function getAffBlackList($ids){
+		$query =	$this->_db->query("SELECT * FROM pm_sysblacklist WHERE platform='aff' and id in (".$ids.")");
+		return $this->_getAllResultFromQuery($query);	
+	}
+	
 	function getAffBlackPageList($page, $perPage,$stwhere=null,$storderby=null){
 		$page = intval($page);
 		$perPage = intval($perPage);
@@ -564,7 +583,7 @@ class  PM_AffiliateDB extends BaseDB{
 	}	
 	
 	function getAffBlackStruct() {
-		return array('platform','user_id','user_name','create_time','memo','status','release_id','release_user','update_time');
+		return array('platform','user_id','user_name','memo','status','release_id','release_user','release_time','lock_id','lock_user','lock_time','release_desc');
 	}
 	
 	function _checkAffBlackData($data){
