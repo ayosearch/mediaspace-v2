@@ -18,12 +18,18 @@ class PM_AdvertiseDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
-	function updateAdvertiseStatus($id,$sysaudit_id=0,$status){
+	function updateAdvertiseAudit($id,$sysaudit_id=0,$audit){
 		global $timestamp;
 		if($sysaudit_id==0)
-			$sql = "update pm_advertise set audit=".intval($status).",audit_time=$timestamp where id in (".$id.")";
+			$sql = "update pm_advertise set audit=".intval($audit).",audit_time=$timestamp where id in (".$id.")";
 		else
-			$sql = "update pm_advertise set audit=".intval($status).",audit_time=$timestamp, sysaudit_id=".intval($sysaudit_id)." where id in (".$id.")";
+			$sql = "update pm_advertise set audit=".intval($audit).",audit_time=$timestamp, sysaudit_id=".intval($sysaudit_id)." where id in (".$id.")";
+		$this->_db->update($sql);
+		return $this->_db->affected_rows();
+	}
+	
+	function updateAdvertiseStatus($id,$status){
+		$sql = "update pm_advertise set status=".intval($status)." where id in (".$id.")";
 		$this->_db->update($sql);
 		return $this->_db->affected_rows();
 	}
@@ -176,7 +182,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}
 	
 	function deleteAdvPages($id){
-		$this->_db->update("DELETE FROM pm_advpages WHERE id=". intval($id) ." LIMIT 1");
+		$this->_db->update("UPDATE pm_advpages SET is_del=1 WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
 	}
 	
@@ -201,7 +207,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}
 
 	function getAdvPagesTotalCount($stwhere=null){
-		$sql = "SELECT COUNT(id) as count FROM pm_advpages";
+		$sql = "SELECT COUNT(a.id) as count FROM pm_advpages a";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
 		$count = $this->_db->get_value($sql);
