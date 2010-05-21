@@ -9,7 +9,7 @@ InitGetPost(array('audit','all','auditstatus','status',',start_date','end_date')
 		
 if($action=="new"){
 	$objAdvertise = LOAD::loadDB("Advertise");	
-	$op_advlist = loadAdvertiseList(1);
+	$op_advlist = loadAdvertiseList(1,"0");
 	$objCommData = LOAD::loadDB("CommonData");	
 	$op_advformatlist = loadBaseAdvFormat();
 	$op_advsizelist = loadBaseAdvSize();

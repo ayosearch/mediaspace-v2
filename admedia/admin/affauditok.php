@@ -23,7 +23,7 @@ if(empty($action) || $action=="select"){
 	$totalnum = $objAffUser->getAffiliateTotalCount($stwhere);	
 	$totalpage = ceil($totalnum/$perpage);
 
-	$db_afflist = $objAffUser->getAffiliatePageList($curpage,$perpage,$stwhere,"create_time");
+	$db_afflist = $objAffUser->getAffiliatePageList($curpage,$perpage,$stwhere,"update_time");
 	include PrintEot($job);
 	footer(true);
 	unset($objAffUser,$totalnum,$db_afflist);

@@ -64,7 +64,7 @@ if($action=="new"){
 	$objSystem = LOAD::loadDB("System");	
 	$sysaudit_id = $objSystem->insertSysAudit($arrfield);
 	$objAdvertise = LOAD::loadDB("Advertise");	
-	$objAdvertise->updateAdvertiseStatus($ids,$sysaudit_id,$auditstatus);
+	$objAdvertise->updateAdvertiseAudit($ids,$sysaudit_id,$auditstatus);
 	echo "<script>window.returnValue='1';window.close();</script>";
 	unset($objSystem,$objAdvertise,$arrfield);
 	exit;

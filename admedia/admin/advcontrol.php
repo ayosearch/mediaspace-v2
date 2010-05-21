@@ -13,7 +13,7 @@ InitGetPost(array('all','status',',start_date','end_date'));
 	(!empty($end_date)) && $stwhere .= " create_time<=".__strtotime($end_date)." and ";		
 	if(!empty($searchtype) && !empty($searchkey)) {
 		$querykey = "%".$searchkey."%";
-		$stwhere .= " $searchtype like ".sqlEscape($querykey)." and ";			
+		$stwhere .= " $searchtype like ".sqlEscape($searchkey)." and ";			
 	}
 	(strlen($stwhere)>0) && $stwhere = substr($stwhere,0,strlen($stwhere)-4);	 	
  	
@@ -30,6 +30,16 @@ InitGetPost(array('all','status',',start_date','end_date'));
 	}else{
 		adminMsg("error_create_view");	
 	}
+}else if($action=="open"){
+	$objAdvertise = LOAD::loadDB("Advertise");
+	$objAdvertise->updateAdvertiseStatus($ids,1);
+	ObHeader("$basename?job=advcontrol$transtr");	
+	exit;	
+}else if($action=="stop"){
+	$objAdvertise = LOAD::loadDB("Advertise");
+	$objAdvertise->updateAdvertiseStatus($ids,0);
+	ObHeader("$basename?job=advcontrol$transtr");	
+	exit;	
 }else if($action=="createclick"){
 	$objDataLog = LOAD::loadDB("DataLog");
 	if($objDataLog->createClickLog($curid)){
