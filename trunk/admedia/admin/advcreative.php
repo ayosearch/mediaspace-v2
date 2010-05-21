@@ -13,6 +13,7 @@ if($action=="new"){
 	$objCommData = LOAD::loadDB("CommonData");	
 	$op_advformatlist = loadBaseAdvFormat();
 	$op_advsizelist = loadBaseAdvSize();
+	$op_advpagelist = loadAdvPagesList(1,1);
 }else if($action=="edit"){
 	$objAdvertise = LOAD::loadDB("Advertise");	
 	$db_adv = $objAdvertise->getAdvCreative($curid);
@@ -20,12 +21,22 @@ if($action=="new"){
 	$op_advlist = loadAdvertiseList(1,$db_adv[adv_id]);
 	$op_advformatlist = loadBaseAdvFormat($db_adv[format]);
 	$op_advsizelist = loadBaseAdvSize($db_adv[adsize]);
+	$op_advpagelist = loadAdvPagesList(1,$db_adv[page_id]);	
 }else if($action=="save"){
+	($_POST[content_type]==0) && $_POST[res_content] = $_POST[txt_word];
+	($_POST[content_type]==1) && $_POST[res_content] = $_FILES[img_file][name];
+	($_POST[content_type]==2) && $_POST[res_content] = $_POST[txt_code];
 	$objAdvertise = LOAD::loadDB("Advertise");	
 	if(empty($curid)){
 		$_POST[create_time] = $timestamp;
-		$_POST[update_time] = $timestamp;		
-		$objAdvertise->insertAdvCreatvie($_POST);
+		$_POST[update_time] = $timestamp;
+		$db_adv = $objAdvertise->getAdvertise($_POST[adv_id]);
+		if($db_adv){
+			$_POST[mer_id] = $db_adv[mer_id];
+			$_POST[creator_id] = $AdminUser[id];
+			$_POST[creator_user] = $AdminUser[login_name];
+			$objAdvertise->insertAdvCreative($_POST);
+		}
 	}else{
 		$_POST[update_time] = $timestamp;
 		$objAdvertise->updateAdvCreative($curid,$_POST);
