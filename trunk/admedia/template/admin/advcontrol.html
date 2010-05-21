@@ -40,9 +40,9 @@ print <<<EOT
                                 <span style="color: #547054"> 刷新</span></a>
 <!--
 EOT;
-						if($canaudit==true){
-							showButton(4,'暂停','javascript:showAudit("'.$admin_file.'&action=stop'.$transtr.'&curpage='.$curpage.'");');
-							showButton(4,'运营','javascript:showAudit("'.$admin_file.'&action=open'.$transtr.'&curpage='.$curpage.'");');							
+						if($canaudit==true){							
+							showButton(4,'暂停','javascript:ConfirmDel("'.$admin_file.'&action=stop'.$transtr.'&curpage='.$curpage.'","确定暂停选中计划吗？暂停后此计划下的广告不显示！");');
+							showButton(4,'运营','javascript:ConfirmDel("'.$admin_file.'&action=open'.$transtr.'&curpage='.$curpage.'","确定开放选中此计划吗？开放后此计划下的广告可显示！");');
 						}
 						if($candel==true){
 							showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","此操作不可恢复,确认删除吗？");');

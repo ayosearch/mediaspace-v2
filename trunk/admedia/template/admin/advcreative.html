@@ -169,46 +169,46 @@ print <<<EOT
 				<tr>
 					<td align=right width=20%>所属广告计划：</td>
 					<td>
-						<select id="adv_id" name="adv_id" style="WIDTH: 159px"><option value="">请选择...</option>$op_advlist</select>
+						<select id="adv_id" name="adv_id" style="width:235px"><option value="">请选择...</option>$op_advlist</select>
 					</td>
 				</tr>
 				<tr>
 					<td align=right width=20%>创意名称：</td>
 					<td>
-					    <input type="text" id="name" name="name" style="WIDTH: 159px"/>
+					    <input type="text" id="name" name="name" style="width:235px"/>
 					</td>
 				</tr>
 				<tr>			
 					<td align=right>广告格式：</td>
 					<td>
-					    <select id="adformat" name="adformat" style="WIDTH: 159px"><option value="">请选择...</option>$op_advformatlist</select>
+					    <select id="adformat" name="adformat" style="width:235px><option value="">请选择...</option>$op_advformatlist</select>
 					</td>
 				</tr>
 				<tr>					
 					<td align=right>内容类型：</td>
 					<td>
-					    <input type="radio" id="content_type0" name="content_type" value="0"/><label for="content_type0">文字</label>
-					    <input type="radio" id="content_type1" name="content_type" value="1"/><label for="content_type1">图片</label>
-					    <input type="radio" id="content_type2" name="content_type" value="2"/><label for="content_type2">原始代码</label>
+					    <input type="radio" id="content_type0" name="content_type" value="0" onclick="showHideDiv(0)"/><label for="content_type0" onclick="showHideDiv(0)">文字</label>
+					    <input type="radio" id="content_type1" name="content_type" value="1" onclick="showHideDiv(1)/><label for="content_type1" onclick="showHideDiv(1)">图片</label>
+					    <input type="radio" id="content_type2" name="content_type" value="2" onclick="showHideDiv(2)"/><label for="content_type2" onclick="showHideDiv(2)">原始代码</label>
 					</td>
 				</tr>
 				<tr>							
 					<td align=right>创意内容：</td>
-					<td><input id="txt_word" name="txt_word" style="WIDTH: 159px"/>
-						<div id="divImage" style="display:none"><input type="file" name="imgfile" style="WIDTH: 159px"/></div>
-						<div id="divCode" style="display:none"><textarea name="txt_code" id="txt_code" style="WIDTH: 159px"></textarea></div>	
+					<td><div id="div0"><input id="txt_word" name="txt_word" style="width:235px"/></div>
+						<div id="div1" style="display:none"><input type="file" name="imgfile" style="width:235px"/></div>
+						<div id="div2" style="display:none"><textarea name="txt_code" id="txt_code" style="width:235px"></textarea></div>	
 					</td>
 				</tr>				
 				<tr>							
 					<td align=right>导向页面：</td>
 					<td>
-					    <select id="page_id" name="page_id" style="WIDTH: 159px">$op_advpagelist</select>
+					    <select id="page_id" name="page_id" style="width:235px">$op_advpagelist</select>
 					</td>
 				</tr>
 				<tr>
 					<td align=right>广告尺寸：</td>
 					<td>
-					    <select id="adsize" name="adsize" style="WIDTH: 159px"><option value="">请选择...</option>$op_advsizelist</select>
+					    <select id="adsize" name="adsize" style="width:235px"><option value="">请选择...</option>$op_advsizelist</select>
 					</td>	
 				</tr>
 				<tr>
@@ -239,6 +239,15 @@ function checkfrm(){
 		return false;
 	}
     return true;
+}
+function showHideDiv(selidx){
+		for(var i=0;i<3;i++){
+			if(selidx==i){
+				$('div'+i).style.display='block';
+			}else{
+				$('div'+selidx).style.display='block';
+			}
+		}
 }
 </script>
 
