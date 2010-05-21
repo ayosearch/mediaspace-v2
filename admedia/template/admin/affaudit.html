@@ -103,6 +103,7 @@ EOT;
                 <td align="middle" class="title" height="20" valign="center">所属客服</td>      
                 <td align="middle" class="title" height="20" valign="center">注册来源</td>   
                 <td align="middle" class="title" height="20" valign="center">注册时间</td>      
+                <td align="middle" class="title" height="20" valign="center">更新时间</td>  
                 <td align="middle" class="title" height="20" valign="center">状态</td>
                 <td align="middle" class="title" height="20" valign="center">编辑</td>
             </tr>
@@ -117,6 +118,7 @@ foreach($db_afflist as $affuser ){
 		$regsource = $cfg_affsource[$affuser[source]];
 		$status = $cfg_userstatus[$affuser[status]];
 		$cdate = date('Y/m/d H:i:s',$affuser[create_time]);
+		$udate = date('Y/m/d H:i:s',$affuser[update_time]);
 		$db_gender = $cfg_gender[$affuser[gender]];
 print <<<EOT
 -->      
@@ -132,7 +134,8 @@ print <<<EOT
                 <td valign="middle" align="center">&nbsp;$affuser[mobile]</td>
                 <td align="center" valign="middle">&nbsp;$affuser[service_name]</td>       
                  <td align="center" valign="middle">&nbsp;$regsource</td> 
-                <td valign="middle" align="center" width="145px">&nbsp;$cdate</td>          
+                <td valign="middle" align="center" width="135px">&nbsp;$cdate</td>          
+                <td valign="middle" align="center" width="135px">&nbsp;$udate</td>    
                 <td valign="middle" align="center">&nbsp;$status</td>
                 <td valign="middle" align="center">&nbsp;
 <!--

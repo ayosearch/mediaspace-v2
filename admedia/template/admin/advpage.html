@@ -73,7 +73,6 @@ print <<<EOT
                 <td align="middle" class="title" height="20" valign="center">页面名称</td>
                 <td align="middle" class="title" height="20" valign="center">广告名称</td>
                 <td align="middle" class="title" height="20" valign="center">对应客户</td>
-                <td align="middle" class="title" height="20" valign="center">页面地址</td>
                 <td align="middle" class="title" height="20" valign="center">计划日期</td>
                 <td align="middle" class="title" height="20" valign="center">投放时间</td>
                 <td align="middle" class="title" height="20" valign="center">状态</td>
@@ -89,24 +88,19 @@ foreach($db_advpagelist as $db_advpage ){
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
 	$cdate = date('Y/m/d H:i:s',$db_advpage[create_time]);
-	$sdate = date('Y/m/d',$db_advpage[start_date]);	
-	$edate = date('Y/m/d',$db_advpage[end_date]);	
-	$shour = date('Y/m/d',$db_advpage[start_hour]);	
-	$ehour = date('Y/m/d',$db_advpage[end_hour]);
 	$db_status = $cfg_advpagestatus[$db_advpage[status]];
 print <<<EOT
--->    
+-->   
             <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center" height="20">$curidx</td>
                 <td align="middle" valign="center">
                     <input id="ids" name="ids" type="checkbox" value="$db_advpage[id]" />
                 </td>
                 <td align="middle" valign="center">&nbsp;$db_advpage[name]</td>
-                <td align="middle" valign="center">&nbsp;$db_advpage[adv_name]</td>
+                <td align="middle" valign="center">&nbsp;<a href="$db_advpage[url]" title='点击查看页面' target=_blank class="noLine">$db_advpage[adv_name]</a></td>
                 <td align="middle" valign="center">&nbsp;$db_advpage[mer_name]($db_advpage[mer_id])</td>
-                <td align="middle" valign="center">&nbsp;$db_advpage[url]</td>
-                <td align="middle" valign="center">&nbsp;$sdate-edate</td>
-                <td align="middle" valign="center">&nbsp;$shour-$edate</td>
+                <td align="middle" valign="center">&nbsp;<b>$db_advpage[start_date]</b>至<b>$db_advpage[end_date]</b></td>
+                <td align="middle" valign="center">&nbsp;<b>$db_advpage[start_hour]时</b> 到 <b>$db_advpage[end_hour]时</b></td>
                 <td align="middle" valign="center">&nbsp;$db_status</td>               
                 <td align="middle" valign="center">&nbsp;$cdate</td>
                  <td align="middle" valign="center">&nbsp;
@@ -166,6 +160,10 @@ print <<<EOT
 <form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
 <input type="hidden" name="action" value="save"/>
 <input type="hidden" name="curid" value="$curid"/>
+<input type="hidden" name="status" value="$status"/>
+<input type="hidden" name="curpage" value="$curpage"/>
+<input type="hidden" name="searchtype" value="$searchtype"/>
+<input type="hidden" name="searchkey" value="$searchkey"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>
 		<TR >
@@ -181,29 +179,29 @@ print <<<EOT
 		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
         <tbody>
         <tr>			
-					<td align=right width="20%">所属广告计划：</td>
-					<td><select id="adv_id" name="adv_id" style="width:135px">$op_advlist</select></td>
+					<td align=right width="20%">所属广告计划(<font color="red">*</font>)：</td>
+					<td><select id="adv_id" name="adv_id" style="width:235px"><option value="">请选择...</option>$op_advlist</select></td>
 				</tr>
 				<tr>
-					<td align=right>页面名称：</td>
+					<td align=right>页面名称(<font color="red">*</font>)：</td>
 					<td>
-					   <input type="text" name="name" id="name" style="WIDTH: 135px" value="$db_advpage[name]"/>
+					   <input type="text" name="name" id="name" style="WIDTH: 350px" value="$db_advpage[name]"/>
 					</td>					
 				</tr>
 				<tr>
-					<td align=right>页面地址：</td>
+					<td align=right>页面地址(<font color="red">*</font>)：</td>
 					<td>
-					   <input type="text" name="url" id="url" style="WIDTH: 292px" value="$db_advpage[url]"/>
+					   <input type="text" name="url" id="url" style="WIDTH: 350px" value="$db_advpage[url]"/>
 					</td>					
 				</tr>
 				<tr>
-					<td align=right>开始时间：</td>
+					<td align=right>开始时间(<font color="red">*</font>)：</td>
 					<td style="width: 322px">
 					    <input name="start_date" type="text" readonly id="start_date" value="$db_advpage[start_date]" style="WIDTH:102px" value="$db_advpage[start_date]"><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
 					</td>
 				</tr>
 				<tr>
-					<td align=right>结束时间：</td>
+					<td align=right>结束时间(<font color="red">*</font>)：</td>
 					<td>
 					   <input name="end_date" type="text" readonly id="end_date"  value="$db_advpage[end_date]" style="WIDTH:102px" value="$db_advpage[end_date]"><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
 					  
@@ -238,7 +236,7 @@ print <<<EOT
 				<tr>
 					<td align=right style="height: 57px">描述：</td>
 					<td colspan=3 style="height: 57px">
-					<textarea ID="memo"  name="memo" cols="35" rows="12">$db_advpage[memo]</textarea>
+					<textarea ID="memo"  name="memo" style="width:350px;height:150px">$db_advpage[memo]</textarea>
 					</td>
 				</tr>
 				<tr>
@@ -252,44 +250,35 @@ print <<<EOT
 
  </TABLE>  
  </form>
-<iframe name="hidfrm" id="hidfrm" marginWidth="0" marginHeight="0" style="display:none" ></iframe>
-</body>
-</HTML>
+
 <script type="text/javascript" language=javascript>
-function checkfrm()
-{
-	if(document.all.ddlMerActive.value == "0"){
-		alert('所属活动不能为空！');
-		document.all.ddlMerActive.focus();
-		event.returnValue = false;
-        return;
+function checkfrm(){
+	if(isEmpty($("adv_id").value)){
+		alert('请选择所属广告计划！');
+		$("adv_id").focus();
+        return false;
 	}
-	if(document.all.txtName.value == "")
-	{
+	if(isEmpty($("name").value)){
 		alert('请输入页面名称！');
-		document.all.txtName.focus();
-		event.returnValue = false;
-		return;
+		$("name").focus();
+		return false;
 	}
-	if(document.all.txtUrl.value == "")
-	{
+	if(isEmpty($("url").value)){
 		alert('请输入页面地址！');
-		document.all.txtUrl.focus();
-		event.returnValue = false;
-		return;
+		$("url").focus();
+		return false;
 	}
+	if(isEmpty($("start_date").value)){
+		alert('请选择开始时间！');
+		$("start_date").focus();
+		return false;
+	}
+	if(isEmpty($("end_date").value)){
+		alert('请选择结束时间！');
+		$("end_date").focus();
+		return false;
+	}		
     return true;
-}
-
-function DoCopy()
-{
-	document.all.txtCode.createTextRange().select();
-	document.selection.createRange().execCommand("Copy");
-}
-
-function CheckDate()
-{
-	document.getElementById("hidfrm").src = "../Common/getActive.aspx?ActiveID="+document.getElementById("ddlMerActive").value;
 }
 </script>
 
