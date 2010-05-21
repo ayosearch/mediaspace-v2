@@ -5,18 +5,12 @@ if(empty($action)){
 	$totalnum = $objAdvertise->getAdvBuyAffPlacesTotalCount();
 	$totalpage = ceil($totalnum/$perpage);
 	$db_advbuyplacelist = $objAdvertise->getAdvBuyAffPlacesPageList($curpage,$perpage);
-}
-
-if($action=="new"){
+}else if($action=="new"){
 	$objAdvertise = LOAD::loadDB("Advertise");
 	$op_advlist = loadAdvertiseList(1);
-}
+}else if($action=="edit"){
 
-if($action=="edit"){
-
-}
-
-if($action=="save"){
+}else if($action=="save"){
 	$objAdvertise = LOAD::loadDB("Advertise");	
 	if(isset($curid) && empty($curid)){
 		$objAdvertise->insertAdvBuyAffPlaces($_POST);
