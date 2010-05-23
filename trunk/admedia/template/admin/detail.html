@@ -556,4 +556,484 @@ print <<<EOT
 </form>
 <!--
 EOT;
+}else if($action=="advertise"){
+	$adv_id = $curid;
+	$cdate = date('Y/m/d H:i:s',$db_adv[create_time]);
+	$sdate = date('Y-m-d H',$db_adv[start_time]);
+	$edate = date('Y-m-d H',$db_adv[end_time]);	
+	($db_adv[log_uptime]>0) && $ltime =  date('Y-m-d H:i:s',$db_adv[log_uptime]);
+	$feetype = $cfg_advfeetype[$db_adv[fee_type]];
+	$advaudit = $cfg_userstatus[$db_adv[audit]];	
+	if(isset($db_adv) && $db_adv[is_view]==1){
+		$is_view = '记录显示&nbsp;';
+	}else{
+		$is_view = '不记录显示&nbsp;';
+	}
+	if(isset($db_adv) && $db_adv[is_click]==1){
+		$is_click = '记录点击&nbsp;';
+	}else{
+		$is_click = '不记录点击&nbsp;';
+	}
+	if(isset($db_adv) && $db_adv[is_rolling]==1){
+		$is_rolling = '参与轮播&nbsp;';
+	}else{
+		$is_rolling = '不参与轮播&nbsp;';
+	}
+	if(isset($db_adv) && $db_adv[mer_onlyfee]==1){
+		$mer_onlyfee = '是&nbsp;';
+	}else{
+		$mer_onlyfee = '否&nbsp;';	
+	}	
+print <<<EOT
+-->
+<form action="$admin_file" method="get" name="form">
+
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR>
+			<TD align=left class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 广告计划详细信息</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+						<table width="98%" border="0" align="center" cellpadding="5" cellspacing="0">
+							<tr>
+								<td bgcolor="#f6f6f6">
+									计划名称：<span class="hong12"><strong>$db_adv[name]</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+								    每日限额：<span class="hong12"><strong>$db_adv[day_maxmoney]</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									创建时间：<span class="hong12"><strong>$cdate</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									审核状态：<span class="hong12"><strong>$advaudit</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									</td>
+							 <td align=right bgcolor="#f6f6f6">&nbsp;
+							 <a href="$backurl">返回上一页</a>&nbsp;
+							 </td>   									
+							</tr>
+						</table>
+				<table cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+				<tr>
+					<td height="10"></td>
+				</tr>
+			</table>
+			<table cellSpacing="1" cellPadding="5" width="98%" align="center" bgColor="#cccccc" border="0">
+				<tr>
+					<td width="34%" bgColor="#ffffff"><strong>活动Logo：</strong>
+<!--
+EOT;
+	if(isset($db_adv)){
+		echo "<a href='".$db_adv[logo]."' target='_blank'><img src='".$db_adv[logo]."' border='0' height='60px' align='absmiddle' title='点击看原图'/></a>";
+	}
+print <<<EOT
+-->
+					</td>
+					<td width="32%" bgColor="#ffffff"><strong>支付标准：</strong>$feetype</td>
+				</tr>
+				<tr>
+					<td bgColor="#ffffff"><strong>所属客户：</strong>$db_adv[mer_name]</td>
+					<td bgColor="#ffffff">
+						<strong>计划类型：</strong>$db_adv[advtype]
+					</td>
+				</tr>	
+				<tr>
+					<td bgColor="#ffffff"><strong>投放期限：</strong>$sdate - $edate
+					</td>
+					<td bgColor="#ffffff"><strong>对账URL：</strong>$db_adv[bill_url]
+					</td>
+				</tr>
+				<tr>
+					<td bgColor="#ffffff"><strong>广告主结算价：</strong>$db_adv[price]$db_adv[unit]
+					</td>
+					<td bgColor="#ffffff"><strong>站长计费单价：</strong>$db_adv[aff_price]$db_adv[aff_unit]
+					</td>
+				</tr>
+			</table>
+			<table cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+				<tr>
+					<td height="10"></td>
+				</tr>
+			</table>
+			<table cellSpacing="0" cellPadding="5" width="98%" align="center" border="0">
+				<tr>
+					<td width="80%" bgColor="#E1EBE2"><STRONG>定向设置</STRONG></td>
+					<td align=right bgcolor="#E1EBE2">&nbsp;
+<!--
+EOT;
+	if($canadd==true){
+		showButton(1,'新增定向设置','javascript:showModelWin("'.$admin_file.'&action=newadvselector&adv_id='.$curid.$transtr.'");');
+	}
+print <<<EOT
+-->					
+					&nbsp;</td>   								
+				</tr>
+			</table>
+			<table width="98%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+				<tr>
+					<td width="12%" height="25" align="center" bgcolor="#efefef" class="hei12b"><nobr>定向方式</td>
+					<td width="15%" align="center" bgcolor="#efefef" class="hei12b"><nobr>定向类型</td>
+					<td align="center" bgcolor="#efefef" class="hei12b"><nobr>内容</td>
+					<td width="15%" align="center" bgcolor="#efefef" class="hei12b"><nobr>添加日期</td>
+					<td width="8%" align="center" bgcolor="#efefef" class="hei12b"><nobr>状态</td>
+					<td width="50px" align="center" bgcolor="#efefef" class="hei12b"><nobr>删除</td>					
+				</tr>
+<!--
+EOT;
+foreach($db_advselectorlist as $db_advselector ){
+	$cdate = date('Y/m/d H:i:s',$db_advselector[create_time]);
+	$status = $cfg_advselectorstatus[$db_advselector[status]];
+	$itype = $cfg_advselectortype[$db_advselector[itype]];
+	$filter = $cfg_advselectorfilter[$db_advselector[is_filter]];
+print <<<EOT
+-->     
+										<tr>
+											<td height="25" align="center" bgcolor="#ffffff">$filter</td>
+											<td height="25" align="center" bgcolor="#ffffff">$itype</td>
+											<td height="25" align="center" bgcolor="#ffffff">$db_advselector[content]</td>									
+											<td height="25" align="center" bgcolor="#ffffff">$cdate</td>
+											<td height="25" align="center" bgcolor="#ffffff">$status</td>
+											<td height="25" align="center" bgcolor="#ffffff">
+<!--
+EOT;
+	showDelButton($db_advselector[id],'deladvselector');
+print <<<EOT
+-->											
+											</td>											
+										</tr>
+<!--
+EOT;
+}
+print <<<EOT
+--> 
+			</table>			
+			<table cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+				<tr>
+					<td height="10"></td>
+				</tr>
+			</table>
+			<div id="divFilter"></div>
+			<table cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+				<tr>
+					<td height="10"></td>
+				</tr>
+			</table>
+			<table cellSpacing="0" cellPadding="5" width="98%" align="center" border="0">
+				<tr>
+					<td class="zhuang12b" width="100%" bgColor="#E1EBE2"><b>统计设置</b></td>
+				</tr>
+			</table>
+
+			<table cellSpacing="1" cellPadding="5" width="98%" align="center" bgColor="#cccccc" border="0">
+				<tr>
+					<td width="12%" bgColor="#ffffff"><b>显示计数：</b></td>
+					<td bgColor="#ffffff">$is_view</td>
+					<td width="12%" bgColor="#ffffff" align="right"><b>点击计数：</b></td>
+					<td bgColor="#ffffff">$is_click</td>
+					<td width="12%" bgColor="#ffffff" align="right"><b>参与轮播：</b></td>
+					<td bgColor="#ffffff">$is_rolling</td>
+					<td width="12%" bgColor="#ffffff" align="right"><b>服务商计费：</b></td>
+					<td bgColor="#ffffff">$mer_onlyfee</td>					
+				</tr>
+				<tr>
+					<td class="p2" bgColor="#ffffff" colSpan="8"><b>防止作弊：</b>
+<!--
+EOT;
+	if(isset($db_adv) && $db_adv[filter_likeip]==1){
+		echo '过滤相似IP&nbsp;';
+	}else{
+		echo '不过滤相似IP&nbsp;';
+	}
+	if(isset($db_adv) && $db_adv[filter_agentip]==1){
+		echo '过滤代理IP&nbsp;';
+	}else{
+		echo '不过滤代理IP&nbsp;';
+	}
+	if(isset($db_adv) && $db_adv[filter_foreignip]==1){
+		echo '过滤国外IP&nbsp;';
+	}else{
+		echo '不过滤国外IP&nbsp;';
+	}
+print <<<EOT
+-->&nbsp;点击率上限$db_adv[max_crt]%
+					</td>
+				</tr>
+			</table>
+				<table cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+				<tr>
+					<td height="10"></td>
+				</tr>
+			</table>			
+			<table cellSpacing="0" cellPadding="5" width="98%" align="center" border="0">
+				<tr>
+					<td class="zhuang12b" width="100%" bgColor="#E1EBE2"><b>运营状态</b></td>
+				</tr>
+			</table>		
+			<table cellSpacing="1" cellPadding="5" width="98%" align="center" bgColor="#cccccc" border="0">
+			<tr>
+					<td bgColor="#ffffff"><strong>创意数量：</strong>$db_adv[creative_count]
+					</td>
+					<td bgColor="#ffffff"><strong>申请数量：</strong>$db_adv[aff_count]
+					</td>
+					<td bgColor="#ffffff"><strong>站点数量：</strong>$db_adv[site_count]
+					</td>	
+					<td bgColor="#ffffff"><strong>广告位数量：</strong>$db_adv[adpalce_count]
+					</td>												
+				</tr>	
+			<tr>
+					<td bgColor="#ffffff"><strong>日志表使用：</strong>$db_adv[log_flag]
+					</td>
+					<td bgColor="#ffffff"><strong>显示日志表状态：</strong>$db_adv[log_v_created]
+					</td>
+					<td bgColor="#ffffff"><strong>点击日志表状态：</strong>$db_adv[log_c_created]
+					</td>
+					<td bgColor="#ffffff"><strong>日志表最后切换时间：</strong>$ltime
+					</td>					
+				</tr>					
+				</table>			
+</form>
+<!--
+EOT;
+}else if($action=="newadvselector" || $action=="editadvselector"){
+print <<<EOT
+-->
+
+<form name="form" method="post" action="$basename" id="form" onsubmit="return checkfrm();" >
+<input type="hidden" name="job" id="job" value="$job" />
+<input type="hidden" name="adv_id" id="adv_id" value="$adv_id" />
+<input type="hidden" name="action" id="action" value="saveadvselector" />
+<input type="hidden" name="sel_province" id="sel_province" value="" />
+<input type="hidden" name="sel_sitetype" id="sel_sitetype" value="" />
+<input type="hidden" name="sel_domain" id="sel_domain" value="" />
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增　定向设置信息</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+				<tr>
+					<td colspan="2" align="right"><input name="btnSubmit" type="submit" id="btnSubmit" value=" 保存>> "  style="background-color:#ffffff;border;0px"/>&nbsp;<input type="button" onclick="window.close();" value=" 取消 " style="background-color:#ffffff;border;0px"/>
+					</td>
+				</tr>        
+				<tr>
+					<td align=right width="28%">定向方式(<font color=red>*</font>)：</td>
+					<td>
+						<input type="radio" name="is_filter" id="is_filter0"  value='0' checked/>选取
+						<input type="radio" name="is_filter" id="is_filter1"  value='1'/>过滤					
+					</td>
+				</tr>
+				<tr>
+					<td align=right>定向类型(<font color=red>*</font>)：</td>
+					<td>
+						<input type="radio" name="itype" id="itype0"  value='site_type' onclick="javascript:showSiteTypeList();" checked/><label for="itype0">站长类型</label>
+						<input type="radio" name="itype" id="itype1"  value='province' onclick="javscript:showProvinceList();"/><label for="itype1">省份</label>			
+						<input type="radio" name="itype" id="itype3"  value='domain' onclick="javascript:showDomainList();"/><label for="itype3">域名</label>
+						<input type="radio" name="itype" id="itype4"  value='keyword' onclick="javascript:showHidden();"/><label for="itype4">关键字</label>
+					</td>
+				</tr>
+				<tr id="divprovince" style="display:none">
+					<td align="right">请选择省份(<font color=red>*</font>)：</td>
+					<td>
+						<table>
+<!--
+EOT;
+						$i=0;
+						foreach($db_provincelist as $db_province ){
+							if($i%7==0){
+								echo "<tr>";
+							}
+print <<<EOT
+--> 
+						<td><input type="checkbox" id="province" name="province"  value="$db_province[name]" onclick="selProvince();"/></td><td noWrap>$db_province[name]</td>
+<!--
+EOT;
+							if($i%7==6){
+								echo "</tr>";
+							}
+							$i++;
+						}
+print <<<EOT
+--> 
+						</table>
+					</td>
+				</tr>									
+				<tr id="divsitetype">
+					<td align="right">请选择站点类型(<font color=red>*</font>)：</td>
+					<td>
+						<table border="0" cellpadding="0" cellspacing="0">
+<!--
+EOT;
+						$i=0;
+						foreach($db_sitetypelist as $db_sitetype ){
+							if($i%5==0){
+								echo "<tr>";
+							}
+print <<<EOT
+--> 
+						<td><input type="checkbox" id="sitetype" name="sitetype"  value="$db_sitetype[val]" onclick="selSitetype();"/></td><td noWrap>$db_sitetype[val]</td>
+<!--
+EOT;
+							if($i%5==4){
+								echo "</tr>";
+							}
+							$i++;
+						}
+print <<<EOT
+--> 
+						</table>
+					</td>
+				</tr>
+				<tr id="divdomain" style="display:none">
+					<td align="right">请选择域名类型(<font color=red>*</font>)：</td>
+					<td>
+						<table border="0" cellpadding="0" cellspacing="0">
+						<tr>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".com" onclick="selDomain();"/></td><td noWrap>.com</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".cn" onclick="selDomain();"/></td><td noWrap>.cn</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".mobi" onclick="selDomain();"/></td><td noWrap>.mobi</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".net" onclick="selDomain();"/></td><td noWrap>.net</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".org" onclick="selDomain();"/></td><td noWrap>.org</td>
+						</tr>
+						<tr>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".com.cn" onclick="selDomain();"/></td><td noWrap>.com.cn</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".net.cn" onclick="selDomain();"/></td><td noWrap>.net.cn</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".org.cn" onclick="selDomain();"/></td><td noWrap>.org.cn</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".gov.cn" onclick="selDomain();"/></td><td noWrap>.gov.cn</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".hk" onclick="selDomain();"/></td><td noWrap>.hk</td>
+						</tr>
+						<tr>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".tv" onclick="selDomain();"/></td><td noWrap>.tv</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".biz" onclick="selDomain();"/></td><td noWrap>.biz</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".cc" onclick="selDomain();"/></td><td noWrap>.cc</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".name" onclick="selDomain();"/></td><td noWrap>.name</td>
+						<td><input type="checkbox" id="domaintype" name="domaintype"  value=".info" onclick="selDomain();"/></td><td noWrap>.info</td>
+						</tr>						
+						</table>
+					</td>
+				</tr>				
+				<tr id="divcontent" style="display:none">
+					<td align=right>定向内容(<font color=red>*</font>)：</td>
+					<td>
+						<textarea id="content" name="content" style="width:240px;height:50px"></textarea>
+					</td>
+				</tr>				
+				<tr>
+					<td align=right>状态(<font color=red>*</font>)：</td>
+					<td>
+						<input type="radio" name="status" id="status1"  value='1' checked/>启用						
+						<input type="radio" name="status" id="status0"  value='0'/>停止
+					</td>
+				</tr>
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+</form>
+
+<script type="text/javascript">
+	function checkfrm(){
+		var bflag = false;
+		if(document.form.itype[0].checked){
+			for(var i=0;i<document.form.sitetype.length;i++){
+				if(document.form.sitetype[i].checked){
+					bflag = true;
+					break;
+				}
+			}
+			if(bflag==false){
+				alert('请选择站点类型！');
+				return false;
+			}
+		}		
+		if(document.form.itype[1].checked){
+			for(var i=0;i<document.form.province.length;i++){
+				if(document.form.province[i].checked){
+					bflag = true;
+					break;
+				}
+			}
+			if(bflag==false){
+				alert('请选择省份！');
+				return false;
+			}
+		}
+		if(document.form.itype[2].checked){
+			for(var i=0;i<document.form.domaintype.length;i++){
+				if(document.form.domaintype[i].checked){
+					bflag = true;
+					break;
+				}
+			}
+			if(bflag==false){
+				alert('请选择域名类型！');
+				return false;
+			}
+		}		
+		if(document.form.itype[3].checked){
+			if(isEmpty($("content").value)==true){
+				alert('请输入内容！');
+				return false;
+			}
+		}
+		return true;
+	}
+	function showProvinceList(){
+		$('divprovince').style.display="block";
+		$('divsitetype').style.display="none";	
+		$('divcontent').style.display="none";	
+		$('divdomain').style.display="none";					
+	}
+	function showSiteTypeList(){
+		$('divprovince').style.display="none";		
+		$('divsitetype').style.display="block";		
+		$('divcontent').style.display="none";	
+		$('divdomain').style.display="none";	
+	}
+	function showDomainList(){
+		$('divprovince').style.display="none";		
+		$('divsitetype').style.display="none";
+		$('divdomain').style.display="block";
+		$('divcontent').style.display="none";		
+	}	
+	function showHidden(){
+		$('divprovince').style.display="none";		
+		$('divsitetype').style.display="none";	
+		$('divcontent').style.display="block";	
+		$('divdomain').style.display="none";										
+	}
+	function selDomain(){
+		$("sel_domain").value = "";
+		for(var i=0;i<document.form.domaintype.length;i++){
+			if(document.form.domaintype[i].checked==true){
+				$("sel_domain").value+=document.form.domaintype[i].value+",";
+			}
+		}
+	}
+	function selProvince(){
+		$("sel_province").value = "";
+		for(var i=0;i<document.form.province.length;i++){
+			if(document.form.province[i].checked==true){
+				$("sel_province").value+=document.form.province[i].value+",";
+			}
+		}
+	}	
+	function selSitetype(){
+		$("sel_sitetype").value = "";
+		for(var i=0;i<document.form.sitetype.length;i++){
+			if(document.form.sitetype[i].checked){
+				$("sel_sitetype").value+=document.form.sitetype[i].value+",";
+			}
+		}
+	}	
+</script>
+
+
+<!--
+EOT;
 }?>-->

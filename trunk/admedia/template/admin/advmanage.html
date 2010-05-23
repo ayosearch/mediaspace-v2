@@ -96,8 +96,8 @@ print <<<EOT
                 <td align="middle" valign="center" height="20">$curidx </td>
                 <td align="middle" valign="center"><input id="ids" name="ids" type="checkbox" value="$adv[id]" />
                 </td>
-                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=advertise&curid=$adv[id]" class=NoLine>$adv[name]</a></td>
-                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$adv[mer_id]" class=NoLine>$adv[mer_name]</a></td>
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=advertise&curid=$adv[id]$transtr&backurl=$backurl" class=NoLine>$adv[name]</a></td>
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$adv[mer_id]$transtr&backurl=$backurl" class=NoLine>$adv[mer_name]</a></td>
                 <td align="middle" valign="center">&nbsp;$feetype</td>
                 <td align="middle" valign="center">&nbsp;$adv[day_maxmoney]</td>
                 <td align="middle" valign="center">&nbsp;$adv[aff_count]</td>
@@ -185,6 +185,11 @@ print <<<EOT
       <tr>
         <td valign=top>
 		<div class="addpro">
+			<table cellSpacing="0" cellPadding="5" width="100%" align="center" border="0">
+				<tr>
+					<td class="zhuang12b" width="100%" bgColor="#E1EBE2"><b>&nbsp;&nbsp;&nbsp;&nbsp;基本信息</b></td>
+				</tr>
+			</table>		
 		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
         <tbody>
         <tr>
@@ -229,66 +234,24 @@ print <<<EOT
 -->					
 					<br/>
 					</td>
-				    <td align=right>对帐地址：</td>
-					<td>
-					    <input type="text" id="bill_url" name="bill_url" value="$db_adv[bill_url]" style="WIDTH: 200px">
-					</td>					
-				</tr>				
-				<tr>
-					<td align=right>支付标准：</td>
-					<td>
-<!--
-EOT;
-	if(!isset($db_adv) || $db_adv[fee_type]==0){
-		echo '<input type="radio" id="fee_type0" name="fee_type" Value="0" checked/><label for="fee_type0">CPC</label>';
-	}else{
-		echo '<input type="radio" id="fee_type0" name="fee_type" Value="0"/><label for="fee_type0">CPC</label>';
-	}
-	if($db_adv[fee_type]==1){
-		echo '<input type="radio" id="fee_type1" name="fee_type" Value="1" checked/><label for="fee_type1">CPM</label>';
-	}else{
-		echo '<input type="radio" id="fee_type1" name="fee_type" Value="1"/><label for="fee_type1">CPM</label>';
-	}
-	if($db_adv[fee_type]==2){
-		echo '<input type="radio" id="fee_type2" name="fee_type" Value="2" checked/><label for="fee_type2">CPA</label>';
-	}else{
-		echo '<input type="radio" id="fee_type2" name="fee_type" Value="2"/><label for="fee_type2">CPA</label>';
-	}
-	if($db_adv[fee_type]==3){
-		echo '<input type="radio" id="fee_type3" name="fee_type" Value="3" checked/><label for="fee_type3">CPD</label>';
-	}else{
-		echo '<input type="radio" id="fee_type3" name="fee_type" Value="3"/><label for="fee_type3">CPD</label>';
-	}		
-print <<<EOT
--->
-					</td>	
 					<td bgColor="#ffffff" align=right>
 					    投放优先级：
 					</td>
 					<td>
 					    <input type="text" id="level" name="level" style="WIDTH: 40px" value="$db_adv[level]"/>(数字越大表示优先级越高)
-					</td>				
-				</tr>
-				<tr>
-					<td align=right>广告商结算价(<font color="red">*</font>)：</td>
-					<td>
-						<input type="text" id="price" name="price" value="$db_adv[price]"/><select id="unit" name="unit" style="width:70px">$op_unitlist</select>
 					</td>	
-					<td bgColor="#ffffff" align=right>站长支付价(<font color="red">*</font>)：</td>
-					<td>
-					    <input type="text" id="aff_price" name="aff_price" value="$db_adv[aff_price]"/><select id="aff_unit" name="aff_unit" style="width:70px">$op_affunitlist</select>
-					</td>				
-				</tr>
+				</tr>			
 				<tr>
-					<td align=right>每日限额：</td>
+					<td bgColor="#ffffff" align=right>
+					默认导向页面：</td>
 					<td colspan="3">
-						<input type="text" id="day_maxmoney" name="day_maxmoney" value="$db_adv[day_maxmoney]"/> 元
-					</td>			
-				</tr>							
+					<select name="page_id" id="page_id" style="width:200px"><option value="">请选择...</option>$op_pagelist</select>
+					</td>
+				</tr>
 				<tr>
 					<td bgColor="#ffffff" align=right>
 					数据记录：</td>
-					<td colspan="3">
+					<td>
 <!--
 EOT;
 	if(isset($db_adv) && $db_adv[is_view]==1){
@@ -314,10 +277,8 @@ EOT;
 print <<<EOT
 -->				
 					</td>
-				</tr>
-				<tr>
 					<td bgColor="#ffffff" align=right>防止作弊：</td>
-					<td colspan=3>
+					<td>
 <!--
 EOT;
 	if(isset($db_adv) && $db_adv[filter_likeip]==1){
@@ -339,36 +300,87 @@ print <<<EOT
 -->
 						点击率上限<input type="text" id="max_crt" name="max_crt" style="WIDTH: 30px" value="$maxcrt"/>%
 					</td>
-				</tr>
-				<tr>
-					<td bgColor="#ffffff" align=right>效果限制(CPA类)：</td>
-					<td colspan=3>
-						独立IP效果限制<input type="text" id="eff_singleip" style="WIDTH: 30px" value="$effsingleip"/>次
-						相似IP效果限制<input type="text" id="eff_likeip" style="WIDTH: 30px" value="$efflikeip"/>次
-						交易编号相似字符数<input type="text" id="eff_codelike" name="eff_codelike" style="WIDTH: 30px" value="$effcodelike"/>个字符						
-						交易编号相似度次数限制<input type="text" id="eff_recodenum" name="eff_recodenum" style="WIDTH: 30px" value="$effrecodenum"/>次&nbsp;					
-					</td>
-				</tr>						
+				</tr>				
 				<tr>
 					<td align=right style="height: 57px">活动说明：</td>
 					<td colspan=3 style="height: 57px">
-					<textarea ID="memo" name="memo" style="Height:100px;Width:480px">$db_adv[memo]</textarea>
+					<textarea ID="memo" name="memo" style="Height:80px;Width:80%">$db_adv[memo]</textarea>
 					</td>
 				</tr>
-				
-				<tr>
-					<td colspan="4" align="center">
-					<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<input type="button" onclick="history.go(-1);" value=" 取消 ">
-					</td>
-				</tr>
-         
+
     </tbody>
 
  </TABLE>
   
-
-    </TD></TR></TBODY></TABLE>
+			<table cellSpacing="0" cellPadding="5" width="100%" align="center" border="0">
+				<tr>
+					<td class="zhuang12b" width="100%" bgColor="#E1EBE2">&nbsp;&nbsp;&nbsp;&nbsp;<b>计费信息</b></td>
+				</tr>
+			</table>		
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+				<tr>
+					<td align=right style="width: 15%">支付标准：</td>
+					<td width="28%">
+<!--
+EOT;
+	if(!isset($db_adv) || $db_adv[fee_type]==0){
+		echo '<input type="radio" id="fee_type0" name="fee_type" Value="0" checked/><label for="fee_type0">CPC</label>';
+	}else{
+		echo '<input type="radio" id="fee_type0" name="fee_type" Value="0"/><label for="fee_type0">CPC</label>';
+	}
+	if($db_adv[fee_type]==1){
+		echo '<input type="radio" id="fee_type1" name="fee_type" Value="1" checked/><label for="fee_type1">CPM</label>';
+	}else{
+		echo '<input type="radio" id="fee_type1" name="fee_type" Value="1"/><label for="fee_type1">CPM</label>';
+	}
+	if($db_adv[fee_type]==2){
+		echo '<input type="radio" id="fee_type2" name="fee_type" Value="2" checked/><label for="fee_type2">CPA</label>';
+	}else{
+		echo '<input type="radio" id="fee_type2" name="fee_type" Value="2"/><label for="fee_type2">CPA</label>';
+	}
+	if($db_adv[fee_type]==3){
+		echo '<input type="radio" id="fee_type3" name="fee_type" Value="3" checked/><label for="fee_type3">CPD</label>';
+	}else{
+		echo '<input type="radio" id="fee_type3" name="fee_type" Value="3"/><label for="fee_type3">CPD</label>';
+	}		
+print <<<EOT
+-->
+					</td>	
+				    <td align=right>对帐URL：</td>
+					<td>
+					    <input type="text" id="bill_url" name="bill_url" value="$db_adv[bill_url]" style="WIDTH: 200px">
+					</td>										
+				</tr>
+				<tr>
+					<td align=right>广告商结算价(<font color="red">*</font>)：</td>
+					<td>
+						<input type="text" id="price" name="price" value="$db_adv[price]"/><select id="unit" name="unit" style="width:70px">$op_unitlist</select>
+					</td>	
+					<td bgColor="#ffffff" align=right>站长支付价(<font color="red">*</font>)：</td>
+					<td>
+					    <input type="text" id="aff_price" name="aff_price" value="$db_adv[aff_price]"/><select id="aff_unit" name="aff_unit" style="width:70px">$op_affunitlist</select>
+					</td>				
+				</tr>
+				<tr>
+					<td align=right>每日限额：</td>
+					<td colspan="3">
+						<input type="text" id="day_maxmoney" name="day_maxmoney" value="$db_adv[day_maxmoney]"/> 元
+					</td>			
+				</tr>							
+        </tbody>
+    </TD>
+    </TR>
+				
+				<tr>
+					<td align="center" height="50px" colspan=4>
+					<input type="submit" id="btnSubmit" value=" 确定 " class="text" NAME="btnSubmit"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消 " class="text"/>
+					</td>
+				</tr>
+         
+    </TBODY>
+    </TABLE>
  
  </form>
 

@@ -2,11 +2,11 @@
 if($action=="selsite"){
 	$op_sitelist = "";
 	foreach($db_sitelist as $db_site){
-		$op_sitelist = "<option value='".$db_site[id]."'>".$db_site[name]."</option>";
+		$op_sitelist .= "<option value='".$db_site[id]."'>".$db_site[name]."</option>";
 	}
 print <<<EOT
 
-<select name="site_id" id="site_id">$op_sitelist</select>
+<select name="site_id" id="site_id" style="width:261px"><option value=''>请选择...</option>$op_sitelist</select>
 
 EOT;
 }else{

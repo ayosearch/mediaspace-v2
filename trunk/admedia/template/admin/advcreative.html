@@ -18,9 +18,6 @@ print <<<EOT
 <!--
 EOT;
  showPageLink("all", "1", "全部数据");
- showPageLink("audit", "0", "等待审核"); 
- showPageLink("audit", "1", "审核通过"); 
- showPageLink("audit", "2", "审核未通过");
  showPageLink("status", "0", "暂停");
  showPageLink("status", "1", "运营中");  
 print <<<EOT
@@ -45,7 +42,7 @@ print <<<EOT
 <!--
 EOT;
 						if($canaudit==true){
-							showButton(4,'审批','javascript:showAudit("'.$admin_file.'&action=audit'.$transtr.'&curpage='.$curpage.'");');
+							showButton(4,'启用','javascript:ConfirmDel("'.$admin_file.'&action=changestatus&auditstatus=1'.$transtr.'&curpage='.$curpage.'","是否确认启用选中的创意？");');
 						}
 						if($canadd==true){
 							showButton(1,'新增',$admin_file.'&action=new'.$transtr);
@@ -88,27 +85,28 @@ EOT;
 EOT;
 $curidx = ($curpage-1)*$perpage;
 $curpageidx = 0;
-$showcount = count($db_advlist); 
+$showcount = count($db_advcreativelist); 
 foreach($db_advcreativelist as $db_advcreative ){
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
 	$udate = date('Y/m/d H:i:s',$db_advcreative[update_time]);
 	$cdate = date('Y/m/d H:i:s',$db_advcreative[create_time]);	
-	$advctistatus = $cfg_userstatus[$db_advcreative[status]];	
+	$advctistatus = $cfg_advstatus[$db_advcreative[status]];	
+	$advctitype = $cfg_advctitype[$db_advcreative[content_type]];
 print <<<EOT
 --> 
             <tr height="20"  onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center" height="20">$curidx </td>
-                <td align="middle" valign="center"><input id="ids" name="ids" type="checkbox" value="$adv[id]" />
-                </td>
+                <td align="middle" valign="center"><input id="ids" name="ids" type="checkbox" value="$db_advcreative[id]" /></td>
+                <td align="middle" valign="center">&nbsp;$db_advcreative[name]</td>
                 <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=advertise&curid=$adv[id]" class=NoLine>$db_advcreative[adv_name]</a></td>
                 <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$adv[mer_id]" class=NoLine>$db_advcreative[mer_name]</a></td>
-                <td align="middle" valign="center">&nbsp;$db_advcreative[content_type]</td>
-                <td align="middle" valign="center">&nbsp;$db_advcreative[adsort]</td>
+                <td align="middle" valign="center">&nbsp;$advctitype</td>
+                <td align="middle" valign="center">&nbsp;$db_advcreative[adformat]</td>
                 <td align="middle" valign="center">&nbsp;$db_advcreative[adsize]</td>
                 <td align="middle" valign="center">&nbsp;$cdate</td> 
                 <td align="middle" valign="center">&nbsp;$udate</td>
-                <td align="middle" valign="center">&nbsp;$db_advcreative[page_id]</td>
+                <td align="middle" valign="center">&nbsp;$db_advcreative[pageurl]</td>
                 <td align="middle" valign="center">&nbsp;$db_advcreative[creator_user]</td> 
      			<td align="middle" valign="center">&nbsp;$advctistatus</td>                                                 
                 <td align="middle" valign="center">&nbsp;
@@ -175,7 +173,7 @@ print <<<EOT
 				<tr>
 					<td align=right width=20%>创意名称(<font color="red">*</font>)：</td>
 					<td>
-					    <input type="text" id="name" name="name" style="width:235px" value="$db_advpage[name]"/>
+					    <input type="text" id="name" name="name" style="width:235px" value="$db_advcreative[name]"/>
 					</td>
 				</tr>
 				<tr>			
@@ -210,7 +208,7 @@ print <<<EOT
 				</tr>
 				<tr>							
 					<td align=right>创意内容(<font color="red">*</font>)：</td>
-					<td><div id="div0"><input id="txt_word" name="txt_word" style="width:235px"/></div>
+					<td><div id="div0"><input id="txt_word" name="txt_word" style="width:235px" value="$db_advcreative[res_content]"/></div>
 						<div id="div1" style="display:none"><input type="file" id="img_file" name="img_file" style="width:235px"/></div>
 						<div id="div2" style="display:none"><textarea name="txt_code" id="txt_code" style="width:235px;height:60px"></textarea></div>	
 					</td>
