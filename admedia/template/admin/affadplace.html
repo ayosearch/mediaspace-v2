@@ -17,9 +17,9 @@ print <<<EOT
 <!--
 EOT;
  showPageLink("all", "1", "全部数据");
- showPageLink("aduit", "0", "等待审核");
- showPageLink("aduit", "1", "已审核");
- showPageLink("aduit", "2", "审核未通过");
+ showPageLink("audit", "0", "等待审核");
+ showPageLink("audit", "1", "已审核");
+ showPageLink("audit", "2", "审核未通过");
  showPageLink("status", "0", "空闲");
  showPageLink("status", "1", "可定向");
  showPageLink("status", "2", "已设定");
@@ -88,15 +88,15 @@ print <<<EOT
                     序号</td>
                 <td align="middle" class="title" height="20" valign="center">
                     <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
-                <td align="middle" class="title" height="20" valign="center">联盟</td>
-                <td align="middle" class="title" height="20" valign="center">网站</td>
-                <td align="middle" class="title" height="20" valign="center">广告位</td>
-                <td align="middle" class="title" height="20" valign="center"> 示例网址</td>
-                <td align="middle" class="title" height="20" valign="center">广告位尺寸</td>              
-                <td align="middle" class="title" height="20" valign="center">状态</td>
-                <td align="middle" class="title" height="20" valign="center">CPC计价</td>    
-                <td align="middle" class="title" height="20" valign="center">每周计价</td>    
-                 <td align="middle" class="title" height="20" valign="center">编辑</td>
+                <td align="middle" class="title" height="30" valign="center">广告位</td>
+                <td align="middle" class="title" height="30" valign="center">站长-站点</td>
+                <td align="middle" class="title" height="30" valign="center"> 示例网址</td>
+                <td align="middle" class="title" height="30" valign="center">广告位尺寸</td>              
+                <td align="middle" class="title" height="30" valign="center">CPC计价</td>    
+                <td align="middle" class="title" height="30" valign="center">每周计价</td>    
+               <td align="middle" class="title" height="30" valign="center">审核</td>                       
+                <td align="middle" class="title" height="30" valign="center">状态</td>                
+                 <td align="middle" class="title" height="30" valign="center">编辑</td>
             </tr>
 <!--
 EOT;
@@ -104,35 +104,27 @@ $curidx = ($curpage-1)*$perpage;
 $curpageidx = 0;
 $showcount = count($db_affadplacelist); 
 foreach($db_affadplacelist as $affadplace ){
-	$obj_affwebsite = getAffWebSite($affadplace[site_id]);
-	$affname = getAffName($affadplace[aff_id]);	
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
 	$cdate = date('Y/m/d H:i:s',$affadplace[create_time]);
+	$db_placeaudit = $cfg_userstatus[$affadplace[audit]];
+	$db_placestatus = $cfg_advplacestatus[$affadplace[status]];
 print <<<EOT
 -->    
             <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);"
                 onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center">$curidx </td>
-                <td align="middle" class="hei" valign="center"><input id="ID" name="ID" type="checkbox" value="$affadplace[id]" /></td>
-                <td valign="middle" align="center">&nbsp;
-<!--
-EOT;
-	showLink("$admin_file&action=affdetail",$affadplace[aff_id],$affname);
-print <<<EOT
--->($affadplace[aff_id])</td>
-                <td valign="middle" align="center">&nbsp;
-<!--
-EOT;
-	showUrl($obj_affwebsite[url],$obj_affwebsite[name]);
-print <<<EOT
--->($affadplace[site_id])</td>
+                <td align="middle" class="hei" valign="center"><input id="ids" name="ids" type="checkbox" value="$affadplace[id]" /></td>
                <td valign="middle" align="center">&nbsp;$affadplace[name]</td>
-               <td valign="middle" align="center">&nbsp;$affadplace[place_url]</td>                 
-               <td valign="middle" align="center">&nbsp;$affadplace[adsize_id]</td>             
-               <td valign="middle" align="center">&nbsp;$affadplace[status]</td>
+                <td><a href="$basename?job=detail&action=affiliate&curid=$affadplace[cur_id]$transtr" class="NoLine">$affadplace[aff_name]($affadplace[aff_id])</a>-
+                <a href="$basename?job=detail&action=affsite&curid=$affadplace[site_id]$transtr" class="NoLine">$affadplace[site_name]($affadplace[site_id])</a>                
+				</td>
+               <td valign="middle" align="center">&nbsp;<a href="$affadplace[demo_url]" title="$affadplace[demo_url]"><img src="$imgpath/admin/url.gif" border="0"/></a></td>                 
+               <td valign="middle" align="center">&nbsp;$affadplace[adsize]</td>             
                <td valign="middle" align="center">&nbsp;$affadplace[week_price]</td>
                <td valign="middle" align="center">&nbsp;$affadplace[click_price]</td>
+               <td valign="middle" align="center">&nbsp;$db_placeaudit</td>           
+               <td valign="middle" align="center">&nbsp;$db_placestatus</td>                           
                <td valign="middle" align="center">&nbsp;
 <!--
 EOT;
@@ -176,6 +168,15 @@ if($db_advplace){
 print <<<EOT
 -->
 <form name="form" id="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" value="save"/>
+<input type="hidden" name="curid" value="$curid"/>
+<input type="hidden" name="status" value="$status"/>
+<input type="hidden" name="audit" value="$audit"/>
+<input type="hidden" name="curpage" value="$curpage"/>
+<input type="hidden" name="searchtype" value="$searchtype"/>
+<input type="hidden" name="searchkey" value="$searchkey"/>
+<input type="hidden" name="start_date" value="$start_date"/>
+<input type="hidden" name="end_date" value="$end_date"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>
 		<TR >
@@ -194,7 +195,7 @@ print <<<EOT
         <tbody>
                 <tr>
 					<td align=right width="25%">所属站长(<font color=red>*</font>)：</td>
-					<td><input type="text" id="aff_name" name="aff_name" style="WIDTH: 132px"  readonly/>
+					<td><input type="text" id="aff_name" name="aff_name" style="WIDTH: 261px"  value="$db_advplace[aff_name]" readonly/>
 					<a href="javascript:void(0)" onclick="javascript:showAfflist();">
 					    <IMG border="0" align="absmiddle" style="CURSOR: hand" height="21" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle">选择站长
 					</a><input type=hidden id="aff_id" name="aff_id" value="$db_advplace[aff_id]"/>
@@ -203,7 +204,7 @@ print <<<EOT
 				<tr>
 					<td align=right>所属站点(<font color=red>*</font>)：</td>
 					<td align="left">
-						<div id="divSite"><select name="site_id" id="site_id" style="WIDTH: 132px"><option value="">请选择...</option>$op_sitelist</select></div>
+						<div id="divSite"><select name="site_id" id="site_id" style="WIDTH: 261px"><option value="">请选择...</option>$op_sitelist</select></div>
 					</td>
 				</tr>				
 				<tr>
@@ -263,9 +264,9 @@ function checkfrm(){
 		$("aff_name").focus();
 		return false;
 	}
-	if(isEmpty($('site_name').value)){
+	if(isEmpty($('site_id').value)){
 		alert('站点不能为空！');
-		$('site_name').focus();
+		$('site_id').focus();
 		return false;
 	}
 	if(isEmpty($('name').value)){
@@ -273,12 +274,12 @@ function checkfrm(){
 		$('name').focus();
 		return false;
 	}	
-	if($('demo_url').value == ""){
+	if(isEmpty($('demo_url').value)){
 		alert('示例网址不能为空！');
-		('demo_url').focus();
+		$('demo_url').focus();
 		return false;
 	}
-	if($('week_price').value == ""){
+	if(isEmpty($('week_price').value)){
 		alert('每周计价不能为空！');
 		$('week_price').focus();
 		return false;
@@ -288,9 +289,9 @@ function checkfrm(){
 		event.returnValue = false;
 		return;
 	}
-	if($('click_price').value == ""){
+	if(isEmpty($('click_price').value)){
 		alert('点击计价不能为空！');
-		$('week_price').focus();
+		$('click_price').focus();
 		return false;
 	}else if(isNaN($('click_price').value)){
 	    alert('点击计价必须为数字！');
@@ -302,4 +303,70 @@ function checkfrm(){
 </script>
 <!--
 EOT;
-}?>-->
+}
+if($action=="audit"){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
+<input type="hidden" name="action" value="auditsave"/>
+<input type="hidden" name="ids" value="$ids"/>
+<input type="hidden" name="status" value="$status"/>
+<input type="hidden" name="audit" value="$audit"/>
+<input type="hidden" name="curpage" value="$curpage"/>
+<input type="hidden" name="searchtype" value="$searchtype"/>
+<input type="hidden" name="searchkey" value="$searchkey"/>
+<input type="hidden" name="start_date" value="$start_date"/>
+<input type="hidden" name="end_date" value="$end_date"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>	    
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 审批广告位</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="98%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+            <tbody>
+                <tr>
+					<td align="right" width="15%">审批结果<font color=red>*</font>：</td>
+					<td>
+				 		<input type="radio" name="auditstatus" id='auditstatus1' value="1" checked onclick='javascript:$("content").value="广告位信息准确，允许通过！";'/><label for="auditstatus1">审核通过</label> 
+				 		<input type="radio" name="auditstatus" id='auditstatus2' value="2" onclick='javascript:$("content").value="广告位信息不准确，不允许通过！";'/><label for="auditstatus2">审核不通过</label> 
+					</td>
+				</tr>
+				<tr>
+					<td align=right>审核内容：</td>
+					<td><textarea name="content" id="content" style="width: 90%; height:55px">广告位信息准确，允许通过！</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="window.close();" value=" 取消"/>
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+<script>
+function checkfrm(){
+	if(isEmpty($('content').value)){
+		alert("请输入审批内容!");
+	}
+}
+</script>
+<!--
+EOT;
+}
+?>-->
+

@@ -16,5 +16,7 @@ $lang['msg'] = array (
 'noenough_condition'		=> '没有提供足够的条件',
 'password_confirm'			=> '两次输入密码不一致，请重新输入',
 'username_exists'			=> '该用户名已经被注册了,请重新填写.',
+'error_save'			=> '保存错误.',
+'advselector_exists'			=> '该类定向设置已存在，不能重复添加',
 );
 ?>
