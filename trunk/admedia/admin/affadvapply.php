@@ -1,35 +1,49 @@
 <?php 
 
-if($action=="new" || $action=="edit"){
-	$objCommData = LOAD::loadDB("CommonData");
-	if(!empty($curid)){
-		$objAffiliate = LOAD::loadDB("Affiliate");
-		$objAdvertise = LOAD::loadDB("Advertise");		
-		$db_advapply = $objAffiliate->getAffAdvApply($curid);
-		$db_advlist = $objAdvertise->getAdvertiseAll();
-		$op_advlist = "";
-		foreach ($db_advlist as $db_adv){
-			if($db_adv[id]==$db_advapply[adv_id]){
-				$op_advlist .= "<option value='$db_adv[id]' selected>$db_adv[name]</option>";
-			}else{
-				$op_advlist .= "<option value='$db_adv[id]'>$db_adv[name]</option>";
-			}
-		}
-	}
-	unset($objAffiliate,$objAdvertise,$db_affadvplace);
-}else if($acton=="save"){
+InitGetPost(array('status','all','auditstatus','start_date','end_date'));
+
+strlen($status)>0 && $transtr .= "&status=$status";
+strlen($start_date)>0 && $transtr .= "&start_date=$start_time";
+strlen($end_date)>0&& $transtr .= "&end_date=$end_date";
+(strlen($searchtype)>0 && strlen($searchkey)>0) && $transtr .= "&searchtype=".$searchtype."&searchkey=$searchkey";
+
+if($action=="new"){
+	$objAdvertise = LOAD::loadDB("Advertise");
+	$op_advlist = loadAdvertiseList(1);
+	unset($objAdvertise);		
+}else if($action=="edit"){
+	$objAdvertise = LOAD::loadDB("Advertise");	
+	$objAffiliate = LOAD::loadDB("Affiliate");		
+	$db_advapply = $objAffiliate->getAffAdvApply($curid);
+	$op_advlist = loadAdvertiseList(1,$db_advapply[adv_id]);
+	$op_sitelist = loadAffSiteList(1,$db_advapply[aff_id],$db_advapply[site_id]);
+	unset($objAffiliate,$objAdvertise);
+}else if($action=="save"){
 	$objAffiliate = LOAD::loadDB("Affiliate");		
 	if(empty($curid)){
 		$_POST[create_time] = $timestamp;
-		$objAffiliate->insertAffAdvApply(_POST);
+		$objAffiliate->insertAffAdvApply($_POST);
 	}else{
-		$objAffiliate->updateAffAdvApply($curid,_POST);
+		$objAffiliate->updateAffAdvApply($curid,$_POST);
 	}
 	unset($objAffiliate);
 	ObHeader("$basename?job=affadvapply");	
 }else if($action=="audit"){
 	$objAffiliate = LOAD::loadDB("Affiliate");
 	$objAffiliate->updateAffAdvApplyStatus($curid,$status);
+}else if($action=="auditsave"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}
+	$arrfield = array("audit_id"=>$AdminUser[id],"audit_name"=>$AdminUser[login_name],"create_time"=>$timestamp,"target_ids"=>$ids,
+								"parent_id"=>0,"level"=>0,"action"=>$aduitstatus,"content"=>$_POST[content],"itype"=>2);
+	$objSystem = LOAD::loadDB("System");	
+	$sysaudit_id = $objSystem->insertSysAudit($arrfield);
+	$objAffUser = LOAD::loadDB("Affiliate");	
+	$objAffUser->updateAffWebSiteStatus($ids,$sysaudit_id,$auditstatus);
+	echo "<script>window.returnValue='1';window.close();</script>";
+	unset($objSystem,$objAffUser,$arrfield);
+	exit;
 }else if($action=="del"){
 	$objAffiliate = LOAD::loadDB("Affiliate");
 	$objAffiliate->deleteAffAdvApply($curid);

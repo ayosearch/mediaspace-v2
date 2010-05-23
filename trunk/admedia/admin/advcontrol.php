@@ -31,6 +31,9 @@ InitGetPost(array('all','status',',start_date','end_date'));
 		adminMsg("error_create_view");	
 	}
 }else if($action=="open"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}
 	$objAdvertise = LOAD::loadDB("Advertise");
 	$objAdvertise->updateAdvertiseStatus($ids,1);
 	ObHeader("$basename?job=advcontrol$transtr");	

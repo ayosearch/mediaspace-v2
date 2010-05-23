@@ -16,12 +16,12 @@ if($action=="new"){
 	$op_advpagelist = loadAdvPagesList(1,1);
 }else if($action=="edit"){
 	$objAdvertise = LOAD::loadDB("Advertise");	
-	$db_adv = $objAdvertise->getAdvCreative($curid);
+	$db_advcreative = $objAdvertise->getAdvCreative($curid);
 	$objCommData = LOAD::loadDB("CommonData");
-	$op_advlist = loadAdvertiseList(1,$db_adv[adv_id]);
-	$op_advformatlist = loadBaseAdvFormat($db_adv[format]);
-	$op_advsizelist = loadBaseAdvSize($db_adv[adsize]);
-	$op_advpagelist = loadAdvPagesList(1,$db_adv[page_id]);	
+	$op_advlist = loadAdvertiseList(1,$db_advcreative[adv_id]);
+	$op_advformatlist = loadBaseAdvFormat($db_advcreative[format]);
+	$op_advsizelist = loadBaseAdvSize($db_advcreative[adsize]);
+	$op_advpagelist = loadAdvPagesList(1,$db_advcreative[page_id]);	
 }else if($action=="save"){
 	($_POST[content_type]==0) && $_POST[res_content] = $_POST[txt_word];
 	($_POST[content_type]==1) && $_POST[res_content] = $_FILES[img_file][name];
@@ -44,7 +44,17 @@ if($action=="new"){
 	ObHeader("$basename?job=advcreative$tranastr");
 	unset($objAdvertise);
 	exit;
+}else if($action=="changestatus"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}	
+	$objAdvertise = LOAD::loadDB("Advertise");	
+	$objAdvertise->updateAdvCreativeStatus($ids,$auditstatus);
+	ObHeader("$basename?job=advcreative$tranastr");
+	unset($objAdvertise);	
+	exit;	
 }else if(empty($action)){
+	$stwhere = "";
 	(!empty($audit)) && $stwhere .= " audit=".sqlEscape($audit)." and ";	
 	(!empty($status)) && $stwhere .= " status=".sqlEscape($status)." and ";		
 	(!empty($start_date)) && $stwhere .= " create_time>=".__strtotime($start_date)." and ";	
@@ -56,9 +66,9 @@ if($action=="new"){
 	(strlen($stwhere)>0) && $stwhere = substr($stwhere,0,strlen($stwhere)-4);	
 	
 	$objAdvertise = LOAD::loadDB("Advertise");
-	$totalnum = $objAdvertise->getAdvCreativeTotalCount();
+	$totalnum = $objAdvertise->getAdvCreativeTotalCount($stwhere);
 	$totalpage = ceil($totalnum/$perpage);
-	$db_advcreativelist = $objAdvertise->getAdvCreativePageList($curpage,$perpage);
+	$db_advcreativelist = $objAdvertise->getAdvCreativePageList($curpage,$perpage,$stwhere);
 }
 
 include PrintEot($job);

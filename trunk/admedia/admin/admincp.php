@@ -489,12 +489,12 @@ function loadMerChanceList($selid=null){
 	return $op_merchantlist;
 }
 
-function loadAdvertiseList($status,$selid=null){
+function loadAdvertiseList($status,$selid=0){
 	global $objAdvertise;
 	$db_advlist = $objAdvertise->getAdvertiseStatusList($status);
 	$op_advlist = "";
 	foreach($db_advlist as $db_adv){
-		if($selid==$db_adv[val]){
+		if($selid==$db_adv[id]){
 			$op_advlist .= "<option value='$db_adv[id]' selected>$db_adv[name]</option>";
 		}else{
 			$op_advlist .= "<option value='$db_adv[id]'>$db_adv[name]</option>";
@@ -504,12 +504,27 @@ function loadAdvertiseList($status,$selid=null){
 	return $op_advlist;
 }
 
+function loadAffSiteList($status,$affid,$selid=0){
+	global $objAffiliate;
+	$db_sitelist = $objAffiliate->getAffSiteStatusList($affid,$status);
+	$op_sitelist = "";
+	foreach($db_sitelist as $db_site){
+		if($selid==$db_site[id]){
+			$op_sitelist .= "<option value='$db_site[id]' selected>$db_site[name]</option>";
+		}else{
+			$op_sitelist .= "<option value='$db_site[id]'>$db_site[name]</option>";
+		}
+	}
+	unset($db_sitelist,$db_site);
+	return $op_sitelist;
+}
+
 function loadAdvPagesList($status,$selid=null){
 	global $objAdvertise;
 	$db_advpagelist = $objAdvertise->getAdvPagesList($status);
 	$op_advpagelist = "";
 	foreach($db_advpagelist as $db_advpage){
-		if($selid==$db_advpage[val]){
+		if($selid==$db_advpage[id]){
 			$op_advpagelist .= "<option value='$db_advpage[id]' selected>$db_advpage[name]</option>";
 		}else{
 			$op_advpagelist .= "<option value='$db_advpage[id]'>$db_advpage[name]</option>";
@@ -583,10 +598,12 @@ function showDisString($curid){
 }
 
 function showDelButton($curid,$del="del"){
-	global $candel,$admin_file,$curpage,$transtr,$imgpath,$aff_id,$mer_id;
+	global $candel,$admin_file,$curpage,$transtr,$imgpath,$aff_id,$mer_id,$backurl,$adv_id;
 	$url = $admin_file."&action=".$del."&curpage=".$curpage."&curid=".$curid.$transtr;
 	if(isset($aff_id)) $url .= "&aff_id=".$aff_id;
 	if(isset($mer_id)) $url .= "&mer_id=".$mer_id;	
+	if(isset($adv_id)) $url .= "&adv_id=".$adv_id;		
+	if(isset($backurl)) $url .= "&backurl=".urlencode($backurl);		
 	if($candel){
 		echo "<a href=javascript:ConfirmUrlDel('$url','".mb_convert_encoding("此操作不能恢复，确定删除吗？","utf-8","gbk")."');><img align='absMiddle' alt='删除' border='0' src='$imgpath/admin/del.gif'/></a>";
 	}else{
@@ -638,7 +655,7 @@ function showButton($imgval,$title,$clickurl){
 	if($imgval==6){
 		$iconimgurl = "$imgpath/admin/url.gif";
 	}			
-	echo "<img src='$imgpath/admin/bg_line.gif' align='AbsMiddle'/>&nbsp;<img src='$iconimgurl'/><a href='$clickurl' title='$title'>$title</a>";
+	echo "<img src='$imgpath/admin/bg_line.gif' align='absmiddle'/>&nbsp;<img src='$iconimgurl'/><a href='$clickurl' title='$title' align='absmiddle'>$title</a>";
 }
 
 function showPageBreakInfo($currpagecount,$js=null){
