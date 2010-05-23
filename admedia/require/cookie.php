@@ -2,7 +2,6 @@
 function Cookie($ck_Var,$ck_Value,$ck_Time='F',$p=true){
 	global $cfg_ckpath,$cfg_ckdomain,$timestamp,$pmServer;
 
-
 	if (!$pmServer['REQUEST_URI'] || ($https = @parse_url($pmServer['REQUEST_URI']))===false) {
 		$https = array();
 	}
