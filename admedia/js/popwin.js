@@ -22,7 +22,7 @@ function showAfflist(){
 	    $("aff_name").value = ClientArray[1];
 	    $("aff_id").value = ClientArray[0];
 	    if($("site_id")!=null){
-	    	var pars = "job=affsiteaudit&action=selsite&curid="+$("aff_id").value;
+	    	var pars = "job=affsiteaudit&action=selsite&curid="+$("aff_id").value+"&d="+d.getMilliseconds();
 	    	new Ajax.Updater("divSite",'admincp.php', {method: 'get', parameters: pars});
 	    }
     }
@@ -53,7 +53,7 @@ function showAudit(url){
 
 function showModelWin(url){
 	url = url+"&d="+d.getMilliseconds();	
-    var strClient = OpenWindow(url,530,425,'');//window.open(url+"&ids="+selids,'','');
+    var strClient = OpenWindow(url,572,495,'');//window.open(url+"&ids="+selids,'','');
     if(strClient != null){
 	    window.location.reload();
     }   
