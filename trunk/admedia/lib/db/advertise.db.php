@@ -52,7 +52,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}
 	
 	function getAdvertise($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_advertise WHERE id=".intval($id));
+		$data = $this->_db->get_one("SELECT a.*,b.short_name as mer_name FROM pm_advertise a,pm_merchant b where a.mer_id=b.id and a.id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
@@ -122,6 +122,12 @@ class PM_AdvertiseDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function updateAdvCreativeStatus($ids,$status){
+		$sql = "UPDATE pm_advcreative SET status=".intval($status)." WHERE id in (". $ids .")";
+		$this->_db->update($sql);
+		return $this->_db->affected_rows();
+	}
+	
 	function deleteAdvCreative($id){
 		$this->_db->update("DELETE FROM pm_advcreative WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -138,7 +144,9 @@ class PM_AdvertiseDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$sql = "SELECT a.*,b.name as adv_name,c.short_name as mer_name FROM pm_advcreative a,pm_advertise b,pm_merchant c where a.mer_id=c.id and a.adv_id=b.id ";
+		$sql = "SELECT a.*,b.name as adv_name,c.short_name as mer_name,f.url as pageurl
+					 FROM pm_advcreative a,pm_advertise b,pm_merchant c,pm_advpages f 
+					 where a.mer_id=c.id and a.adv_id=b.id and f.id=a.page_id";
 		if($stwhere!=null)
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
@@ -234,7 +242,8 @@ class PM_AdvertiseDB extends BaseDB{
 	function insertAdvSelector($fieldsData){
 		$fieldsData = $this->_checkAdvSelectorData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_advselector SET " . $this->_getUpdateSqlString($fieldsData));
+		$sql = "INSERT INTO pm_advselector SET " . $this->_getUpdateSqlString($fieldsData);
+		$this->_db->update($sql);
 		$insertId = $this->_db->insert_id();
 		return $insertId;
 	}
@@ -256,6 +265,18 @@ class PM_AdvertiseDB extends BaseDB{
 		if (!$data) return null;
 		return $data;
 	}
+	
+	function checkAdvSelector($adv_id,$isfilter,$itype){
+		$sql = "select count(id) from pm_advselector where adv_id=".intval($adv_id)." and is_filter=".intval($isfilter)." and itype=".sqlEscape($itype);
+		$count = $this->_db->get_value($sql);
+		return $count>0;
+	}
+	
+	function getAdvSelectorByAdvId($adv_id){
+		$sql = "SELECT * FROM pm_advselector where adv_id=".intval($adv_id)." order by itype,id desc";
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);	
+	}	
 	
 	function getAdvSelectorPageList($page, $perPage,$stwhere=null,$storderby=null){
 		$page = intval($page);
@@ -280,12 +301,12 @@ class PM_AdvertiseDB extends BaseDB{
 	}		
 	
 	function getAdvSelectorStruct() {
-		return array('id','mer_id','adv_id','type','content','status','create_time');
+		return array('id','mer_id','adv_id','itype','content','status','create_time','is_filter');
 	}
 	
 	function _checkAdvSelectorData($data){
 		if (!is_array($data) || !count($data)) return null;
-		$data = $this->_checkAllowField($data,$this->getAdvPagesStruct());
+		$data = $this->_checkAllowField($data,$this->getAdvSelectorStruct());
 		return $data;
 	}
 	
