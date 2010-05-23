@@ -76,4 +76,9 @@ $cfg_mercctype = array("纸张","传真","电子合同");
 $cfg_merccstatus = array("暂停执行","执行中","已到期"); 
 $cfg_advfeetype = array("CPC","CPM","CPA","CPD");
 $cfg_advstatus = array("<font color='red'>暂停</font>","<font color='green'>运营中</font>");
+$cfg_advctitype = array("文字 ","图片","原始代码");
+$cfg_advplacestatus = array("<font color='green'>空闲中</font>","<font color='blue'>可定向</font>","<font color='red'>已定向</font>");
+$cfg_advselectortype = array("site_type"=>"站长类型","province"=>"省份","domain"=>"域名","keyword"=>"关键字");
+$cfg_advselectorfilter = array("选取","过滤");
+$cfg_advselectorstatus = array("停止","启用");
 ?>
