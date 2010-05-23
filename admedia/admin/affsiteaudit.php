@@ -50,6 +50,7 @@ if(isset($action) && $action=="new"){
 }else if($action=="selsite"){
 	$objAffiliate = LOAD::loadDB("Affiliate");	
 	$db_sitelist = $objAffiliate->getAffWebSiteByAffId($curid);
+	unset($objAffiliate);
 	include PrintEot($job);
 	exit;
 }else if($action=="lock"){
