@@ -1,0 +1,47 @@
+@charset "gb2312";
+/* CSS Document */
+
+*{margin:0; padding:0; border:0; font-size:12px; font-family:Arial, Helvetica, sans-serif;}
+html{overflow-x:hidden;}
+.zz_right{background:#ececec;}
+.cleatdiv{clear:both; line-height:0; height:0; font-size:0;}
+.right_box{width:100%; min-height:718px; min-height:697px\9; +min-height:764px; _min-height:700px; _height:740px; overflow:hidden; _overflow:visible; border-top:1px solid #c3c3c3; border-left:1px solid #c3c3c3; margin-top:12px; background-color:#fff;}
+.right_tit{width:99.2%; height:29px; border:1px solid #c9c9c9; margin:6px 6px 1px 6px; background:url(../img/right_tit.gif) left top repeat-x;}
+.right_tit dl{width:100%;}
+.right_tit dl dt{width:28px; height:29px; background:url(../img/right_ico.gif) center no-repeat; float:left;}
+.right_tit dl dd{width:200px; height:29px; font-size:12px; color:#000; font-weight:bold; line-height:29px; line-height:32px\9; +line-height:29px; _line-height:29px; text-align:left;}
+
+
+
+.pay_list{width:99.2%; min-height:60px; _height:60px; overflow:hidden; _overflow:visible; border:1px solid #e3e5e3; background:#fff; margin:4px 6px;}
+.pay_list dl{width 100%;}
+.pay_list dl .dd01{width:10%; height:30px; background:#f9f7f7; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.pay_list dl strong{color:#757575;}
+.pay_list dl .dd02{width:10%; height:30px; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.pay_list dl .dd03{width:30%; width:30%\9; +width:29.8%; _width:29.8%; height:30px; background:#f9f7f7; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.pay_list dl .dd04{width:10%; width:10%\9; +width:9.5%; _width:9.7%; height:30px; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.pay_list dl a,.pay_list dl a:link{color:#00c0ff; text-decoration:none;}
+.pay_list dl a:hover{color:#630; text-decoration:underline;}
+
+
+
+.editad_list{width:99.2%; min-height:60px; _height:60px; overflow:hidden; _overflow:visible; border:1px solid #e3e5e3; background:#fff; margin:4px 6px;}
+.editad_list dl{width 100%;}
+.editad_list dl .dd01{width:9.5%; height:30px; background:#f9f7f7; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.editad_list dl strong{color:#757575;}
+.editad_list dl .dd02{width:9.5%; height:30px; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.editad_list dl .dd02 a,.editad_list dl .dd02 a:link{color:#f00; text-decoration:none; padding-right:8px;}
+.editad_list dl .dd02 a:hover{color:#039; text-decoration:underline;}
+.editad_list dl .dd03{width:30%; width:30%\9; +width:29.8%; _width:29.8%; height:30px; background:#f9f7f7; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.editad_list dl .dd04{width:14.5%; width:14.5%\9; +width:14.2%; _width:14.4%; height:30px; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.editad_list dl a,.editad_list dl a:link{color:#00c0ff; text-decoration:none; padding-right:8px;}
+.editad_list dl a:hover{color:#630; text-decoration:underline;}
+
+
+
+
+
+
+
+
+
