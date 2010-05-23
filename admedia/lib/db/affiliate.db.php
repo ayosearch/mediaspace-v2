@@ -99,7 +99,7 @@ class  PM_AffiliateDB extends BaseDB{
 		$this->_db->update($sql);
 		return $this->_db->affected_rows();
 	}
-	
+
 	function updateAffWebSiteStatus($id,$sysaudit_id=0,$status){
 		global $timestamp;
 		if($sysaudit_id==0)
@@ -125,6 +125,12 @@ class  PM_AffiliateDB extends BaseDB{
 		$query = $this->_db->query("SELECT * FROM pm_affwebsite ORDER BY id DESC");
 		return $this->_getAllResultFromQuery($query);	
 	}
+	
+	function getAffSiteStatusList($aff_id,$status){
+		$sql = "SELECT * FROM pm_affwebsite where aff_id=".intval($aff_id)." and status=".intval($status)." ORDER BY id DESC";
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);	
+	}	
 	
 	function getAffWebSiteByAffId($aff_id){
 		$query = $this->_db->query("SELECT * FROM pm_affwebsite where aff_id=".intval($aff_id)." and status=1 ORDER BY id DESC");
@@ -167,7 +173,7 @@ class  PM_AffiliateDB extends BaseDB{
 	function insertAffAdvApply($fieldsData){
 		$fieldsData = $this->_checkAffAdvApplyData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_affiliate SET " . $this->_getUpdateSqlString($fieldsData));
+		$this->_db->update("INSERT INTO pm_affadvapply SET " . $this->_getUpdateSqlString($fieldsData));
 		$insertId = $this->_db->insert_id();
 		return $insertId;
 	}
@@ -191,7 +197,8 @@ class  PM_AffiliateDB extends BaseDB{
 	}
 	
 	function getAffAdvApply($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_affadvapply WHERE $id=".intval($id));
+		$sql = "SELECT a.*,b.login_name as aff_name FROM pm_affadvapply a,pm_affiliate b where a.aff_id=b.id and a.id=".intval($id);
+		$data = $this->_db->get_one($sql);
 		if (!$data) return null;
 		return $data;
 	}
@@ -206,9 +213,9 @@ class  PM_AffiliateDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$sql = "SELECT * FROM pm_affadvapply";
+		$sql = "SELECT a.*,b.name as adv_name,c.name as site_name,d.login_name as aff_name FROM pm_affadvapply a,pm_advertise b,pm_affwebsite c,pm_affiliate d where a.aff_id=d.id and a.adv_id=b.id and a.site_id=c.id ";
 		if($stwhere!=null)
-			$sql = $sql." where ".$stwhere;
+			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
 		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
@@ -224,7 +231,7 @@ class  PM_AffiliateDB extends BaseDB{
 	}
 	
 	function getAffAdvApplyStruct() {
-		return array('aff_id','adv_id','site_id','audit_id','audit_user','create_time','audit_time','status','memo');
+		return array('aff_id','adv_id','site_id','sysaudit_id','create_time','status','memo');
 	}
 	
 	function _checkAffAdvApplyData($data){
@@ -249,13 +256,28 @@ class  PM_AffiliateDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function updateAffAdvPlaceAudit($ids,$sysaudit_id=0,$audit){
+		global $timestamp;
+		if($sysaudit_id==0)
+			$sql = "update pm_affadvplace set audit=".intval($audit).",audit_time=$timestamp where id in (".$ids.")";
+		else
+			$sql = "update pm_affadvplace set audit=".intval($audit).",audit_time=$timestamp, sysaudit_id=".intval($sysaudit_id)." where id in (".$ids.")";		
+		$this->_db->update($sql);
+		return $this->_db->affected_rows();
+	}
+	
+	function updateAffAdvPlaceStatus($ids,$status){
+		$this->_db->update("UPDATE pm_affadvplace SET audit=".intval($status)." WHERE ids in (".$ids .")");
+		return $this->_db->affected_rows();
+	}
+	
 	function deleteAffAdvPlace($id){
 		$this->_db->update("DELETE FROM pm_affadvplace WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
 	}
 	
 	function getAffAdvPlace($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_affadvplace WHERE $id=".intval($id));
+		$data = $this->_db->get_one("SELECT a.*,b.name as site_name,c.login_name as aff_name FROM pm_affadvplace a,pm_affwebsite b,pm_affiliate c where a.site_id=b.id and a.aff_id=c.id and a.id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
@@ -280,7 +302,7 @@ class  PM_AffiliateDB extends BaseDB{
 	}
 
 	function getAffAdvPlaceTotalCount($stwhere=null){
-		$sql = "SELECT COUNT(id) as count FROM pm_affadvplace";
+		$sql = "SELECT COUNT(a.id) as count FROM pm_affadvplace a ";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
 		$count = $this->_db->get_value($sql);
