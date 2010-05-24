@@ -259,6 +259,27 @@ print <<<EOT
 						<textarea name="admin_ip_list" id="admin_ip_list" style="width:400px" rows="3">$db_sysconfig[admin_ip_list]</textarea>(多个用,分开)
 					</td>					
 				</tr>								
+                <tr>
+					<td align=left colspan=4 bgcolor="#eeeeee"><b>邮件&消息设置</b></td>					
+				</tr>	
+				<tr>
+					<td align=right>SMTP服务器<font color=red>*</font>：</td>
+					<td><input type="text" name="smtp_server" id="smtp_service"/></td>	
+					<td align=right>端 口号<font color=red>*</font>：</td>
+					<td><input type="text" name="smtp_port" id="smtp_port"/></td>										
+				</tr>
+				<tr>
+					<td align=right>系统邮件发件人<font color=red>*</font>：</td>
+					<td><input type="text" name="mail_user" id="mail_user"/></td>	
+					<td align=right>系统邮件密码<font color=red>*</font>：</td>
+					<td><input type="text" name="mail_pass" id="mail_pass"/></td>										
+				</tr>
+				<tr>
+					<td align=right>短信下发地址<font color=red>*</font>：</td>
+					<td colspan="3"><input type="text" name="sms_url" id="sms_url" style="width:355"/>
+					参数:手机号-<input type="text" name="sms_mobile" id="sms_mobile" style="width:40px"/>
+					内容参数-<input type="text" name="sms_msg" id="sms_msg" style="width:40"/></td>										
+				</tr>				
 				<tr>
 					<td colspan="4" align="center">
 					<input type="submit" id="btnSubmit" value=" 保存 ">
@@ -353,6 +374,43 @@ function checkfrm(){
 			$("admin_ip_list").focus();			
 			return false;
 		}
+	}
+	if(isEmpty($("smtp_server").value)){
+		alert("请输入SMTP服务器");
+		$("smtp_server").focus();
+		return false;		
+	}
+	if(isEmpty($("smtp_port").value)){
+		alert("请输入SMTP服务器端口");
+		$("smtp_port").focus();
+		return false;	
+	}else if(isInteger($("smtp_port").value)==false){
+		alert("SMTP服务器端口为数字");
+	}
+	if(isEmpty($("mail_user").value)){
+		alert("请输入邮件账号名称");
+		$("mail_user").focus();
+		return false;
+	}
+	if(isEmpty($("mail_pass").value)){
+		alert("请输入邮件账号密码");
+		$("mail_pass").focus();
+		return false;
+	}
+	if(isEmpty($("sms_url").value)){
+		alert("请输入短信下发地址");
+		$("sms_url").focus();
+		return false;
+	}
+	if(isEmpty($("sms_mobile").value)){
+		alert("请输入短信下发地址的参数-手机号");
+		$("sms_mobile").focus();
+		return false;
+	}
+	if(isEmpty($("sms_msg").value)){
+		alert("请输入短信下发地址的参数-短信内容");
+		$("sms_msg").focus();
+		return false;
 	}		
 }
 function showIpLimit(val){
