@@ -50,10 +50,20 @@ if($action=="new"){
 	unset($objAffiliate);	
 	ObHeader("$basename?job=affadvplace");	
 }else if(empty($action) || $action=="select"){
+	$stwhere = "status in (0,2) and ";	
+	if(strlen($start_date)>0) $stwhere .= " create_time>=".__strtotime($start_date)." and ";	
+	if(strlen($end_date)>0) $stwhere .= " create_time<=".__strtotime($end_date)." and ";		
+
+	if(strlen($searchtype)>0 && strlen($searchkey)>0) {
+		$querykey = "%".$searchkey."%";
+		$stwhere .= " $searchtype like ".sqlEscape($querykey)." and ";			
+	}	
+	(strlen($stwhere)>0) && $stwhere = substr($stwhere,0,strlen($stwhere)-4);	
+	
 	$objAffiliate = LOAD::loadDB("Affiliate");
-	$totalnum = $objAffiliate->getAffAdvApplyTotalCount();
+	$totalnum = $objAffiliate->getAffAdvApplyTotalCount($stwhere);
 	$totalpage = ceil($totalnum/$perpage);
-	$db_affadvapplylist = $objAffiliate->getAffAdvApplyPageList($curpage,$perpage);
+	$db_affadvapplylist = $objAffiliate->getAffAdvApplyPageList($curpage,$perpage,$stwhere,"create_time");
 	unset($objAffiliate,$totalnum,$totalpage);
 }
 include PrintEot($job);
