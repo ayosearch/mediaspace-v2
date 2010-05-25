@@ -28,13 +28,18 @@ function showAfflist(){
     }
 }
 
-function showAffAdPlace(){
+function showAffAdPlace(backurl){
 	var url = "admincp.php?job=affadplace&action=select&d="+d.getMilliseconds();
-    var strClient = OpenWindow(url,530,505,'');
+    var strClient = OpenWindow(url,660,505,'');
     if(strClient != null){
-	    var ClientArray = strClient.replace('***',',').split(',');
+	    var ClientArray = strClient.split('***');
+	    $("place_id").value = ClientArray[0];	    
 	    $("place_name").value = ClientArray[1];
-	    $("place_id").value = ClientArray[0];
+	    var arrsite = ClientArray[2].split("-");
+	    backurl = escape(backurl);
+	    $('aff_id').value = ClientArray[3];
+	    $('site_id').value = ClientArray[4];
+	    $("divsite").innerHTML = "<a href='admincp.php?job=detail&action=affiliate&curid="+ClientArray[3]+"&backurl="+backurl+"'>"+arrsite[0]+"</>-<a href='admincp.php?job=detail&action=website&curid="+ClientArray[4]+"&backurl="+backurl+"'>"+arrsite[1]+"</a>";
     }
 }
 
@@ -76,6 +81,12 @@ function selAffiliate(affid,affname){
 	window.returnValue = affid+'***'+affname;
 	window.close();
 }
+
+function selAffAdPlace(placeid,placename,view,ids){
+	window.returnValue = placeid+'***'+placename+"***"+view+"***"+ids;
+	window.close();
+}
+
 
 function selMsgtpl(subject,content){
 	window.returnValue = subject+"-"+content;
