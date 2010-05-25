@@ -8,24 +8,32 @@ print <<<EOT
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
-                <strong>站长管理 &gt;&gt;  申请广告审核</strong>
+                <strong>站长管理 &gt;&gt;  站长申请投放初审</strong>
             </td>
         </tr>
     </table>
-    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="100%" align=center>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
          <tr>
-            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+         	<td>&nbsp;&nbsp;<b>快速查询：</b>
+			<select id="searchtype" name="searchtype">
 <!--
 EOT;
- showPageLink("all", "1", "全部数据");
- showPageLink("status", "0", "等待审核");
- showPageLink("status", "1", "已审核");
- showPageLink("status", "2", "审核未通过");
+				if(empty($searchtype) || $searchtype=="aff_id")  echo '<option value="aff_id" selected>站长ID</option>';
+			    else echo '<option value="name">站长ID</option>';
+				if(!empty($searchtype) && $searchtype=="aff_name")  echo '<option value="aff_name" selected>站长名称</option>';
+			    else echo '<option value="name">站长名称</option>';
+				if(!empty($searchtype) && $searchtype=="site_name")  echo '<option value="place_url" selected>站点名称</option>';
+			    else echo '<option value="place_url">站点名称</option>'; 			    
+				if(!empty($searchtype) && $searchtype=="adv_name")  echo '<option value="adv_name" selected>广告计划</option>';
+			    else echo '<option value="adv_name">广告计划</option>';
 print <<<EOT
--->
-            </td></tr>
-         <tr>
-        <tr>
+-->				
+				</select>
+							<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>
+						开始时间：<input name="start_date" type="text"  class="text" readonly value="$start_date"/><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_date" type="text" class="text" readonly value="$end_date"/><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<input type="submit" value="查询" class="text"/>
+            </td>
             <td align="right" valign="center">
                 <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
                     <input id="Hidden1" name="allSelect" type="hidden" value="all" />

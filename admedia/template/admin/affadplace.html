@@ -88,8 +88,7 @@ print <<<EOT
                     序号</td>
                 <td align="middle" class="title" height="20" valign="center">
                     <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
-                <td align="middle" class="title" height="30" valign="center">广告位</td>
-                <td align="middle" class="title" height="30" valign="center">站长-站点</td>
+                <td align="middle" class="title" height="30" valign="center">站长-站点-广告位</td>
                 <td align="middle" class="title" height="30" valign="center"> 示例网址</td>
                 <td align="middle" class="title" height="30" valign="center">广告位尺寸</td>              
                 <td align="middle" class="title" height="30" valign="center">CPC计价</td>    
@@ -115,9 +114,8 @@ print <<<EOT
                 onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center">$curidx </td>
                 <td align="middle" class="hei" valign="center"><input id="ids" name="ids" type="checkbox" value="$affadplace[id]" /></td>
-               <td valign="middle" align="center">&nbsp;$affadplace[name]</td>
-                <td><a href="$basename?job=detail&action=affiliate&curid=$affadplace[cur_id]$transtr" class="NoLine">$affadplace[aff_name]($affadplace[aff_id])</a>-
-                <a href="$basename?job=detail&action=affsite&curid=$affadplace[site_id]$transtr" class="NoLine">$affadplace[site_name]($affadplace[site_id])</a>                
+                <td align="left" valign="center">&nbsp;<a href="$basename?job=detail&action=affiliate&curid=$affadplace[cur_id]$transtr" class="NoLine">$affadplace[aff_name]($affadplace[aff_id])</a>-
+                <a href="$basename?job=detail&action=affsite&curid=$affadplace[site_id]$transtr" class="NoLine">$affadplace[site_name]($affadplace[site_id])</a> -$affadplace[name]               
 				</td>
                <td valign="middle" align="center">&nbsp;<a href="$affadplace[demo_url]" title="$affadplace[demo_url]"><img src="$imgpath/admin/url.gif" border="0"/></a></td>                 
                <td valign="middle" align="center">&nbsp;$affadplace[adsize]</td>             
@@ -365,6 +363,117 @@ function checkfrm(){
 	}
 }
 </script>
+
+<!--
+EOT;
+}
+if($action=="select"){
+print <<<EOT
+-->
+<form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>选择广告位</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+         <tr>
+         	<td>&nbsp;&nbsp;
+			<b>快速查询：</b><select id="searchtype" name="searchtype">
+			<!--
+			EOT;
+				if(empty($searchtype) || $searchtype=="name")  echo '<option value="name" selected>广告位名称</option>';
+			    else echo '<option value="name">广告位名称</option>';
+				if(empty($searchtype) || $searchtype=="keyword")  echo '<option value="keyword">关键字</option>';
+			    else echo '<option value="keyword">关键字</option>';
+				if(empty($searchtype) || $searchtype=="place_url")  echo '<option value="place_url">示例网址</option>';
+			    else echo '<option value="place_url">示例网址</option>'; 
+				if(empty($searchtype) || $searchtype=="sitename")  echo '<option value="sitename">站点名称</option>';
+			    else echo '<option value="sitename">站点名称</option>';    
+				if(empty($searchtype) || $searchtype=="siteurl")  echo '<option value="siteurl">网址地址</option>';
+			    else echo '<option value="siteurl">网址地址</option>';
+				if(empty($searchtype) || $searchtype=="adsize")  echo '<option value="adsize">广告位尺寸</option>';
+			    else echo '<option value="siteurl">广告位尺寸</option>';     
+			print <<<EOT
+			-->				
+				</select>
+							<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>     <input type="submit" value="查询" class="text"/>    	
+         	</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+ <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center">广告位</td>
+                <td align="middle" class="title" height="20" valign="center">站点站长</td>                
+                <td align="middle" class="title" height="20" valign="center">广告尺寸</td>
+                <td align="middle" class="title" height="20" valign="center">周计价</td>          
+                <td align="middle" class="title" height="20" valign="center">点击计价</td>  
+                <td align="middle" class="title" height="20" valign="center">状态</td>                                      
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affadplacelist); 
+foreach($db_affadplacelist as $affadplace ){
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;	
+	$db_placestatus = $cfg_advplacestatus[$affadplace[status]];
+print <<<EOT
+--> 
+          <tr height="30" onclick="javascript:selAffAdPlace('$affadplace[id]','$affadplace[name]','$affadplace[aff_name]($affadplace[aff_id])-$affadplace[site_name]($affadplace[site_id])','$affadplace[aff_id]***$affadplace[site_id]')" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx <input id="ids" name="ids" type="hidden" value="$affadplace[id]" /></td>
+                <td align="middle" valign="center">&nbsp;$affadplace[name]</td>
+                <td align="left" valign="center">&nbsp;<a href="$affadplace[demo_url]" target ="_blank" title="点击查看地址:$affadplace[demo_url]">$affadplace[aff_name]($affadplace[aff_id])-$affadplace[site_name]($affadplace[site_id])</a></td>    
+               <td valign="middle" align="center">&nbsp;$affadplace[adsize]</td>             
+               <td valign="middle" align="center">&nbsp;$affadplace[week_price]</td>
+               <td valign="middle" align="center">&nbsp;$affadplace[click_price]</td>
+               <td valign="middle" align="center">&nbsp;$db_placestatus</td>                           
+            </tr>
+<!--
+EOT;
+}
+print <<<EOT
+--> 
+            
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>&nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+</form>
+</body>
+
 <!--
 EOT;
 }
