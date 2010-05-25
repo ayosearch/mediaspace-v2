@@ -51,6 +51,11 @@ class PM_AdvertiseDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function deleteBatchAdvertise($ids){
+		$this->_db->update("UPDATE pm_advertise set is_del=1 WHERE ids in (". sqlEscape($ids) .")");
+		return $this->_db->affected_rows();
+	}	
+	
 	function getAdvertise($id){
 		$data = $this->_db->get_one("SELECT a.*,b.short_name as mer_name FROM pm_advertise a,pm_merchant b where a.mer_id=b.id and a.id=".intval($id));
 		if (!$data) return null;
@@ -331,8 +336,13 @@ class PM_AdvertiseDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function deleteAdvBatchBuyAffPlaces($ids){
+		$this->_db->update("update pm_advbuyaffplaces set is_del=1 WHERE id in (". sqlEscape($ids) .")");
+		return $this->_db->affected_rows();
+	}	
+	
 	function getAdvBuyAffPlaces($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_advbuyaffplaces WHERE id=".intval($id));
+		$data = $this->_db->get_one("SELECT a.*,b.login_name as aff_name,c.name as site_name,d.name as place_name FROM pm_advbuyaffplaces a,pm_affiliate b,pm_affwebsite c,pm_affadvplace d WHERE a.aff_id=b.id and a.site_id=c.id and a.place_id=d.id and a.id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
@@ -342,9 +352,9 @@ class PM_AdvertiseDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$sql = "SELECT * FROM pm_advbuyaffplaces";
+		$sql = "SELECT a.*,b.login_name as aff_name,c.name as place_name,c.demo_url as demo_url,d.name as site_name,e.name as adv_name FROM pm_advbuyaffplaces a,pm_affiliate b,pm_affadvplace c,pm_affwebsite d,pm_advertise e where a.aff_id=b.id and a.place_id=c.id and a.site_id=d.id and a.adv_id=e.id ";
 		if($stwhere!=null)
-			$sql = $sql." where ".$stwhere;
+			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
 		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
@@ -352,7 +362,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}
 
 	function getAdvBuyAffPlacesTotalCount($stwhere=null){
-		$sql = "SELECT COUNT(id) as count FROM pm_advselector";
+		$sql = "SELECT COUNT(a.id) as count FROM pm_advbuyaffplaces a";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
 		$count = $this->_db->get_value($sql);
