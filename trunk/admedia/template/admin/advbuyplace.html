@@ -1,25 +1,65 @@
 <!--<?php
 include_once PrintEot('header');
 if($action=="new" || $action=="edit"){
+	$sitename = "";
+	if(isset($db_advbuyaffplace)){
+		$sdate = date('Y-m-d',$db_advbuyaffplace[start_time]);
+		$edate = date('Y-m-d',$db_advbuyaffplace[end_time]);
+		$shour = date('H',$db_advbuyaffplace[start_time]);
+		$ehour = date('H',$db_advbuyaffplace[end_time]);	
+		$sminute = date('i',$db_advbuyaffplace[start_time]);
+		$eminute = date('i',$db_advbuyaffplace[end_time]);
+		$sitename =  "<a href='$basename?job=detail&action=affiliate&curid='".$db_advbuyaffplace[aff_id]."'>$db_advbuyaffplace[aff_name]</a>";
+		$sitename .= "-<a href='$basename?job=detail&action=website&curid='".$db_advbuyaffplace[site_id]."'>$db_advbuyaffplace[site_name]</a>";
+	}
 	for($i=0;$i<24;$i++){
 		if($i<10) $si = "0".$i;
 		else $si = "".$i;
-		$start_hour .= "<option value='$i'>$si</option>";
-		$end_hour = $start_hour;
+		if($shour==$si){
+			$start_hour .= "<option value='$i' selected>$si</option>";
+		}else{
+			$start_hour .= "<option value='$i'>$si</option>";
+		}
+	}
+	for($i=0;$i<24;$i++){
+		if($i<10) $si = "0".$i;
+		else $si = "".$i;
+		if($ehour==$si){
+			$end_hour .= "<option value='$i' selected>$si</option>";
+		}else{
+			$end_hour .= "<option value='$i'>$si</option>";
+		}
+	}	
+	for($i=0;$i<60;$i++){
+		if($i<10) $si = "0".$i;
+		else $si = "".$i;
+		if($sminute==$si){
+			$start_minute .= "<option value='$i' selected>$si</option>";
+		}else{
+			$start_minute .= "<option value='$i'>$si</option>";
+		}
 	}
 	for($i=0;$i<60;$i++){
 		if($i<10) $si = "0".$i;
 		else $si = "".$i;
-		$start_minute .= "<option value='$i'>$si</option>";
-		$end_minute = $start_minute;
-	}
+		if($eminute==$si){
+			$end_minute .= "<option value='$i' selected>$si</option>";
+		}else{
+			$end_minute .= "<option value='$i'>$si</option>";
+		}
+	}	
 print <<<EOT
 -->
-<form runat="server" id="addForm">
+<form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
+<input type="hidden" name="action" id="action" value="save"/>
+<input type="hidden" name="curid" id="curid" value="$curid"/>
+<input type="hidden" name="status" id="status" value="$status"/>
+<input type="hidden" name="searchtype" id="searchtype" value="$searchtype"/>
+<input type="hidden" name="searchkey" id="searchkey" value="$searchkey"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>
 		<TR >
-			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　广告位排期管理</strong></TD>
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增/编辑　广告位定投管理</strong></TD>
 		</TR>
 	</TBODY>
 </TABLE>
@@ -32,7 +72,7 @@ print <<<EOT
         <tbody>
         <tr>			
 					<td align=right width=25%>所属广告计划：</td>
-					<td><select ID="adv_id" name="adv_id" style="width:125px">
+					<td><select ID="adv_id" name="adv_id" style="width:225px">
 						<option value="0">请选择广告计划</option>$op_advlist
 						</select>
 					</td>
@@ -40,48 +80,64 @@ print <<<EOT
 				<tr>
 					<td align=right>购买时间：</td>
 					<td>
-					   <input type="text" id="buy_time" style="WIDTH: 80px">
-					   <select name="buy_type" id="buy_type" style="WIDTH: 42px">
-						   <option value="0">天</option>
-						   <option value="1">周</option>
-						   <option value="2">月</option>
-						   <option value="3">季</option>
-						   <option value="4">年</option>
-					   </select>
+					   <input type="text" id="buy_time"  name="buy_time" style="WIDTH: 80px" value="$db_advbuyaffplace[buy_time]">周
 					</td>					
 				</tr>
 				<tr>
 					<td align=right>广告位：</td>
-					<td>
-					   <input type="hidden" id="place_id" name="place_id">
-					   <input type="text" id="place_name" name="place_name" style="WIDTH: 125px" readonly>
-					   <a href="javascript:void(0);" href="javascript:showAffAdPlace();"><IMG style="CURSOR: hand" height="21" border="0" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle">请选择广告位</a>
+					<td><span id="divsite">$sitename</span>
+					   <input type="hidden" id="place_id" name="place_id" value="$db_advbuyaffplace[place_id]"/>
+					   <input type="hidden" id="site_id" name="site_id" value="$db_advbuyaffplace[site_id]"/>
+					   <input type="hidden" id="aff_id" name="aff_id" value="$db_advbuyaffplace[aff_id]"/>					   
+					   <input type="text" id="place_name" name="place_name" style="WIDTH: 125px" readonly value="$db_advbuyaffplace[place_name]">
+					   <a href="javascript:showAffAdPlace('$backurl');"><IMG style="CURSOR: hand" height="21" border="0" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle">请选择广告位</a>
 					</td>					
 				</tr>
 				<tr>
 					<td align=right>开始时间：</td>
 					<td>
-					    <input name="start_date" type="text" readonly id="start_date" style="WIDTH:102px"><A href="javascript:OpenCalendar('StartDate', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+					    <input name="start_date" type="text" readonly id="start_date" style="WIDTH:102px" value="$sdate"><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
 					    &nbsp;<select name="start_hour" id="send_hour">$start_hour</select>：<select name="start_minute" id="send_minute">$start_minute</select>
 					</td>
 				</tr>
 				<tr>
 					<td align=right>结束时间：</td>
 					<td>
-					   <input name="end_date" type="text" runat="server" readonly id="end_date" style="WIDTH:102px"><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+					   <input name="end_date" type="text"  readonly id="end_date" style="WIDTH:102px" value="$edate"><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
 					   &nbsp;<select name="end_hour" id="send_hour">$end_hour</select>：<select name="end_minute" id="send_minute">$end_minute</select>
 					</td>					
 				</tr>							
-				
+				<tr>
+					<td align=right>状态：</td>
+					<td>
+<!--
+EOT;
+	if(!isset($db_advbuyaffplace) || $db_advbuyaffplace[status]==0 ){
+		echo '<input name="status" id="status" type="radio"  value="0" checked>停止';
+	}else{
+		echo '<input name="status" id="status" type="radio"  value="0">停止';
+	}
+	if(isset($db_advbuyaffplace) && $db_advbuyaffplace[status]==1 ){
+		echo '<input name="status" id="status" type="radio"  value="1" checked>正常投放';
+	}else{
+		echo '<input name="status" id="status" type="radio"  value="1">正常投放';
+	}	
+	if(isset($db_advbuyaffplace) && $db_advbuyaffplace[status]==2 ){
+		echo '&nbsp;<font color="red">已过期</font>';
+	}
+print <<<EOT
+-->
+					</td>					
+				</tr>		
 				<tr>
 					<td align=right style="height: 57px">描述：</td>
 					<td colspan=3 style="height: 57px">
-					<textarea id="memo" name="memo" style="Height:81px;Width:300px">$db_advbuyplace[memo]</textarea>
+					<textarea id="memo" name="memo" style="Height:81px;Width:300px">$db_advbuyaffplace[memo]</textarea>
 					</td>
 				</tr>
 				<tr>
 					<td colspan="4" align="center">
-					<input type="submit" runat="server" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="submit"  id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 					<input type="button" onclick="history.go(-1);" value=" 取消 ">
 					</td>
 				</tr>
@@ -112,7 +168,7 @@ function checkfrm(){
 	}
 	if(isEmpty($("place_id").value)){
 		alert('请选择广告位！');
-		$("place_name").focus();
+		showAffAdPlace('$backurl');
 		return false;
 	}
     return true;
@@ -140,10 +196,9 @@ print <<<EOT
 <!--
 EOT;
  showPageLink("all", "1", "全部");
- showPageLink("status", "0", "申请中"); 
+ showPageLink("status", "0", "停止"); 
  showPageLink("status", "1", "正常投放"); 
- showPageLink("status", "2", "未批准");
- showPageLink("status", "3", "已停止");
+ showPageLink("status", "2", "已过期");
 print <<<EOT
 -->
             </td></tr>
@@ -167,10 +222,6 @@ print <<<EOT
                                 <span style="color: #547054"> 刷新</span></a>
 <!--
 EOT;
-	if($canaudit==true){
-		showButton(4,'审核','javascript:ConfirmDel("'.$admin_file.'&action=audit&status=1'.$transtr.'&curpage='.$curpage.'","确认审核通过选定渠道吗？");');
-		showButton(5,'审核不通过','javascript:ConfirmDel("'.$admin_file.'&action=audit&status=2'.$transtr.'&curpage='.$curpage.'","确定不通过选定的渠道吗？");');
-	}
 	if($canadd==true){
 		showButton(1,'新增',$admin_file.'&action=new'.$transtr);
 	}
@@ -195,15 +246,13 @@ EOT;
                 <td align="middle" class="title" height="20" valign="center">
                     <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
                 </td>
-                <td align="middle" class="title" height="20" valign="center">广告位名称</td>
-                <td align="middle" class="title" height="20" valign="center">活动名称</td>
-                <td align="middle" class="title" height="20" valign="center">站点名称</td>
-                <td align="middle" class="title" height="20" valign="center">广告主</td>
+                <td align="middle" class="title" height="20" valign="center">站长-站点-广告位</td>
+                <td align="middle" class="title" height="20" valign="center">广告计划</td>
                 <td align="middle" class="title" height="20" valign="center">开始时间</td>
                 <td align="middle" class="title" height="20" valign="center">结束时间</td>                 
                 <td align="middle" class="title" height="20" valign="center">购买周数</td>               
-                <td align="middle" class="title" height="20" valign="center">状态</td>
                 <td align="middle" class="title" height="20" valign="center">添加日期</td>
+                <td align="middle" class="title" height="20" valign="center">状态</td>                
                 <td align="middle" class="title" height="20" valign="center">操作</td>
             </tr>
 <!--
@@ -212,51 +261,24 @@ $curidx = ($curpage-1)*$perpage;
 $curpageidx = 0;
 $showcount = count($db_advbuyplacelist); 
 foreach($db_advbuyplacelist as $advbuyplace ){
-	$affplace = getAffPlace($advbuyplace[place_id]);
-	$affwebsite = getAffWebSite($advbuyplace[site_id]);
-	$adv = getAdvertise($advbuyplace[adv_id]);
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
 	$cdate = date('Y/m/d H:i:s',$advbuyplace[create_time]);
+	$stime = date('Y/m/d H:i',$advbuyplace[start_time]);
+	$etime = date('Y/m/d H:i',$advbuyplace[end_time]);
+	$bpstatus = $cfg_advbuyaffplace[$advbuyplace[status]];
 print <<<EOT
 -->  
             <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center" height="20">$curidx </td>
-                <td align="middle" valign="center">
-                    <input id="ID" name="ID" type="checkbox" value="$advbuyplace[id]" />
-                </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showUrl($advbuyplace[url],$affplace[name]);
-print <<<EOT
--->
-                </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showLink("admincp.php?job=advdetail",$advbuyplace[adv_id],$adv[name]);
-print <<<EOT
--->    
-                </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showLink("$affplace[place_url]",$affwebsite[name]);
-print <<<EOT
--->        
-                </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;                
-    getAffName($advbuyplace[aff_id]);
-print <<<EOT
--->				</td>
-                <td align="middle" valign="center">&nbsp;$advbuyplace[start_time]</td>
-                <td align="middle" valign="center">&nbsp;$advbuyplace[end_time]</td>
-                <td align="middle" valign="center">&nbsp;$advbuyplace[buy_time]</td>                
-                <td align="middle" valign="center">&nbsp;$advbuyplace[status]</td> 
+                <td align="middle" valign="center"><input id="ids" name="ids" type="checkbox" value="$advbuyplace[id]" /></td>
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=affiliate&curid=$advbuyplace[aff_id]&backurl=$backurl"class="noLine">$advbuyplace[aff_name]($advbuyplace[aff_id])</a>ˉ<a href="$basename?job=detail&action=website&curid=$advbuyplace[site_id]&backurl=$backurl" class="noLine">$advbuyplace[site_name]($advbuyplace[site_id])</a>ˉ<a href="$advbuyplace[demo_url]" target ="_blank" title="点击查看地址:$advbuyplace[demo_url]" class="noLine">$advbuyplace[place_name]</a></td>
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=advertise&curid=$advbuyplace[adv_id]">$advbuyplace[adv_name]</a></td>
+                <td align="middle" valign="center">&nbsp;$stime</td>
+                <td align="middle" valign="center">&nbsp;$etime</td>
+                <td align="middle" valign="center">&nbsp;$advbuyplace[buy_time]周</td>                
                 <td align="middle" valign="center">&nbsp;$cdate</td>
+                <td align="middle" valign="center">&nbsp;$bpstatus</td>                 
                 <td align="middle" valign="center">&nbsp;
 <!--
 EOT;

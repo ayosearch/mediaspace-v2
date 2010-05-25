@@ -31,11 +31,11 @@ BGCOLOR="#ffffff">
 		insDoc(aux5, gLnk(2, '<font color=#B00204>已审批站长</font>','admincp.php?job=affauditok', '$imgpath/admin/bu.gif'));		
 		insDoc(aux5, gLnk(2, '<font color=#B00204>站长站点管理</font>','admincp.php?job=affsiteaudit', '$imgpath/admin/bu.gif'));	
 		insDoc(aux5, gLnk(2, '<font color=#B00204>站长广告位管理</font>','admincp.php?job=affadplace', '$imgpath/admin/bu.gif'));	
-		insDoc(aux5, gLnk(2, '<font color=#B00204>站长投放审批</font>','admincp.php?job=affadvapply', '$imgpath/admin/bu.gif'));
-		insDoc(aux5, gLnk(2, '<font color=#B00204>站长黑名单管理</font>','admincp.php?job=affblack', '$imgpath/admin/bu.gif'));    
+		insDoc(aux5, gLnk(2, '<font color=#B00204>站长申请投放初审</font>','admincp.php?job=affadvapply', '$imgpath/admin/bu.gif'));
+		insDoc(aux5, gLnk(2, '<font color=#B00204>站长黑名单管理</font>','admincp.php?job=affblack', '$imgpath/admin/bu.gif'));
     aux23 = insFldr(foldersTree, gFldr('<DIV CLASS=fldrroot>广告主管理</DIV>', ''));
 		insDoc(aux23, gLnk(2, '<font color=#B00204>销售机会</font>','admincp.php?job=merchance', '$imgpath/admin/bu.gif'));
-		insDoc(aux23, gLnk(2, '<font color=#B00204>服务商管理</font>','admincp.php?job=mermanage', '$imgpath/admin/bu.gif'));
+		insDoc(aux23, gLnk(2, '<font color=#B00204>广告主管理</font>','admincp.php?job=mermanage', '$imgpath/admin/bu.gif'));
 		insDoc(aux23, gLnk(2, '<font color=#B00204>附属信息管理</font>','admincp.php?job=merlinkman', '$imgpath/admin/bu.gif'));
 		insDoc(aux23, gLnk(2, '<font color=#B00204>合同管理</font>','admincp.php?job=mercontract', '$imgpath/admin/bu.gif'));
 		insDoc(aux23, gLnk(2, '<font color=#B00204>账务回款管理</font>','admincp.php?job=merpayrec', '$imgpath/admin/bu.gif'));
@@ -46,7 +46,7 @@ BGCOLOR="#ffffff">
 		insDoc(aux47, gLnk(2, '<font color=#B00204>广告页面管理</font>','admincp.php?job=advpage', '$imgpath/admin/bu.gif'));
 		insDoc(aux47, gLnk(2, '<font color=#B00204>广告创意发布</font>','admincp.php?job=advcreative', '$imgpath/admin/bu.gif'));
 		insDoc(aux47, gLnk(2, '<font color=#B00204>广告定投设置</font>','admincp.php?job=advbuyplace', '$imgpath/admin/bu.gif'));
-		insDoc(aux47, gLnk(2, '<font color=#B00204>广告申请查询</font>','admincp.php?job=advapply', '$imgpath/admin/bu.gif'));				
+		insDoc(aux47, gLnk(2, '<font color=#B00204>广告申请复审</font>','admincp.php?job=advapply', '$imgpath/admin/bu.gif'));				
 		insDoc(aux47, gLnk(2, '<font color=#B00204>轮播广告排期</font>','admincp.php?job=advrole', '$imgpath/admin/bu.gif'));    
     aux69 = insFldr(foldersTree, gFldr('<DIV CLASS=fldrroot>数据查询</DIV>', ''));
 		insDoc(aux69, gLnk(2, '<font color=#B00204>显示数据</font>','admincp.php?job=repshowquery', '$imgpath/admin/bu.gif'));
@@ -75,7 +75,13 @@ BGCOLOR="#ffffff">
 		insDoc(aux1, gLnk(2, '<font color=#B00204>角色管理</font>','admincp.php?job=sysrole', '$imgpath/admin/bu.gif'));
 		insDoc(aux1, gLnk(2, '<font color=#B00204>数据字典</font>','admincp.php?job=sysdata', '$imgpath/admin/bu.gif'));
 		insDoc(aux1, gLnk(2, '<font color=#B00204>参数设置</font>','admincp.php?job=sysconfig', '$imgpath/admin/bu.gif'));		
-		insDoc(aux1, gLnk(2, '<font color=#B00204>操作记录</font>','admincp.php?job=sysoplog', '$imgpath/admin/bu.gif'));	
+		insDoc(aux1, gLnk(2, '<font color=#B00204>操作记录</font>','admincp.php?job=sysoplog', '$imgpath/admin/bu.gif'));
+	    aux2 = insFldr(aux1, gFldr('<DIV CLASS=fldrroot>回收站</DIV>', ''));
+			insDoc(aux2, gLnk(2, '<font color=#B00204>站长回收站</font>','admincp.php?job=recycle&action=affiliate', '$imgpath/admin/bu.gif'));   
+			insDoc(aux2, gLnk(2, '<font color=#B00204>站点回收站</font>','admincp.php?job=recycle&action=website', '$imgpath/admin/bu.gif'));   
+			insDoc(aux2, gLnk(2, '<font color=#B00204>广告位回收站</font>','admincp.php?job=recycle&action=adplace', '$imgpath/admin/bu.gif'));   
+			insDoc(aux2, gLnk(2, '<font color=#B00204>广告主回收站</font>','admincp.php?job=recycle&action=merchant', '$imgpath/admin/bu.gif'));		
+			insDoc(aux2, gLnk(2, '<font color=#B00204>广告计划回收站</font>','admincp.php?job=recycle&action=advertise', '$imgpath/admin/bu.gif'));		
     initializeDocument();
      </SCRIPT>
     </TD>
