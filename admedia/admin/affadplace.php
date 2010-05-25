@@ -32,8 +32,11 @@ if($action=="new" || $action=="edit"){
 	}
 	ObHeader("$basename?job=affadplace$transtr");	
 }else if($action=="del"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}	
 	$objAffiliate = LOAD::loadDB("Affiliate");
-	$objAffiliate->deleteAffiliate($curid);
+	$objAffiliate->deleteBatchAffAdvPlace($ids);
 	ObHeader("$basename?job=affadplace");	
 }else if($action=="auditsave"){
 	if(strpos($ids,',')>0){
@@ -48,8 +51,9 @@ if($action=="new" || $action=="edit"){
 	echo "<script>window.returnValue='1';window.close();</script>";
 	unset($objSystem,$objAffUser,$arrfield);
 	exit;	
-}else if(empty($action)){
+}else if(empty($action) || $action=="select"){
 	$stwhere = "";
+	($action=="select") && $stwhere .= " a.audit=1 and ";
 	(strlen($status)>0) && $stwhere .= " a.status=$status and ";
 	(strlen($audit)>0) && $stwhere .= " a.audit=$audit and ";	
 	(strlen($start_date)>0) && $stwhere .= " a.create_time>=".__strtotime($start_date)." and ";	

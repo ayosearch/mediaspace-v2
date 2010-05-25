@@ -69,6 +69,16 @@ if($action=="new"){
 	unset($objSystem,$objAdvertise,$arrfield);
 	exit;
 	//ObHeader("admincp.php?job=affmanage".$transtr);		
+}else if($action=="del"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}
+	if(strlen($ids)>0){
+		$objAdvertise = LOAD::loadDB("Advertise");
+		$objAdvertise->deleteBatchAdvertise($ids);
+	}
+	ObHeader("$basename?job=advmanage$transtr");	
+	exit;
 }else if(empty($action)){
 	$stwhere = "";
 	(!empty($audit)) && $stwhere .= " audit=".sqlEscape($audit)." and ";		
