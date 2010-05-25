@@ -213,9 +213,9 @@ class  PM_AffiliateDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$sql = "SELECT a.*,b.name as adv_name,c.name as site_name,d.login_name as aff_name FROM pm_affadvapply a,pm_advertise b,pm_affwebsite c,pm_affiliate d where a.aff_id=d.id and a.adv_id=b.id and a.site_id=c.id ";
+		$sql = " select * from ( SELECT a.*,b.name as adv_name,c.name as site_name,d.login_name as aff_name FROM pm_affadvapply a,pm_advertise b,pm_affwebsite c,pm_affiliate d where a.aff_id=d.id and a.adv_id=b.id and a.site_id=c.id) view_advapply";
 		if($stwhere!=null)
-			$sql = $sql." and ".$stwhere;
+			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
 		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
@@ -223,7 +223,7 @@ class  PM_AffiliateDB extends BaseDB{
 	}
 
 	function getAffAdvApplyTotalCount($stwhere=null){
-		$sql = "SELECT COUNT(id) as count FROM pm_affadvapply";
+		$sql = "select count(id) from ( SELECT a.*,b.name as adv_name,c.name as site_name,d.login_name as aff_name FROM pm_affadvapply a,pm_advertise b,pm_affwebsite c,pm_affiliate d where a.aff_id=d.id and a.adv_id=b.id and a.site_id=c.id) view_advapply";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
 		$count = $this->_db->get_value($sql);
@@ -275,6 +275,11 @@ class  PM_AffiliateDB extends BaseDB{
 		$this->_db->update("DELETE FROM pm_affadvplace WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
 	}
+	
+	function deleteBatchAffAdvPlace($ids){
+		$this->_db->update("UPDATE pm_affadvplace set is_del=1 WHERE ids in (". sqlEscape($id) .")");
+		return $this->_db->affected_rows();
+	}	
 	
 	function getAffAdvPlace($id){
 		$data = $this->_db->get_one("SELECT a.*,b.name as site_name,c.login_name as aff_name FROM pm_affadvplace a,pm_affwebsite b,pm_affiliate c where a.site_id=b.id and a.aff_id=c.id and a.id=".intval($id));
