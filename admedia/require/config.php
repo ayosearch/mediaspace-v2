@@ -34,7 +34,7 @@ $cfg_hash='*$%1*I*7o6';
 $cfg_dateformat='Y-m-d H:i:s';
 $cfg_timezone='-8';
 $cfg_ftpweb='';
-$cfg_userstatus = array("<font color=blue>等待审核</font>","<font color=green>审核通过</font>","<font color=red>审核未通过</font>","<font color=red>重新审核</font>","<font color=black>黑名单</font>");
+$cfg_userstatus = array("<font color=blue>等待审核</font>","<font color=green>审核通过</font>","<font color=red>审核未通过</font>","<font color=red>进入复审</font>","<font color=black>黑名单</font>");
 $cfg_gender = array('女','男');
 $cfg_affbiztype= array('个人','企业');
 $cfg_affcerttype= array('身份证','军官证','护照');
@@ -80,5 +80,6 @@ $cfg_advctitype = array("文字 ","图片","原始代码");
 $cfg_advplacestatus = array("<font color='green'>空闲中</font>","<font color='blue'>可定向</font>","<font color='red'>已定向</font>");
 $cfg_advselectortype = array("site_type"=>"站长类型","province"=>"省份","domain"=>"域名","keyword"=>"关键字");
 $cfg_advselectorfilter = array("选取","过滤");
-$cfg_advselectorstatus = array("停止","启用");
+$cfg_advselectorstatus = array("<font color=red>停止</font>","<font color=green>启用</font>");
+$cfg_advbuyaffplace = array("<font color=red>停止</font>","<font color=green>正常投放</font>","<font color=blue>已到期</font>"); 
 ?>
