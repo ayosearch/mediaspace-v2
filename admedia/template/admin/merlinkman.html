@@ -7,6 +7,10 @@ print <<<EOT
 <form id="form" name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
 <input type="hidden" name="action" value="save"/>
 <input type="hidden" name="curid" value="$curid"/>
+<input type="hidden" name="all" value="$all"/>
+<input type="hidden" name="sex" value="$sex"/>
+<input type="hidden" name="searchtype" value="$searchtype"/>
+<input type="hidden" name="searchkey" value="$searchkey"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>
 		<TR >
@@ -22,8 +26,8 @@ print <<<EOT
 		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
         <tbody>
         <tr>
-					<td align=right width=100>联系人姓名：</td>
-					<td><input type="text"  id="name" style="WIDTH: 120px" NAME="name" value="$db_merlinkman[name]">					    
+					<td align=right width=120>联系人姓名(<font color="red">*</font>)：</td>
+					<td width=30%><input type="text"  id="name" style="WIDTH: 120px" NAME="name" value="$db_merlinkman[name]">					    
 					</td>
 				
 					<td align=right width=100>所属客户：</td>
@@ -34,15 +38,15 @@ print <<<EOT
 					<td>
 <!--
 EOT;
-	if($db_merlinkman[is_default]==0){
-		echo '<input type="radio" name="is_default" id="is_default0" Value="0" checked/><label for="is_default0">主联系人</label>';
+	if(!isset($db_merlinkman) || $db_merlinkman[is_default]==1){
+		echo '<input type="radio" name="is_default" id="is_default0" Value="1" checked/><label for="is_default0">主联系人</label>';
 	}else{
-		echo '<input type="radio" name="is_default" id="is_default0" Value="0"/><label for="is_default0">主联系人</label>';
+		echo '<input type="radio" name="is_default" id="is_default0" Value="1"/><label for="is_default0">主联系人</label>';
 	}
-	if($db_merlinkman[is_default]==1){
-		echo '<input type="radio" name="is_default" id="is_default1" Value="1" checked/><label for="is_default1">一般联系人</label>';
+	if($db_merlinkman[is_default]==0){
+		echo '<input type="radio" name="is_default" id="is_default1" Value="0" checked/><label for="is_default1">一般联系人</label>';
 	}else{
-		echo '<input type="radio" name="is_default" id="is_default1" Value="1"/><label for="is_default1">一般联系人</label>';
+		echo '<input type="radio" name="is_default" id="is_default1" Value="0"/><label for="is_default1">一般联系人</label>';
 	}	
 print <<<EOT
 -->
@@ -51,12 +55,12 @@ print <<<EOT
 					<td>
 <!--
 EOT;
-	if($db_merlinkman[is_default]==0){
+	if(!isset($db_merlinkman) || $db_merlinkman[sex]==0){
 		echo '<input type="radio" name="sex" id="sex0" Value="0" checked/><label for="sex0">男</label>';
 	}else{
 		echo '<input type="radio" name="sex" id="sex0" Value="0"/><label for="sex0">男</label>';
 	}
-	if($db_merlinkman[is_default]==1){
+	if(isset($db_merlinkman) && $db_merlinkman[sex]==1){
 		echo '<input type="radio" name="sex" id="sex1" Value="1" checked/><label for="sex1">女</label>';
 	}else{
 		echo '<input type="radio" name="sex" id="sex1" Value="1"/><label for="sex1">女</label>';
@@ -147,17 +151,10 @@ print <<<EOT
 
 <script language=javascript>
 function checkfrm(){
-	if(document.all.txtName.value == ""){
+	if(isEmpty($('name').value)){
 		alert('用户姓名不能为空！');
-		document.all.txtName.focus();
-		event.returnValue = false;
-		return;
-	}
-	if(document.all.txtShortName.value == ""){
-		alert('客户简称不能为空！');
-		document.all.txtShortName.focus();
-		event.returnValue = false;
-		return;
+		$('name').focus();
+		return false;
 	}
     return true;
 }
@@ -256,28 +253,17 @@ foreach($db_merlinkmanlist as $merlinkman){
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
 	$cdate = date('Y/m/d',$merlinkman[create_time]);
+	$sex = $cfg_gender[$merlinkman[sex]];
 print <<<EOT
 -->    
             <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center" height="20">$curidx </td>
-                <td align="middle" valign="center">
+                <td align="middle" valign="center" width="50px">
                     <input id="ID" name="ID" type="checkbox" value="$merlinkman[id]" />
                 </td>
                 <td align="middle" valign="center">&nbsp;$merlinkman[name]</td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showLink("$admin_file&action=merdetail",$merlinkman[merchant_id],$merchant[short_name]);
-print <<<EOT
--->                  
-                </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;   
-	getSex($merlinkman[sex]);
-print <<<EOT
--->             
-                </td>
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$merlinkman[mer_id]&backurl=$backurl">$merlinkman[mer_name]</a></td>
+                <td align="middle" valign="center">&nbsp;$sex</td>
                 <td align="middle" valign="center">&nbsp;$merlinkman[title]</td>
                 <td align="middle" valign="center">&nbsp;$merlinkman[department]</td>
                 <td align="middle" valign="center">&nbsp;$merlinkman[dutyname]</td>

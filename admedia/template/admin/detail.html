@@ -204,15 +204,54 @@ print <<<EOT
 EOT;
 }print <<<EOT
 -->
-							</table>							
-
+							</table>
+							<br/>							
+							<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+								 <tr><td bgcolor="#f6f6f6" height="25" colspan="5">
+								 <table width="100%" border="0" cellpadding="0" cellspacing="0">
+								 <tr><td><b>审批记录</b></td>
+								 <td align=right>&nbsp;</td>
+								 </tr>
+								 </table>
+						</td>
+								</tr>
+								<tr>
+									<td align="center" bgcolor="#ffffff" class="hei12b" height="25px"><nobr>序号</nobr></td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核人</td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核时间</td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>说明</td>		
+									<td width="60px" align="center" bgcolor="#ffffff" class="hei12b"><nobr>结果</td>								
+								</tr>	
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_auditlist); 
+foreach($db_auditlist as $db_audit ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('m/d H:i',$db_audit[create_time]);
+		$status = $cfg_userstatus[$db_audit[auditstatus]];
+print <<<EOT
+-->      
+										<tr>
+											<td height="25" align="center" bgcolor="#ffffff">$curidx</td>										
+											<td height="25" align="center" bgcolor="#ffffff"><nobr>$db_audit[audit_name]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$cdate</nobr></td>
+											<td bgcolor="#ffffff" align="center" class="lanh12"><nobr>$db_audit[content]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$status</nobr></td>
+										</tr>
+<!--
+EOT;
+}print <<<EOT
+-->															  
+						 	</table>	
 					</td>
 				</tr>
 			</table>
 </center>
 </form>
-</body>
-</html>
+
 <script language=javascript>
 function ConfirmChange(url,msg){	
 	if(confirm(msg)){
@@ -319,6 +358,189 @@ print <<<EOT
 		}
 	}
 </script>
+<!--
+EOT;
+}else if($action=="affsite"){
+	$affcdate = date('Y/m/d H:i:s',$db_affsite[aff_create_time]);	
+	$cdate = date('Y/m/d H:i:s',$db_affsite[create_time]);		
+print <<<EOT
+-->
+
+<form action="$admin_file" method="get" name="form">
+<center>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR>
+			<TD align=left class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 站点详细资料</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<br/>
+						<table width="98%" border="0" align="center" cellpadding="5" cellspacing="0">
+							<tr>
+								<td bgcolor="#f6f6f6">所属站长：<span class="hong12"><strong>$db_affsite[aff_name]</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									真实姓名：<span class="hong12"><strong>$db_affsite[aff_real_name]</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+									注册时间：<span class="hong12"><strong>$affcdate</strong></span>&nbsp;&nbsp;&nbsp;&nbsp; 
+								</td>
+							 	<td align=right bgcolor="#f6f6f6">
+							 		<a href="$backurl">返回上一页</a>&nbsp;
+						 		</td>   
+							</tr>
+						</table>
+
+
+			<table width="98%" border="0" align="center" cellpadding="5" cellspacing="0">
+				<tr>
+					<td valign="top"><table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#d0d0d0">
+							<tr>
+								<td align="center" bgcolor="#ffffff">
+								    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr><td height="10"></td></tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">										
+										<tr>
+											<td height="25" align="right" width="15%"><nobr>站点名称：</nobr></td>
+											<td align="left">&nbsp;$db_affsite[aff_real_name]</td>
+											<td height="25" align="right" class="hei12b">创建时间：</td>
+											<td width="45%">&nbsp;cdate</td>										
+										</tr>
+										<tr>
+											<td height="25" align="right" class="hei12b">站点类型：</td>
+											<td align="left">&nbsp;$db_affsite[sitetype]</td>																			
+											<td height="25" align="right" >站点地址：</td>
+											<td align="left">&nbsp;$db_affsite[url]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td align="center" bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">
+									    <tr>
+											<td  height="25" align="right" width="15%"><nobr>标签：</nobr></td>
+											<td align="left">&nbsp;$db_affsite[tags]</td>
+											<td height="25" align="right" class="hei12b">关键字：</td>
+											<td width="45%">&nbsp;$db_affsite[keyword]</td>
+										</tr>
+										<tr>
+											<td height="25" align="right" class="hei12b">IP地址：</td>
+											<td>&nbsp;$db_affsite[ip]</td>
+										
+											<td height="31" align="right" class="hei12b">ICP证号：</td>
+											<td>&nbsp;$db_affsite[icp_code]</td>
+										</tr>
+										<tr>
+											<td height="31" align="right" class="hei12b">日访问量：</td>
+											<td>&nbsp;$db_affsite[day_pv]</td>
+										
+											<td height="31" align="right" class="hei12b">日独立IP：</td>
+											<td>&nbsp;$db_affsite[day_ip]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+								<td bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr>
+											<td height="10"></td>
+										</tr>
+										<tr>
+											<td height="25" align="right" width="25%"><nobr>是否使用了广告代码：</nobr></td>
+											<td >&nbsp;$db_affsite[ad_used]</td>
+										
+											<td height="25" align="right" width="25%">是否允许投放CPC：</td>
+											<td>&nbsp;$db_affsite[enable_cpc]</td>
+											
+											<td height="25" align="right" width="30%">是否允许投放轮播：</td>
+											<td>&nbsp;$db_affsite[enable_roll]</td>											
+										</tr>
+										<tr>
+											<td height="10"></td>
+										</tr>										
+									</table>
+								</td>
+							</tr>							
+							<tr>
+								<td align="center" bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td height="10"></td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">
+										<tr>
+											<td width="15%" align="right" valign="top">备注说明：</td>
+											<td align="left">&nbsp;$db_affsite[memo]</td>
+										</tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr>
+											<td>&nbsp;</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+						</table>
+						</td>
+						<td width="45%" valign="top">					
+								<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+								 <tr><td bgcolor="#f6f6f6" height="25" colspan="5">
+								 <table width="100%" border="0" cellpadding="0" cellspacing="0">
+								 <tr><td><b>审批记录</b></td>
+								 <td align=right>&nbsp;</td>
+								 </tr>
+								 </table>
+						</td>
+					</tr>
+					<tr>
+						<td align="center" bgcolor="#ffffff" class="hei12b" height="25px"><nobr>序号</nobr></td>
+						<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核人</td>
+						<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核时间</td>
+						<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>说明</td>		
+						<td width="60px" align="center" bgcolor="#ffffff" class="hei12b"><nobr>结果</td>								
+					</tr>	
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_auditlist); 
+foreach($db_auditlist as $db_audit ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('m/d H:i',$db_audit[create_time]);
+		$status = $cfg_userstatus[$db_audit[auditstatus]];
+print <<<EOT
+-->      
+										<tr>
+											<td height="25" align="center" bgcolor="#ffffff">$curidx</td>										
+											<td height="25" align="center" bgcolor="#ffffff"><nobr>$db_audit[audit_name]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$cdate</nobr></td>
+											<td bgcolor="#ffffff" align="center" class="lanh12"><nobr>$db_audit[content]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$status</nobr></td>
+										</tr>
+<!--
+EOT;
+}print <<<EOT
+-->															  
+						 	</table>	
+					</td>
+				</tr>
+			</table>
+</center>
+</form>
 
 <!--
 EOT;
@@ -478,6 +700,13 @@ print <<<EOT
 					</td>
 					<td width="43%" valign="top">
 							<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+								 <tr><td bgcolor="#f6f6f6" height="25" colspan="5">
+								 <table width="100%" border="0" cellpadding="0" cellspacing="0">
+								 <tr><td><b>支付信息</b></td>
+								 </tr>
+								 </table>
+								 </td>
+								 </tr>
 								<tr>
 									<td width="30%" height="30" align="center" bgcolor="#ffffff" class="hei12b"><nobr>广告计划</td>
 									<td width="20%" align="center" bgcolor="#ffffff" class="hei12b"><nobr>开始日期</td>
@@ -489,17 +718,17 @@ print <<<EOT
 EOT;
 $showcount = count($db_advlist); 
 foreach($db_advlist as $db_adv ){
-	$sdate = date('Y/m/d H:i:s',$db_adv[start_time]);
-	$edate = date('Y/m/d H:i:s',$db_adv[end_time]);
-	$cdate = date('Y/m/d H:i:s',$db_adv[create_time]);
+	$sdate = date('y/m/d',$db_adv[start_time]);
+	$edate = date('y/m/d',$db_adv[end_time]);
+	$cdate = date('y/m/d',$db_adv[create_time]);
 	$db_status = $cfg_userstatus[$db_adv[status]];
 print <<<EOT
 -->     
 										<tr>
 											<td height="30" align="center" bgcolor="#ffffff">$db_adv[name]</td>
-											<td bgcolor="#ffffff" class="lanh12"><nobr>$sdate</td>
-											<td bgcolor="#ffffff" class="lanh12"><nobr>$edate</td>											
-											<td bgcolor="#ffffff"><nobr>$db_status</td>
+											<td bgcolor="#ffffff" class="lanh12" align="center"><nobr>$sdate</td>
+											<td bgcolor="#ffffff" class="lanh12" align="center"><nobr>$edate</td>											
+											<td bgcolor="#ffffff" align="center"><nobr>$db_status</td>
 											<td bgcolor="#ffffff" class="lanh12"><nobr>$cdate</td>
 										</tr>
 <!--
@@ -508,40 +737,73 @@ EOT;
 print <<<EOT
 --> 
 							</table>
+							<br/>							
+							<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+								 <tr><td bgcolor="#f6f6f6" height="25" colspan="5">
+								 <table width="100%" border="0" cellpadding="0" cellspacing="0">
+								 <tr><td><b>审批记录</b></td>
+								 <td align=right>&nbsp;</td>
+								 </tr>
+								 </table>
+						</td>
+								</tr>
+								<tr>
+									<td align="center" bgcolor="#ffffff" class="hei12b" height="25px"><nobr>序号</nobr></td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核人</td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核时间</td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>说明</td>		
+									<td width="60px" align="center" bgcolor="#ffffff" class="hei12b"><nobr>结果</td>								
+								</tr>	
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_auditlist); 
+foreach($db_auditlist as $db_audit ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('m/d H:i',$db_audit[create_time]);
+		$status = $cfg_userstatus[$db_audit[auditstatus]];
+print <<<EOT
+-->      
+										<tr>
+											<td height="25" align="center" bgcolor="#ffffff">$curidx</td>										
+											<td height="25" align="center" bgcolor="#ffffff"><nobr>$db_audit[audit_name]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$cdate</nobr></td>
+											<td bgcolor="#ffffff" align="center" class="lanh12"><nobr>$db_audit[content]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$status</nobr></td>
+										</tr>
+<!--
+EOT;
+}print <<<EOT
+-->															  
+						 	</table>							
 							<br>
 						<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#d0d0d0">
 							<tr>
 								<td bgcolor="#ffffff"><table width="100%" border="0" cellspacing="0" cellpadding="4">
 										<tr>
-											<td width="28%" height="30" align="right"><span>默认联系人：</span></td>
-											<td width="72%">$db_defaultman[name]</td>
-										</tr>
-										<tr>
+											<td width="22%" height="30" align="right"><span>默认联系人：</span></td>
+											<td width="25%">$db_defaultman[name]</td>
 											<td height="30" align="right"><span class="hei12b">联系人职务：</span></td>
-											<td>$db_defaultman[title]</td>
+											<td width="30%">$db_defaultman[title]</td>
 										</tr>
 										<tr>
 											<td height="30" align="right" class="hei12b">负责业务：</td>
 											<td>$db_defaultman[function]</td>
-										</tr>
-										<tr>
 											<td height="31" align="right" class="hei12b">手机号码：</td>
 											<td>$db_defaultman[mobile]</td>
 										</tr>
 										<tr>
 											<td height="31" align="right" class="hei12b">电子邮件：</td>
 											<td>$db_defaultman[email]</td>
-										</tr>
-										<tr>
 											<td height="31" align="right" class="hei12b">MSN：</td>
 											<td>$db_defaultman[msn]</td>
 										</tr>
 										<tr>
 											<td height="31" align="right" class="hei12b">QQ号码：</td>
 											<td>$db_defaultman[qq]</td>
-										</tr>
-										<tr>
-											<td height="30" align="right" class="hei12b">办公电话：</td>
+											<td height="23" align="right" class="hei12b">办公电话：</td>
 											<td>$db_defaultman[work_tel]</td>
 										</tr>										
 									</table>
@@ -595,6 +857,11 @@ print <<<EOT
 		</TR>
 	</TBODY>
 </TABLE>
+				<table cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
+				<tr>
+					<td height="10"></td>
+				</tr>
+			</table>
 						<table width="98%" border="0" align="center" cellpadding="5" cellspacing="0">
 							<tr>
 								<td bgcolor="#f6f6f6">
@@ -613,7 +880,9 @@ print <<<EOT
 					<td height="10"></td>
 				</tr>
 			</table>
-			<table cellSpacing="1" cellPadding="5" width="98%" align="center" bgColor="#cccccc" border="0">
+			
+	<table width="98%"><tr><td width="50%" valign="top">
+			<table cellSpacing="1" cellPadding="5" width="100%" align="center" bgColor="#cccccc" border="0">
 				<tr>
 					<td width="34%" bgColor="#ffffff"><strong>活动Logo：</strong>
 <!--
@@ -645,6 +914,53 @@ print <<<EOT
 					</td>
 				</tr>
 			</table>
+			
+			</td>
+			
+			<td width="50%" valign="top">
+							<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+								 <tr><td bgcolor="#f6f6f6" height="25" colspan="5">
+								 <table width="100%" border="0" cellpadding="0" cellspacing="0">
+								 <tr><td><b>审批记录</b></td>
+								 <td align=right>&nbsp;</td>
+								 </tr>
+								 </table>
+						</td>
+								</tr>
+								<tr>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>序号</nobr></td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核人</td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核时间</td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>说明</td>		
+									<td width="60px" align="center" bgcolor="#ffffff" class="hei12b"><nobr>结果</td>								
+								</tr>	
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_auditlist); 
+foreach($db_auditlist as $db_audit ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('m/d H:i',$db_audit[create_time]);
+		$status = $cfg_userstatus[$db_audit[auditstatus]];
+print <<<EOT
+-->      
+										<tr>
+											<td height="25" align="center" bgcolor="#ffffff">$curidx</td>										
+											<td height="25" align="center" bgcolor="#ffffff"><nobr>$db_audit[audit_name]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$cdate</nobr></td>
+											<td bgcolor="#ffffff" align="center" class="lanh12"><nobr>$db_audit[content]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$status</nobr></td>
+										</tr>
+<!--
+EOT;
+}print <<<EOT
+-->															  
+						 	</table>	
+			</td>
+			</tr></table>
+
 			<table cellSpacing="0" cellPadding="0" width="98%" align="center" border="0">
 				<tr>
 					<td height="10"></td>
@@ -787,6 +1103,7 @@ print <<<EOT
 				</tr>					
 				</table>			
 </form>
+<br/>
 <!--
 EOT;
 }else if($action=="newadvselector" || $action=="editadvselector"){

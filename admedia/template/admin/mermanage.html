@@ -240,6 +240,7 @@ foreach($db_merlist as $merchant ){
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
 	$cdate = date('Y/m/d H:i:s',$merchant[create_time]);
+	$status = $cfg_userstatus[$merchant[status]];
 print <<<EOT
 -->      
             <tr height="20"onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
@@ -247,12 +248,7 @@ print <<<EOT
                 <td align="middle" valign="center">
                 <input id="ids" name="ids" type="checkbox" value="$merchant[id]" />
                 </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showLink($basename."?job=detail&action=merchant",$merchant[id],$merchant[short_name]);
-print <<<EOT
--->                
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$merchant[id]&backurl=$backurl">$merchant[short_name]</a>             
                 </td>
                 <td align="middle" valign="center">&nbsp;
 <!--
@@ -272,13 +268,7 @@ print <<<EOT
                 </td>             
                 <td align="middle" valign="center">&nbsp;$merchant[seller_name]</td>
                 <td align="middle" valign="center" width="145px">&nbsp;$cdate</td>
-                <td align="middle" valign="center" width="55px">    
-<!--
-EOT;
-	showStatus($merchant[status]);
-print <<<EOT
--->                               
-                </td>                   
+                <td align="middle" valign="center" width="55px">$status</td>                   
                 <td align="middle" valign="center">&nbsp;
 <!--
 EOT;

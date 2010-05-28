@@ -1,9 +1,11 @@
 <!--<?php
 include_once PrintEot('header');
-if(isset($action) && ($action=="new" || $action=="edit")){
+if($action=="new" || $action=="edit"){
 print <<<EOT
 -->
 <form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" id="action" value="save"/>
+<input type="hidden" name="curid" id="curid" value="$curid"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>
 		<TR >
@@ -20,7 +22,7 @@ print <<<EOT
         <tbody>
 				<tr>
 					<td align=right>标识：</td>
-					<td><input type="text" id="id" style="WIDTH: 261px" NAME="id" value="$db_column[id]"></td>
+					<td><input type="text" id="code" style="WIDTH: 261px" NAME="code" value="$db_column[code]"></td>
 				</tr>
 				<tr>
 					<td align=right>名称：</td>
@@ -46,7 +48,7 @@ print <<<EOT
 				</tr>
 				<tr>
 					<td align=right>排序：</td>
-					<td><input type="text" id="col_index" name="col_index" style="WIDTH: 261px">$db_column[col_index]</td>
+					<td><input type="text" id="col_index" name="col_index" style="WIDTH: 261px" value="$db_column[col_index]"/></td>
 				</tr>
 				<tr>
 				<td colspan="2" align="center">
@@ -67,18 +69,17 @@ print <<<EOT
 
 <script>
 	function checkfrm(){
+		if(isEmpty($('code').value)){
+			alert('标识不能为空！');
+			$('code').focus();
+			return false;
+		}		
 		if(isEmpty($('name').value)){
 			alert('栏目名称不能为空！');
 			$('name').focus();
 			return false;
 		}
-		if(isEmpty($('url').value)){
-			alert('栏目URL不能为空！');
-			$('name').focus();
-			return false;
-		}		
-		var re = /^\d{0,16}$/;
-		if(isEmpty($('col_index').value) || $('col_index').value.match(re) == false){
+		if(isEmpty($('col_index').value) || isInteger($('col_index').value) == false){
 			alert('排序必须为数字！');
 			$('col_index').focus();
 			return false;					
@@ -89,7 +90,7 @@ print <<<EOT
 <!--
 EOT;
 }else{
-print <<<EOT 
+print <<<EOT
 -->
 <form name="form" action="$admin_file" method="post">
 <center>
@@ -100,7 +101,7 @@ print <<<EOT
             </td>
         </tr>
     </table>
-    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="100%" align=center>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
         <tr>
             <td align="right" valign="center">
                 <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
@@ -137,8 +138,8 @@ print <<<EOT
                     <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
                 </td>
                 <td align="middle" class="title" height="20" valign="center">栏目名称</td>
+                <td align="middle" class="title" height="20" valign="center">上级栏目</td>                
                 <td align="middle" class="title" height="20" valign="center">栏目地址</td>
-                <td align="middle" class="title" height="20" valign="center">上级栏目</td>
                 <td align="middle" class="title" height="20" valign="center">栏目描述</td>
                 <td align="middle" class="title" height="20" valign="center">排序</td>               
                 <td align="middle" class="title" height="20" valign="center">编辑</td>
@@ -152,17 +153,19 @@ foreach($db_syscolumnlist as $syscolumn ){
 		$curidx = $curidx+1;
 		$curpageidx = $curpageidx+1;
 		$cdate = date('Y/m/d H:i:s',$syscolumn[create_time]);
+		if($syscolumn[parent_id]==0) $strcolumn = $syscolumn[name];
+		else $strcolumn="&nbsp;&nbsp;|-".$syscolumn[name];
 print <<<EOT
 -->
             <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);"
                 onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
-                <td align="middle" valign="center">$curidx </td>
-                <td align="middle" class="hei" valign="center">
-                    <input id="ID" name="ID" type="checkbox" value="$syscolumn[id]" />
+                <td align="middle" valign="center" width="50px">$curidx </td>
+                <td align="middle" class="hei" valign="center" width="50px">
+                    <input id="ids" name="ids" type="checkbox" value="$syscolumn[id]" />
                 </td>
-                <td align="middle" valign="center">&nbsp;$syscolumn[name]</td>
+                <td>&nbsp;$strcolumn</td>
+                <td>&nbsp;$syscolumn[parentname]</td>                
                 <td align="middle" valign="center">&nbsp;$syscolumn[url]</td>
-                <td align="middle" valign="center">&nbsp;$syscolumn[parentname]</td>
                 <td align="middle" valign="center">&nbsp;$syscolumn[memo]</td>
                 <td align="middle" valign="center">&nbsp;$syscolumn[col_index]</td>
                 <td align="middle" valign="center">&nbsp;

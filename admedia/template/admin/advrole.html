@@ -8,31 +8,32 @@ print <<<EOT
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
-                <strong>���ƻ����� &gt;&gt; �ƻ�������Ϣ</strong>
+                <strong>广告计划管理 &gt;&gt; 轮播广告规则</strong>
             </td>
         </tr>
     </table>
-    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="96%" align=center>
          <tr>
-            <td colspan=2 height=30 class="zmenu"><b>���ݷ��ࣺ</b>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
 <!--
 EOT;
- showPageLink("all", "", "ȫ������");
- showPageLink("audit", "0", "�ȴ����"); 
- showPageLink("audit", "1", "���ͨ��"); 
- showPageLink("audit", "2", "���δͨ��");
- showPageLink("status", "0", "��ͣ");
- showPageLink("status", "1", "��Ӫ��");  
+ showPageLink("all", "1", "全部数据");
+ showPageLink("is_cpc", "0", "包含CPC");
+ showPageLink("is_cpm", "0", "包含CPM");
+ showPageLink("is_cpa", "0", "包含CPA"); 
+ showPageLink("is_cpd", "0", "包含CPD");  
+ showPageLink("status", "0", "未启用");
+ showPageLink("status", "1", "启用");  
 print <<<EOT
 -->
             </td></tr>    
-            <td><b>���ٲ�ѯ��</b><select id="searchtype">
-								<option value="name" selected>�ƻ�����</option>
-								<option value="shortname">�ͻ����</option>
-								<option value="contractname">��ͬ����</option>							
+            <td><b>快速查询：</b><select id="searchtype">
+								<option value="name" selected>规则名称</option>
+								<option value="shortname">客户简称</option>
+								<option value="contractname">合同名称</option>							
 							</select>
-							<input type="text" name="searchkey" value=""/>
-							<input type="button" name="btnQuery" value="��ѯ" OnClick="btnQuery_Click" />
+							<input type="text" name="searchkey" value="" class="text"/>
+							<input type="button" name="btnQuery" value="查询" OnClick="btnQuery_Click" class="text" />
 						</td>
             <td align="right" valign="center">
                 <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
@@ -41,14 +42,14 @@ print <<<EOT
                         <td align="middle" valign="center">
                             <a href="javascript:document.location.reload();">
                                 <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" />
-                                <span style="color: #547054"> ˢ��</span></a>
+                                <span style="color: #547054"> 刷新</span></a>
 <!--
 EOT;
 						if($canadd==true){
-							showButton(1,'����',$admin_file.'&action=new'.$transtr);
+							showButton(1,'新增',$admin_file.'&action=new'.$transtr);
 						}
 						if($candel==true){
-							showButton(2,'ɾ��','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","�˲������ɻָ�,ȷ��ɾ����");');
+							showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","此操作不可恢复,确认删除吗？");');
 						}print <<<EOT
 -->
                         </td>
@@ -64,30 +65,30 @@ EOT;
     <div class="tab">
         <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
             <tr>
-                <td align="middle" class="title" height="20" valign="center">���</td>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
                 <td align="middle" class="title" height="20" valign="center">
-                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />ȫѡ
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
                 </td>
-                <td align="middle" class="title" height="20" valign="center">�����</td>
-                <td align="middle" class="title" height="20" valign="center">��Ӧ�ͻ�</td>
-                <td align="middle" class="title" height="20" valign="center">���㷽ʽ</td>
-                <td align="middle" class="title" height="20" valign="center">ÿ���޶�</td>                 
-                <td align="middle" class="title" height="20" valign="center">�ύ������</td>               
-                <td align="middle" class="title" height="20" valign="center">��������</td>
-                <td align="middle" class="title" height="20" valign="center">����</td>
-                <td align="middle" class="title" height="20" valign="center">״̬</td>                
-                <td align="middle" class="title" height="20" valign="center">����</td>
+                <td align="middle" class="title" height="20" valign="center">规则名称</td>
+                <td align="middle" class="title" height="20" valign="center">规则范围</td>
+                <td align="middle" class="title" height="20" valign="center">类型</td>                 
+                <td align="middle" class="title" height="20" valign="center">是否总计划？</td>  
+                <td align="middle" class="title" height="20" valign="center">创意自动轮播？</td>                                        
+                <td align="middle" class="title" height="20" valign="center">添加时间</td>
+                <td align="middle" class="title" height="20" valign="center">修改时间</td>                
+                <td align="middle" class="title" height="20" valign="center">状态</td>                
+                <td align="middle" class="title" height="20" valign="center">操作</td>
             </tr>
 <!--
 EOT;
 $curidx = ($curpage-1)*$perpage;
 $curpageidx = 0;
 $showcount = count($db_afflist); 
-foreach($db_advlist as $adv ){
-	$merchant = getMerchant($adv[mer_id]);
+foreach($db_adrolllist as $db_adroll ){
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
-	$cdate = date('Y/m/d H:i:s',$adv[create_time]);
+	$cdate = date('Y/m/d H:i:s',$db_adroll[create_time]);
+	$udate = date('Y/m/d H:i:s',$db_adroll[update_time]);	
 print <<<EOT
 --> 
             <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
@@ -171,8 +172,156 @@ EOT;
 if($action=="new" || $action=="edit"){
 print <<<EOT
 -->
-
-
+<form name="form" method="post" action="$basename" id="form" onsubmit="return checkfrm();" >
+<input type="hidden" name="job" id="job" value="$job" />
+<input type="hidden" name="adv_id" id="adv_id" value="$adv_id" />
+<input type="hidden" name="action" id="action" value="saveadvselector" />
+<input type="hidden" name="sel_province" id="sel_province" value="" />
+<input type="hidden" name="sel_sitetype" id="sel_sitetype" value="" />
+<input type="hidden" name="sel_domain" id="sel_domain" value="" />
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 新增　定向设置信息</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
+        <tbody>
+				<tr>
+					<td align=right>是否总规则(<font color=red>*</font>)：</td>
+					<td>
+<!--
+EOT;
+	if(!isset($db_advrole) || $db_advrole[is_all]==1){
+		echo '<input type="radio" name="is_all" id="is_all0" value="0" checked/><label for="is_all0">否</label> ';
+	}else{
+		echo '<input type="radio" name="is_all" id="is_all0" value="0"/><label for="is_all0">否</label> ';
+	}
+	if(isset($db_advrole) && $db_advrole[is_all]==0){
+		echo '<input type="radio" name="is_all" id="is_all1" value="1" checked/><label for="is_all1">是</label> ';
+	}else{
+		echo '<input type="radio" name="is_all" id="is_all1" value="1"/><label for="is_all1">是</label> ';
+	}	
+print <<<EOT
+-->
+					</td>
+				</tr>	        
+				<tr>
+					<td align=right>规则名称(<font color=red>*</font>)：</td>
+					<td><input name="name" type="text" id="name" style="WIDTH: 261px"  value="$db_advrole[name]"/></td>
+				</tr>
+				<tr>
+					<td align=right>规则范围(<font color=red>*</font>)：</td>
+					<td>
+<!--
+EOT;
+	if(!isset($db_advrole) || $db_advrole[is_cpc]==1){
+		echo '<input type="checkbox" name="is_cpc" id="is_cpc" checked value="1"/>包含CPC ';
+	}else{
+		echo '<input type="checkbox" name="is_cpc" id="is_cpc" value="1"/>包含CPC ';
+	}
+	if(isset($db_advrole) && $db_advrole[is_cpm]==1){
+		echo '<input type="checkbox" name="is_cpm" id="is_cpm" checked value="1"/>包含CPM ';
+	}else{
+		echo '<input type="checkbox" name="is_cpm" id="is_cpm" value="1"/>包含CPM ';
+	}
+	if(isset($db_advrole) && $db_advrole[is_cpa]==1){
+		echo '<input type="checkbox" name="is_cpa" id="is_cpa" checked value="1"/>包含CPA ';
+	}else{
+		echo '<input type="checkbox" name="is_cpa" id="is_cpa" value="1">包含CPA ';
+	}
+	if(isset($db_advrole) && $db_advrole[is_cpd]==1){
+		echo '<input type="checkbox" name="is_cpd" id="is_cpd" checked value="1"/>包含CPD ';
+	}else{
+		echo '<input type="checkbox" name="is_cpd" id="is_cpd" value="1"/>包含CPD ';
+	}		
+print <<<EOT
+-->					</td>
+				</tr>
+				<tr>
+					<td align=right>选择广告计划：</td>
+					<td align="left" valign="middle">
+					<table border="0" cellspacing="3" cellpadding="0" height="100%">
+						<tr><td align="center" valign="middle" style="border:0px">
+						<select multiple style="width:120px;height:120px">
+						$db_advlist
+						</select>
+						</td>
+						<td align="center" valign="middle" style="border:0px"><input type="button" value="选择>>"/></td>
+						<td align="center" valign="top" style="border:0px">
+							<div><input type="checkbox"/>1</div>
+							<div><input type="checkbox"/>2</div>
+						</td>
+						</tr>
+					</table>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>轮播类型(<font color=red>*</font>)：</td>
+					<td>
+<!--
+EOT;
+	if(!isset($db_advrole) || $db_advrole[type]==0){
+		echo '<input type="radio" name="type" id="type0" value="0" checked/><label for="type0">所有创意随机</label> ';
+	}else{
+		echo '<input type="radio" name="type" id="type0" value="0"/><label for="type0">所有创意随机</label> ';
+	}
+	if(isset($db_advrole) && $db_advrole[type]==1){
+		echo '<input type="radio" name="type" id="type1" value="1" checked/><label for="type1">选定创意随机</label> ';
+	}else{
+		echo '<input type="radio" name="type" id="type1" value="1"/><label for="type1">选定创意随机</label> ';
+	}
+	if(isset($db_advrole) && $db_advrole[type]==2){
+		echo '<input type="radio" name="type" id="type2" value="2" checked/><label for="type2">自定义</label> ';
+	}else{
+		echo '<input type="radio" name="type" id="type2" value="2"/><label for="type2">自定义</label> ';
+	}	
+print <<<EOT
+-->							
+						
+						
+						
+					</td>
+				</tr>
+				<tr>
+					<td align=right>状态(<font color=red>*</font>)：</td>
+					<td>
+<!--
+EOT;
+	if(!isset($db_advrole) || $db_advrole[status]==0){
+		echo '<input type="radio" name="status" id="status0" value="0" checked/><label for="status0">停用</label> ';
+	}else{
+		echo '<input type="radio" name="status" id="status0" value="0"/><label for="status0">停用</label> ';
+	}
+	if(isset($db_advrole) && $db_advrole[status]==1){
+		echo '<input type="radio" name="status" id="status1" value="1" checked/><label for="status1">启用</label> ';
+	}else{
+		echo '<input type="radio" name="status" id="status1" value="1"/><label for="status1">启用</label> ';
+	}
+print <<<EOT
+-->
+					</td>
+				</tr>		
+				<tr>
+					<td align=right>规则说明(<font color=red>*</font>)：</td>
+					<td>
+						<textarea id="memo" name="memo" cols="30" rows="5">$db_advrole[memo]</textarea> 
+					</td>
+				</tr>																
+		</tbody>
+		</table>
+		</div>
+		</td>
+	</tr>
+</tbody>
+</table>
+</form>
 <!--
 EOT;
 }?>-->
