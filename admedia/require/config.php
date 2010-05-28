@@ -35,7 +35,7 @@ $cfg_dateformat='Y-m-d H:i:s';
 $cfg_timezone='-8';
 $cfg_ftpweb='';
 $cfg_userstatus = array("<font color=blue>等待审核</font>","<font color=green>审核通过</font>","<font color=red>审核未通过</font>","<font color=red>进入复审</font>","<font color=black>黑名单</font>");
-$cfg_gender = array('女','男');
+$cfg_gender = array('男','女');
 $cfg_affbiztype= array('个人','企业');
 $cfg_affcerttype= array('身份证','军官证','护照');
 $cfg_newstype = array('系统公告','活动公告','作弊公示','汇款招领 ');
