@@ -1,4 +1,7 @@
 <?php
+
+InitGetPost(array('all','status',',start_date','end_date'));
+
 if(empty($action)){
 
 
@@ -15,4 +18,5 @@ if(empty($action)){
 }
 include PrintEot($job);
 footer(true);
+
 ?>
