@@ -1,4 +1,11 @@
 <?php 
+InitGetPost(array('birthday','all','sex'));
+
+$month = date('Y-m',$timestamp);
+
+strlen(birthday)>0 && $transtr .= "&birthday=$birthday";
+strlen($sex)>0 && $transtr .= "&sex=$sex";
+(strlen($searchtype)>0 && strlen($searchkey)>0) && $transtr .= "&searchtype=".$searchtype."&searchkey=$searchkey";
 
 if($action=="new"){
 	$objMerchant = LOAD::loadDB("Merchant");
@@ -9,17 +16,26 @@ if($action=="new"){
 	$op_merchantlist = loadMerchantList(1,$db_merlinkman[mer_id]);
 }else if($action=="save"){
 	$objMerchant = LOAD::loadDB("Merchant");
-	if(isset($curid) && empty($curid)){
+	if(empty($curid)){
 		$_POST[create_time] = $timestamp;
-		$objMerchant->insetMerLinkman($_POST);
+		$objMerchant->insertMerLinkMan($_POST);
 	}else{
-		$objMerchant->updateMerLinkman($_POST);
+		$objMerchant->updateMerLinkman($curid,$_POST);
 	}
-}
-if(empty($action)){
+	ObHeader("$admin_file$transtr");
+}else if(empty($action)){
+
+	(!empty($birthday)) && $stwhere .= " a.birthday like '".$month."%' and ";		
+	(!empty($sex)) && $stwhere .= " a.sex=".intval($sex)." and ";	
+	if(!empty($searchtype) && !empty($searchkey)) {
+		$querykey = "%".$searchkey."%";
+		$stwhere .= " $searchtype like ".sqlEscape($querykey)." and ";			
+	}
+	(strlen($stwhere)>0) && $stwhere = substr($stwhere,0,strlen($stwhere)-4);	
+	
 	$objMerchant = LOAD::loadDB("Merchant");
 	$totalnum = $objMerchant->getMerLinkManTotalCount();
-	$totalpage = ceil($totalnum%$perpage);
+	$totalpage = ceil($totalnum/$perpage);
 	$db_merlinkmanlist = $objMerchant->getMerLinkManPageList($curpage,$perpage);
 }
 

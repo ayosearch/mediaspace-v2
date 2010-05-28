@@ -1,11 +1,14 @@
 <?php
 InitGetPost(array("adv_id","mer_id","backurl"));
-
 if($action=="affiliate"){
 	$aff_id = $curid;
 	$objAffUser = LOAD::loadDB("Affiliate");
 	$db_affiliate = $objAffUser->getAffiliate($curid);
-	if($db_affiliate) $db_affpayinfolist = $objAffUser->getAffPayInfoByAffId($curid);
+	if($db_affiliate){
+		$db_affpayinfolist = $objAffUser->getAffPayInfoByAffId($curid);
+		$objSystem = LOAD::loadDB("System");
+		$db_auditlist = $objSystem->getSysAuditAll($curid,0);
+	}
 }else if($action=="newpayinfo"){
 	$objCommData = LOAD::loadDB("CommonData");
 	$op_paymethodlist = loadBaseSortList("bank");
@@ -31,18 +34,26 @@ if($action=="affiliate"){
 	$objAffUser->updateAffPayInfo($curid,$_POST);
 }else if($action=="merchant"){
 	$objMerchant = LOAD::loadDB("Merchant");
-	$db_merchant = $objMerchant->getMerchant($mer_id);
+	$db_merchant = $objMerchant->getMerchant($curid);
 	if($db_merchant){
-		$db_defaultman  = $objMerchant->getDefaultMerLinkMan($mer_id);
-		$db_advlist = $objMerchant->getMerAdvList($mer_id);
+		$db_defaultman  = $objMerchant->getDefaultMerLinkMan($curid);
+		$db_advlist = $objMerchant->getMerAdvList($curid);
 	}
-}else if($action=="website"){
+}else if($action=="affsite"){
 	$objAffiliate = LOAD::loadDB("Affiliate");
-	$db_site = $objAffiliate->getAffWebSite($curid);
+	$db_affsite = $objAffiliate->getAffWebSite($curid);
+	if($db_affsite){
+		$objSystem = LOAD::loadDB("System");
+		$db_auditlist = $objSystem->getSysAuditAll($curid,1);
+	}
 }else if($action=="advertise"){
 	$objAdvertise = LOAD::loadDB("Advertise");
 	$db_adv = $objAdvertise->getAdvertise($curid);
 	$db_advselectorlist = $objAdvertise->getAdvSelectorByAdvId($curid);
+	if($db_adv){
+		$objSystem = LOAD::loadDB("System");
+		$db_auditlist = $objSystem->getSysAuditAll($curid,4);	
+	}
 }else if($action=="newadvselector" || $action=="editadvselector"){
 	$objCommData = LOAD::loadDB("CommonData");
 	$db_provincelist = $objCommData->getBaseProvinceAll();
