@@ -1,0 +1,150 @@
+<!--<?php
+include_once PrintEot('header');
+if(empty($action)){
+print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form">
+
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>站长管理 &gt;&gt;  广告申请复审</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+         <tr>
+            <td colspan=2 height=30 class="zmenu">&nbsp;&nbsp;<b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("status", "1", "已审核");
+ showPageLink("status", "3", "重新审核"); 
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+        <tr>
+        	<td>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="100%" align=center>
+        	<tr>
+	        	 <td align=left>&nbsp;&nbsp;<b>快速查询：</b>
+				<select id="searchtype" name="searchtype">
+	<!--
+	EOT;
+					if(empty($searchtype) || $searchtype=="aff_id")  echo '<option value="aff_id" selected>站长ID</option>';
+				    else echo '<option value="name">站长ID</option>';
+					if(!empty($searchtype) && $searchtype=="aff_name")  echo '<option value="aff_name" selected>站长名称</option>';
+				    else echo '<option value="name">站长名称</option>';
+					if(!empty($searchtype) && $searchtype=="site_name")  echo '<option value="place_url" selected>站点名称</option>';
+				    else echo '<option value="place_url">站点名称</option>'; 			    
+					if(!empty($searchtype) && $searchtype=="adv_name")  echo '<option value="adv_name" selected>广告计划</option>';
+				    else echo '<option value="adv_name">广告计划</option>';
+	print <<<EOT
+	-->				
+					</select>
+								<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>
+							开始时间：<input name="start_date" type="text"  class="text" readonly value="$start_date"/><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+							结束时间：<input name="end_date" type="text" class="text" readonly value="$end_date"/><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+							<input type="submit" value="查询" class="text"/>
+	            </td>
+	            </tr>
+	           </table>
+        	</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" />
+<span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($canaudit==true){
+		showButton(4,'复审','javascript:showAudit("'.$admin_file.'&action=audit&status=1'.$transtr.'&curpage='.$curpage.'");');
+	}
+	if($candel==true){
+		showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center"> 序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                <td align="middle" class="title" height="20" valign="center">站长-站点</td>
+                <td align="middle" class="title" height="20" valign="center">申请广告</td>        
+                <td align="middle" class="title" height="20" valign="center">创建时间</td>
+                <td align="middle" class="title" height="20" valign="center">状态</td>
+                <td align="middle" class="title" height="20" valign="center">审批记录</td>
+                <td align="middle" class="title" height="20" valign="center">编辑</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affadvapplylist); 
+foreach($db_affadvapplylist as $db_advapply ){
+	$curidx = $curidx+1;
+	$curpageidx = $curpageidx+1;
+	$cdate = date('Y/m/d H:i:s',$db_advapply[create_time]);
+	$applystatus = $cfg_userstatus[$db_advapply[status]];		
+print <<<EOT
+-->    
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx</td>
+                <td align="middle" class="hei" valign="center"><input id="ids" name="ids" type="checkbox" value="$db_advapply[id]" /></td>
+                <td valign="middle" align="center">&nbsp;
+                <a href='$basename?job=detail&action=affiliate&curid=$db_advapply[aff_id]$transtr&backurl=$backurl' class="noline">$db_advapply[aff_name]($db_advapply[aff_id])</a>-
+                <a href="$basename?job=detail&action=affsite&curid=$db_advapply[site_id]$transtr&backurl=$backurl" class="noline">$db_advapply[site_name]($db_advapply[site_id])</a></td>
+                <td valign="middle" align="center">&nbsp;<a href="$basename?job=detail&action=advertise&curid=$db_advapply[adv_id]$transtr&backurl=$backurl" class="NoLine">$db_advapply[adv_name]($db_advapply[adv_id])</td>
+                <td valign="middle" align="center">&nbsp;$cdate</td>
+                <td valign="middle" align="center">&nbsp;$applystatus</td>
+                <td valign="middle" align="center">&nbsp;<a href="$basename?job=detail&action=advapply&curid=$db_advapply[id]$transtr&backurl=$backurl">[查看详情]</a></td>
+                <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+	showEditButton($db_advapply[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+--> 
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+--> 
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+<!--
+EOT;
+}?>-->
