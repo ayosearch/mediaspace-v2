@@ -441,6 +441,12 @@ class PM_SystemDB extends BaseDB{
 		return $data;
 	}
 	
+	function getSysAuditAll($target_id,$itype){
+		$sql = "select * from pm_sysaudit where itype=".$itype." and CONCAT(target_ids,',') like '%".$target_id.",%'";
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);			
+	}
+	
 	function getSysAuditPageList($page, $perPage,$stwhere=null,$storderby=null){
 		$page = intval($page);
 		$perPage = intval($perPage);
@@ -465,7 +471,7 @@ class PM_SystemDB extends BaseDB{
 	
 	function getSysAuditStruct() {
 		//itype=0 站长审批 itype=1 网站审核 itype=2 广告申请 itype=3 广告主审批 itype=4 广告计划审批
-		return array('content','target_ids','itype','parent_id','level','audit_id','audit_name','action');
+		return array('content','target_ids','itype','parent_id','level','audit_id','audit_name','auditstatus','create_time');
 	}
 	
 	function _checkSysAuditData($data){

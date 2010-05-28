@@ -46,7 +46,8 @@ class  PM_AffiliateDB extends BaseDB{
 	}
 	
 	function getAffiliate($id){
-		$data = $this->_db->get_one("SELECT a.*,b.name as province_name,c.name as city_name FROM pm_affiliate a,pm_baseprovince b,pm_basecity c WHERE a.province_id=b.id and a.city_id=c.id and a.id=".intval($id));
+		$sql = "SELECT a.*,b.name as province_name,c.name as city_name FROM pm_affiliate a left join (pm_baseprovince b,pm_basecity c) on a.province_id=b.id and a.city_id=c.id where a.id=".intval($id);
+		$data = $this->_db->get_one($sql);
 		if (!$data) return null;
 		return $data;
 	}
@@ -116,7 +117,7 @@ class  PM_AffiliateDB extends BaseDB{
 	}
 	
 	function getAffWebSite($id){
-		$data = $this->_db->get_one("SELECT a.*,b.login_name as aff_name FROM pm_affwebsite a,pm_affiliate b WHERE a.aff_id=b.id and a.id=".intval($id));
+		$data = $this->_db->get_one("SELECT a.*,b.login_name as aff_name,b.linkman as aff_real_name,b.create_time as aff_create_time FROM pm_affwebsite a,pm_affiliate b WHERE a.aff_id=b.id and a.id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}

@@ -2,7 +2,7 @@
 class PM_AdminUserDB extends BaseDB{
 	//系统模块----------------------------------------------------------------------------------------------------
 	function insertSysModule($fieldsData){
-		$fieldsData = $this->_checkSysModule($fieldsData);
+		$fieldsData = $this->_checkSysModuleData($fieldsData);
 		if (!$fieldsData) return null;
 		$this->_db->update("INSERT INTO pm_sysmodule SET " . $this->_getUpdateSqlString($fieldsData));
 		$insertId = $this->_db->insert_id();
@@ -10,7 +10,7 @@ class PM_AdminUserDB extends BaseDB{
 	}
 	
 	function updateSysModule($id,$updateData){
-		$updateData = $this->_checkSysModule($updateData);
+		$updateData = $this->_checkSysModuleData($updateData);
 		if (!$updateData) return null;
 		$this->_db->update("UPDATE pm_sysmodule SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -22,7 +22,7 @@ class PM_AdminUserDB extends BaseDB{
 	}
 	
 	function getSysModule($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_sysmodule WHERE $id=".intval($id));
+		$data = $this->_db->get_one("SELECT * FROM pm_sysmodule WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
@@ -33,8 +33,13 @@ class PM_AdminUserDB extends BaseDB{
 		return $data;
 	}	
 	
-	function getSysModuleAll(){
-		$query = $this->_db->query("SELECT * FROM pm_sysmodule ORDER BY id DESC");
+	function getSysModuleAll($stwhere=null,$orderby=null){
+		$sql = "select a.*,b.name as parentname from pm_sysmodule a left outer join pm_sysmodule b on a.parent_id=b.id";
+		if($stwhere!=null)
+			$sql .= " where $stwhere";
+		if($orderby!=null)
+			$sql .= " order by $orderby";
+		$query = $this->_db->query($sql);
 		return $this->_getAllResultFromQuery($query);	
 	}
 
@@ -43,11 +48,11 @@ class PM_AdminUserDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$sql = "SELECT * FROM pm_sysmodule";
+		$sql = "select a.*,b.name as parentname from pm_sysmodule a left outer join pm_sysmodule b on a.parent_id=b.id";
 		if($stwhere!=null)
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
-			$sql = $sql." order by ".$storderby." DESC";
+			$sql = $sql." order by ".$storderby." asc";
 		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
 		return $this->_getAllResultFromQuery($query);	
 	}
@@ -61,7 +66,7 @@ class PM_AdminUserDB extends BaseDB{
 	}
 	
 	function getSysModuleStruct() {
-		return array('name','url','create_time','parent_id','memo','col_index','is_del');
+		return array('code','name','url','create_time','parent_id','memo','col_index','is_del');
 	}
 	
 	function _checkSysModuleData($data){

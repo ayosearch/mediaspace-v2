@@ -26,7 +26,7 @@ class PM_MerchantDB extends basedb{
 	}
 
 	function getMerChance( $id ){
-		$data = $this->_db->get_one( "SELECT * FROM pm_merchance WHERE {$id}=".intval( $id ) );
+		$data = $this->_db->get_one( "SELECT * FROM pm_merchance WHERE id=".intval( $id ) );
 		if ( !$data )
 		{
 			return null;
@@ -106,7 +106,7 @@ class PM_MerchantDB extends basedb{
 	}
 
 	function getMerContract( $id ){
-		$data = $this->_db->get_one( "SELECT * FROM pm_mercontract WHERE {$id}=".intval( $id ) );
+		$data = $this->_db->get_one( "SELECT * FROM pm_mercontract WHERE id=".intval( $id ) );
 		if ( !$data ){
 			return null;
 		}
@@ -197,13 +197,13 @@ class PM_MerchantDB extends basedb{
 	}
 
 	function getMerchant( $id ){
-		$data = $this->_db->get_one( "SELECT a.*,b.name as province_name,c.name as city_name FROM pm_merchant a, pm_baseprovince b,pm_basecity c WHERE a.province_id=b.id and a.city_id=c.id and a.id=".intval( $id ) );
+		$sql = "SELECT a.*,b.name as province_name,c.name as city_name FROM pm_merchant a left join (pm_baseprovince b,pm_basecity c) on a.province_id=b.id and a.city_id=c.id where a.id=".intval( $id );
+		$data = $this->_db->get_one( $sql );
 		if ( !$data ){
 			return null;
 		}
 		return $data;
-	}
-	
+	}	
 	
 	function getMerAdvList($mer_id){
 		$sql = "SELECT * FROM pm_advertise where mer_id=".intval($mer_id)." and status=1";
@@ -285,7 +285,7 @@ class PM_MerchantDB extends basedb{
 	}
 
 	function getMerMeposit( $id ){
-		$data = $this->_db->get_one( "SELECT * FROM pm_merdeposit WHERE {$id}=".intval( $id ) );
+		$data = $this->_db->get_one( "SELECT * FROM pm_merdeposit WHERE id=".intval( $id ) );
 		if ( !$data ){
 			return null;
 		}
@@ -363,7 +363,7 @@ class PM_MerchantDB extends basedb{
 	}
 
 	function getMerPayrec( $id ){
-		$data = $this->_db->get_one( "SELECT * FROM pm_merpayrec WHERE {$id}=".intval( $id ) );
+		$data = $this->_db->get_one( "SELECT * FROM pm_merpayrec WHERE id=".intval( $id ) );
 		if ( !$data ){
 			return null;
 		}
@@ -441,7 +441,7 @@ class PM_MerchantDB extends basedb{
 	}
 
 	function getMerAppendIcons( $id ){
-		$data = $this->_db->get_one( "SELECT * FROM pm_merappendicons WHERE {$id}=".intval( $id ) );
+		$data = $this->_db->get_one( "SELECT * FROM pm_merappendicons WHERE id=".intval( $id ) );
 		if ( !$data ){
 			return null;
 		}
@@ -502,7 +502,7 @@ class PM_MerchantDB extends basedb{
 	}
 
 	function getMerLinkMan( $id ){
-		$data = $this->_db->get_one( "SELECT * FROM pm_merlinkman WHERE {$id}=".intval( $id ) );
+		$data = $this->_db->get_one( "SELECT * FROM pm_merlinkman WHERE id=".intval( $id ) );
 		if ( !$data ){
 			return null;
 		}
@@ -529,7 +529,7 @@ class PM_MerchantDB extends basedb{
 			return array( );
 		}
 		$offset = ( $page - 1 ) * $perPage;
-		$sql = "SELECT * FROM pm_merlinkman";
+		$sql = "SELECT a.*,b.short_name as mer_name FROM pm_merlinkman a left join pm_merchant b on a.mer_id=b.id ";
 		if ( $stwhere != null ){
 			$sql = $sql." where ".$stwhere;
 		}
