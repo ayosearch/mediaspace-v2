@@ -38,6 +38,8 @@ if($action=="affiliate"){
 	if($db_merchant){
 		$db_defaultman  = $objMerchant->getDefaultMerLinkMan($curid);
 		$db_advlist = $objMerchant->getMerAdvList($curid);
+		$objSystem = LOAD::loadDB("System");
+		$db_auditlist = $objSystem->getSysAuditAll($curid,4);
 	}
 }else if($action=="affsite"){
 	$objAffiliate = LOAD::loadDB("Affiliate");
