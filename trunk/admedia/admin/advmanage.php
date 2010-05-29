@@ -36,8 +36,8 @@ if($action=="new"){
 	if(!isset($_POST[filter_agentip])) $_POST[filter_agentip]=0;
 	if(!isset($_POST[filter_foreignip])) $_POST[filter_foreignip]=0;		
 	if(empty($curid)){
-		if(uploadFile($_FILES['file_logo']['tmp_name'],$cfg_upfilepath.$_FILES['file_logo']['name'])){
-			$_POST[logo] = $cfg_upfilepath.$_FILES['file_logo']['name'];
+		if(uploadFile($_FILES['file_logo']['tmp_name'],$cfg_upfilepath.'advimg/'.$_FILES['file_logo']['name'])){
+			$_POST[logo] = $cfg_upfilepath.'advimg/'.$_FILES['file_logo']['name'];
 		}
 		$_POST[create_time]=$timestamp;
 		$_POST[update_time]=$timestamp;		
@@ -45,8 +45,8 @@ if($action=="new"){
 		$_POST[end_time]=__strtotime($_POST[end_time]." ".$_POST[end_hour].":00:00");
 		$objAdvertise->insertAdvertise($_POST);		
 	}else{
-		if(uploadFile($_FILES['file_logo']['tmp_name'],$cfg_upfilepath.$_FILES['file_logo']['name'])){
-			$_POST[logo] = $cfg_upfilepath.$_FILES['file_logo']['name'];			
+		if(uploadFile($_FILES['file_logo']['tmp_name'],$cfg_upfilepath.'advimg/'.$_FILES['file_logo']['name'])){
+			$_POST[logo] = $cfg_upfilepath.'advimg/'.$_FILES['file_logo']['name'];			
 		}
 		$_POST[update_time]=$timestamp;
 		$_POST[start_time]=__strtotime($_POST[start_time]." ".$_POST[start_hour].":00:00");
@@ -60,7 +60,7 @@ if($action=="new"){
 		$ids = substr($ids,0,strlen($ids)-1);
 	}
 	$arrfield = array("audit_id"=>$AdminUser[id],"audit_name"=>$AdminUser[login_name],"create_time"=>$timestamp,"target_ids"=>$ids,
-								"parent_id"=>0,"level"=>0,"action"=>$aduitstatus,"content"=>$_POST[content],"itype"=>5);
+								"parent_id"=>0,"level"=>0,"action"=>$_POST[auditstatus],"content"=>$_POST[content],"itype"=>5);
 	$objSystem = LOAD::loadDB("System");	
 	$sysaudit_id = $objSystem->insertSysAudit($arrfield);
 	$objAdvertise = LOAD::loadDB("Advertise");	

@@ -10,7 +10,7 @@ if($action=="new"){
 }else if($action=="edit"){
 	$objAdvertise = LOAD::loadDB("Advertise");
 	$db_advpage = $objAdvertise->getAdvPages($curid);
-	$op_advlist = loadAdvertiseList('1',$db_advpage[aff_id]);	
+	$op_advlist = loadAdvertiseList('1',$db_advpage[adv_id]);	
 }else if($action=="save"){
 	if(!isset($curid) || empty($curid)){
 		$objAdvertise = LOAD::loadDB("Advertise");
@@ -46,7 +46,7 @@ if($action=="new"){
 	$objAdvertise = LOAD::loadDB("Advertise");
 	$totalnum = $objAdvertise->getAdvPagesTotalCount($stwhere);
 	$totalpage = ceil($totalnum/$perpage);
-	$db_advpagelist = $objAdvertise->getAdvPagesPageList($curpage,$perpage,$stwhere,"a.update_time");
+	$db_advpagelist = $objAdvertise->getAdvPagesPageList($curpage,$perpage,$stwhere,"a.id");
 }
 
 include PrintEot($job);

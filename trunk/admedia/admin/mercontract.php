@@ -17,8 +17,14 @@ if(empty($action)){
 }else if($action=="save"){
 	$objMerchant = LOAD::loadDB("Merchant");	
 	if(empty($curid)){
+		if(uploadFile($_FILES['contract_file']['tmp_name'],$cfg_upfilepath.'mercontract/'.$_FILES['contract_file']['name'])){
+			$_POST[file_path] = $cfg_upfilepath.'mercontract/'.$_FILES['contract_file']['name'];			
+		}
 		$objMerchant->insertMerContract($_POST);
 	}else{
+		if(uploadFile($_FILES['contract_file']['tmp_name'],$cfg_upfilepath.'mercontract/'.$_FILES['contract_file']['name'])){
+			$_POST[file_path] = $cfg_upfilepath.'mercontract/'.$_FILES['contract_file']['name'];			
+		}		
 		$objMerchant->updateMerContract($curid,$_POST);
 	}
 	unset($objMerchant);
