@@ -52,6 +52,13 @@ class  PM_AffiliateDB extends BaseDB{
 		return $data;
 	}
 	
+	function getAffiliateByLogin($userName,$userPass){
+		$strSql = "select * from pm_affiliate where login_name=".sqlEscape($userName,false)." and login_pwd=".sqlEscape($userPass,false)." and is_del=0";
+		$data = $this->_db->get_one($strSql);
+		if (!$data) return null;
+		return $data;
+	}	
+	
 	function getAffiliatePageList($page, $perPage,$stwhere=null,$storderby=null){
 		$page = intval($page);
 		$perPage = intval($perPage);
@@ -75,7 +82,7 @@ class  PM_AffiliateDB extends BaseDB{
 	}	
 	
 	function getAffiliateStruct() {
-		return array('login_name','login_pwd','login_srcpwd','biz_type','biz_name','biz_code','biz_file','linkman','gender','telephone','ext','mobile','qq','msn','email','cert_type','cert_code','zip','fax','address','province_id','city_id','area_id','pay_limit','tax_rate','pay_cycle','commend_id','audit_id','audit_name','service_id','service_name','audit_time','create_time','update_time','credit','point','total_point','source','union_flag','pay_type','status','is_active','memo','balance','total_money','deduct');
+		return array('login_name','login_pwd','login_srcpwd','biz_type','biz_name','biz_code','biz_file','linkman','gender','telephone','ext','mobile','qq','msn','email','cert_type','cert_code','zip','fax','address','province_id','city_id','area_id','pay_limit','tax_rate','pay_cycle','commend_id','audit_id','audit_name','service_id','service_name','audit_time','create_time','update_time','credit','point','total_point','source','union_flag','pay_type','status','is_active','memo','balance','total_money','deduct','question','answer');
 	}
 	
 	function _checkAffiliateData($data){
