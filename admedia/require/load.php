@@ -37,23 +37,5 @@ class LOAD {
 	function loadDB($dbName) {
 		return LOAD::loadClass($dbName,'db');
 	}
-
-	function config($var = null, $file = 'config', $dir = 'bbscache', $isStatic = true) {
-		static $conf = array();
-		if (!isset($conf[$file])) {
-			if (file_exists(D_P . "data/$dir/{$file}.php")) {
-				include checkPurview(R_P . "data/$dir/{$file}.php");
-				$arr = get_defined_vars();
-				unset($arr['dir'], $arr['file'], $arr['var'], $arr['conf'], $arr['isStatic']);
-				if ($isStatic !== true) {
-					return $var ? $arr[$var] : $arr;
-				}
-				$conf[$file] = $arr;
-			} else {
-				$conf[$file] = array();
-			}
-		}
-		return $var ? $conf[$file][$var] : $conf[$file];
-	}
 }
 ?>

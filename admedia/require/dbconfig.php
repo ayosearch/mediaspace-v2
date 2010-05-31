@@ -13,9 +13,8 @@ $db_pass = 'root';
 // 数据库名，论坛程序所使用的数据库名。
 $db_name = 'adspace';
 
-// 数据库类型，有效选项有 mysql 和 mysqli，自pwforums v6.3.2起，引入了mysqli的支持，兼容性更好，效率性能更稳定，与mysql连接更稳定
 // 若服务器的配置是 PHP5.1.0或更高版本 和 MySQL4.1.3或更高版本，可以尝试使用 mysqli。
-$database = 'mysql';
+$database = 'mysqli';
 
 	// 表区分符，用于区分每一套程序的符号
 $PM = 'pm_';

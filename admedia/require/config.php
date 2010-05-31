@@ -1,4 +1,5 @@
 <?php
+$cfg_memcache=array('host'=>'127.0.0.1','port'=>11211);
 $cfg_name='广告分销平台';
 $cfg_http='N';
 $cfg_url='/admedia';
@@ -9,7 +10,8 @@ $cfg_jspath="js";
 $cfg_pext='.php';
 $cfg_dir='.php?';
 $cfg_ext='.html';
-$cfg_upfilepath='upload/';
+$cfg_basepath = "/data0/apache/htdocs";
+$cfg_upfilepath='/upload/';
 $cfg_debug='0';
 $cfg_ifopen='0';
 $cfg_key='';
@@ -63,7 +65,8 @@ $cfg_sysconfig = array(
 	"site_audit"=>"0","low_cpc_price"=>"0","low_cpm_price"=>"0","low_cpa_price"=>"0","low_cpd_price"=>"0",
 	"day_low_limit"=>"0","domain_audit"=>"0","aff_reg"=>"0","aff_vcreg"=>"0","get_pass"=>"0","pass_question"=>"",
 	"pay_low_price"=>"0","pay_tax"=>"0","pay_manual_fee"=>"0","pay_cycle"=>"1","pay_day"=>"3",
-	"cpc_deduct"=>"0","cpm_deduct"=>"0","cpa_deduct"=>"0","cpd_deduct"=>"0","admin_ip_limit"=>"0","admin_ip_list"=>""
+	"cpc_deduct"=>"0","cpm_deduct"=>"0","cpa_deduct"=>"0","cpd_deduct"=>"0","admin_ip_limit"=>"0","admin_ip_list"=>"",
+	"smtp_server"=>"","smtp_port"=>"","mail_user"=>"","mail_pass"=>"","sms_url"=>"","sms_mobile"=>"","sms_msg"=>""
 );
 $cfg_sysrole = array("超级管理员","站长客服","广告编辑(AE)","广告销售","其它");
 $cfg_affsource = array("前台注册","后台添加");
@@ -82,4 +85,5 @@ $cfg_advselectortype = array("site_type"=>"站长类型","province"=>"省份","d
 $cfg_advselectorfilter = array("选取","过滤");
 $cfg_advselectorstatus = array("<font color=red>停止</font>","<font color=green>启用</font>");
 $cfg_advbuyaffplace = array("<font color=red>停止</font>","<font color=green>正常投放</font>","<font color=blue>已到期</font>"); 
+$cfg_advroletype = array("所有创意随机","选定创意随机","自定义时段");
 ?>

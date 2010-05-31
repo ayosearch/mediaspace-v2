@@ -434,7 +434,7 @@ function isGM($name) {
 	return checkInArray($name,$manager);
 }
 
-function getDataStore() {
+function getDataCache() {
 	global $db_datastore;
 	switch (strtolower($db_datastore)) {
 		case 'memcache' :
@@ -494,6 +494,32 @@ function if_uploaded_file($tmp_name) {
 	} else {
 		return true;
 	}
+}
+
+function showOptionHour($selhour=-1){
+	$op_hourlist = "";
+	for($i=0;$i<24;$i++){
+		if($i<10) $hour = "0".$i;
+		else $hour = $i;
+		if($selhour==$i)
+			$op_hourlist .= "<option value='".$i."' selected>".$hour."</option>";
+		else
+			$op_hourlist .= "<option value='".$i."'>".$hour."</option>";
+	}
+	return $op_hourlist;
+}
+
+function showOptionSecond($selSecond=-1){
+	$op_secondlist = "";
+	for($i=0;$i<60;$i++){
+		if($i<10) $second = "0".$i;
+		else $second = $i;
+		if($selSecond==$i)
+			$op_secondlist .= "<option value='".$i."' selected>".$second."</option>";
+		else
+			$op_secondlist .= "<option value='".$i."'>".$second."</option>";
+	}
+	return $op_secondlist;
 }
 
 //上传文件
