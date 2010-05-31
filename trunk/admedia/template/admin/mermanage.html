@@ -3,7 +3,7 @@ include_once PrintEot('header');
 if($action=="new" || $action=="edit"){
 print <<<EOT
 -->
-<form name="form" id="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
+<form name="form" id="form" action="$admin_file" method="post" onsubmit="return checkfrm();" enctype="multipart/form-data">
 <input type="hidden" name="action" value="save"/>
 <input type="hidden" name="curid" value="$curid"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
@@ -34,7 +34,8 @@ print <<<EOT
 					<td><input type="text" id="short_name" style="WIDTH: 120px" NAME="short_name" value="$db_merchant[short_name]"></td>
 				
 					<td align=right>客户Logo：</td>
-					<td><INPUT id="logo_file" contentEditable="false" type="file" name="logo_file" style="width: 235px; height: 21px" /></td>
+					<td><INPUT id="logo_file" contentEditable="false" type="file" name="logo_file" style="width: 235px; height: 21px" />
+							<a href="$db_merchant[logo]" target="_blank" title="点击看原图"><img src="$db_merchant[logo]" border="0" height="64px" align="absmiddle"/></a></td>
 				</tr>
 				<tr>
 					<td align=right>营业执照号码：</td>
@@ -126,7 +127,11 @@ print <<<EOT
          
     </tbody>
  </table>
-
+</div>
+</td>
+</tr>
+</tbody>
+</table>
  </form>
 <script language=javascript>
 function checkfrm(){
@@ -248,7 +253,7 @@ print <<<EOT
                 <td align="middle" valign="center">
                 <input id="ids" name="ids" type="checkbox" value="$merchant[id]" />
                 </td>
-                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$merchant[id]&backurl=$backurl">$merchant[short_name]</a>             
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$merchant[id]&backurl=$backurl$transtr" class="noline">$merchant[short_name]</a>             
                 </td>
                 <td align="middle" valign="center">&nbsp;
 <!--
@@ -361,4 +366,4 @@ function checkfrm(){
 <!--
 EOT;
 }
-?>
+?>-->

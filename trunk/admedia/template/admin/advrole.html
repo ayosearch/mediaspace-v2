@@ -1,10 +1,120 @@
 <!--<?php
-include_once PrintEot('header');
-if(empty($action) || $action=="list"){
+if($action=="seladv"){
+print <<<EOT
+ -->
+<table border="0" cellspacing="3" cellpadding="0" height="100%">
+<!--
+EOT;
+	$line = 0;
+	if($db_advlist){
+		foreach($db_advlist as $db_adv){
+			if($line%3==0) echo "<tr>";
+			if(strpos(','.$adv_ids,$db_adv[id].',')>0){
+				echo '<td align="left" valign="middle" style="border:0px"><input type="checkbox" id="adv_id" name="adv_id" value="'.$db_adv[id].'" onclick="javascript:chooseAdvCreativelist();" checked/>'.$db_adv[name].'</td>';
+			}else{
+				echo '<td align="left" valign="middle" style="border:0px"><input type="checkbox" id="adv_id" name="adv_id" value="'.$db_adv[id].'" onclick="javascript:chooseAdvCreativelist();"/>'.$db_adv[name].'</td>';
+			}
+			if($line%3==2) echo "</tr>";
+			$line++;
+		}
+	}
 print <<<EOT
 -->
-<form action="$admin_file" method="post" name="form">
-
+</table>
+<!--
+EOT;
+}else if($action=="selcreative"){
+print <<<EOT
+-->
+ 					<table border="0" cellspacing="1" cellpadding="0" width="100%">
+					<tr>
+						<td width="50px" align="center" height="25px">选择</td>					
+						<td width="50px" align="center" height="25px"><nobr>创意名称</nobr></td>
+						<td width="50px" align="center" height="25px"><nobr>内容类型</nobr></td>	
+						<td width="50px" align="center"><nobr>分类</nobr></td>												
+						<td width="60px" align="center"><nobr>尺寸</nobr></td>
+<!--
+EOT;
+if($type=="2"){
+print <<<EOT
+-->
+						<td width="130px"><nobr>开始时段</nobr></td>
+						<td width="130px"><nobr>结束时段</nobr></td>						
+<!--
+EOT;
+}print <<<EOT
+-->					<td>&nbsp;</td>
+					</tr>
+<!--
+EOT;
+	$line = 0;
+	if($db_advcreativelist){
+		foreach($db_advcreativelist as $db_advcreative){
+			$str_checked = "";
+			$op_start_hourlist = showOptionHour();
+			$op_start_minulist = showOptionSecond();
+			$op_end_hourlist = showOptionHour();
+			$op_end_minulist = showOptionSecond();				
+			if($db_detailist){			
+				foreach($db_detailist as $db_detail){
+					if($db_detail[creative_id]==$db_advcreative[id]){
+						$arr_starthour = explode(':',$db_detail[start_time]);
+						$arr_endhour = explode(':',$db_detail[end_time]);
+						$op_start_hourlist = showOptionHour(intval($arr_starthour[0]));
+						$op_start_minulist = showOptionSecond(intval($arr_starthour[1]));
+						$op_end_hourlist = showOptionHour(intval($arr_endhour[0]));
+						$op_end_minulist = showOptionSecond(intval($arr_endhour[1]));
+						$str_checked = "checked";
+						break;
+					}
+				}
+			}
+			$advctitype = $cfg_advctitype[$db_advcreative[content_type]];
+print <<<EOT
+-->
+<tr>
+<td align="center" valign="middle" style="border:0px;width:50px" height="25px">
+<input type="checkbox" id="creative_id" name="creative_id" value="$db_advcreative[id]" $str_checked/>
+<input type="hidden" name="adv_id_$db_advcreative[id]" id="adv_id_$db_advcreative[id]" value="$db_advcreative[adv_id]"/>
+<input type="hidden" name="mer_id_$db_advcreative[id]" id="mer_id_$db_advcreative[id]" value="$db_advcreative[mer_id]"/>
+</td>
+<td align="center" valign="middle" style="border:0px;width:50px"><nobr>$db_advcreative[name] [$db_advcreative[adv_name]]</nobr></td>
+<td align="center" valign="middle" style="border:0px;width:50px"><nobr>$advctitype</nobr></td>	
+<td align="center" valign="middle" style="border:0px;width:50px"><nobr>$db_advcreative[adformat]</nobr></td>			
+<td align="center" valign="middle" style="border:0px;width:60px"><nobr>$db_advcreative[adsize]</nobr></td>
+<!--
+EOT;
+if($type=="2"){
+print <<<EOT
+-->
+<td align="left" valign="middle" style="border:0px;width:130px"><nobr>
+<select id="start_hour_$db_advcreative[id]" name="start_hour_$db_advcreative[id]">$op_start_hourlist</select>时<select id="start_minute_$db_advcreative[id]" name="start_minute_$db_advcreative[id]">$op_start_minulist</select>分
+</nobr></td>
+<td align="left" valign="middle" style="border:0px;width:130px"><nobr>
+<select id="end_hour_$db_advcreative[id]" name="end_hour_$db_advcreative[id]">$op_end_hourlist</select>时<select id="end_minute_$db_advcreative[id]" name="end_minute_$db_advcreative[id]">$op_end_minulist</select>分
+</nobr></td>
+<!--
+EOT;
+}print <<<EOT
+-->
+<td style="border:0px">&nbsp;</td>	
+</tr>
+<!--
+EOT;
+		}
+	}
+print <<<EOT
+-->					
+					</table>
+<!--
+EOT;
+}else{
+	include_once PrintEot('header');
+	if(empty($action) || $action=="list"){
+print <<<EOT
+-->
+<form action="$basename" method="get" name="form">
+<input type="hidden" name="job" value="$job"/>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
@@ -18,22 +128,28 @@ print <<<EOT
 <!--
 EOT;
  showPageLink("all", "1", "全部数据");
- showPageLink("is_cpc", "0", "包含CPC");
- showPageLink("is_cpm", "0", "包含CPM");
- showPageLink("is_cpa", "0", "包含CPA"); 
- showPageLink("is_cpd", "0", "包含CPD");  
+ showPageLink("hascpc", "0", "包含CPC");
+ showPageLink("hascpm", "0", "包含CPM");
+ showPageLink("hascpa", "0", "包含CPA"); 
+ showPageLink("hascpd", "0", "包含CPD");  
  showPageLink("status", "0", "未启用");
  showPageLink("status", "1", "启用");  
 print <<<EOT
 -->
             </td></tr>    
-            <td><b>快速查询：</b><select id="searchtype">
-								<option value="name" selected>规则名称</option>
-								<option value="shortname">客户简称</option>
-								<option value="contractname">合同名称</option>							
+            <tr>
+            <td><b>快速查询：</b><select id="searchtype" name="searchtype">
+<!--
+EOT;
+	if(empty($searchtype) || $searchtype=="name")  echo '<option value="name" selected>规则名称</option>';
+    else echo '<option value="name">规则名称</option>';
+	if($searchtype=="adv_ids") echo '<option value="adv_ids" selected>包含广告id</option>';
+	else echo '<option value="adv_ids">包含广告id</option>';
+print <<<EOT
+-->		
 							</select>
-							<input type="text" name="searchkey" value="" class="text"/>
-							<input type="button" name="btnQuery" value="查询" OnClick="btnQuery_Click" class="text" />
+							<input type="text" name="searchkey" class="text" value="$searchkey"/>
+							<input type="submit" value="查询" class="text"/>
 						</td>
             <td align="right" valign="center">
                 <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
@@ -72,8 +188,7 @@ EOT;
                 <td align="middle" class="title" height="20" valign="center">规则名称</td>
                 <td align="middle" class="title" height="20" valign="center">规则范围</td>
                 <td align="middle" class="title" height="20" valign="center">类型</td>                 
-                <td align="middle" class="title" height="20" valign="center">是否总计划？</td>  
-                <td align="middle" class="title" height="20" valign="center">创意自动轮播？</td>                                        
+                <td align="middle" class="title" height="20" valign="center">是否总计划？</td>                                       
                 <td align="middle" class="title" height="20" valign="center">添加时间</td>
                 <td align="middle" class="title" height="20" valign="center">修改时间</td>                
                 <td align="middle" class="title" height="20" valign="center">状态</td>                
@@ -83,61 +198,41 @@ EOT;
 EOT;
 $curidx = ($curpage-1)*$perpage;
 $curpageidx = 0;
-$showcount = count($db_afflist); 
+$showcount = count($db_adrolllist); 
 foreach($db_adrolllist as $db_adroll ){
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
 	$cdate = date('Y/m/d H:i:s',$db_adroll[create_time]);
-	$udate = date('Y/m/d H:i:s',$db_adroll[update_time]);	
+	$udate = date('Y/m/d H:i:s',$db_adroll[update_time]);
+	$showcpc="";
+	$showcpm="";
+	$showcpa="";
+	$showcpd="";
+	if($db_adroll[is_cpc]==1) $showcpc="包含CPC&nbsp;";
+	if($db_adroll[is_cpm]==1) $showcpm="包含CPM&nbsp;";
+	if($db_adroll[is_cpa]==1) $showcpa="包含CPA&nbsp;";
+	if($db_adroll[is_cpd]==1) $showcpd="包含CPD&nbsp;";
+	$showisall=$cfg_yesno[$db_adroll[is_all]];
+	$showtype = $cfg_advroletype[$db_adroll[type]];
+	$showstatus = $cfg_advselectorstatus[$db_adroll[status]];
 print <<<EOT
 --> 
             <tr height="20" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center" height="20">$curidx </td>
                 <td align="middle" valign="center">
-                    <input id="ID" name="ID" type="checkbox" value="$adv[id]" />
+                    <input id="ids" name="ids" type="checkbox" value="$db_adroll[id]" />
                 </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showLink("admincp.php?job=advdetail",$adv[id],$adv[name]);
-print <<<EOT
--->
-                </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showLink("admincp.php?job=merdetail",$adv[mer_id],$merchant[short_name]);
-print <<<EOT
--->
-                </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showPayCycle($adv[pay_cycle]); 
-print <<<EOT
- -->                
-                </td>
-                <td align="middle" valign="center">&nbsp;$adv[day_maxmoney]</td>
-                <td align="middle" valign="center">&nbsp;$adv[aff_count]</td>
+                <td align="middle" valign="center">&nbsp;$db_adroll[name]</td>
+                <td align="middle" valign="center">&nbsp;$showcpc$showcpm$showcpa$showcpd</td>
+                <td align="middle" valign="center">&nbsp;$showtype</td>                
+                <td align="middle" valign="center">&nbsp;$showisall</td>
                 <td align="middle" valign="center">&nbsp;$cdate</td>
-                <td align="middle" valign="center">&nbsp; 
-<!--
-EOT;
-	showAdvAudit($adv[audit]);
-print <<<EOT
- -->              
-                </td>     
-                <td align="middle" valign="center">&nbsp; 
-<!--
-EOT;
-	showAdvStatus($adv[status]);
-print <<<EOT
- -->              
-                </td>                               
+                <td align="middle" valign="center">&nbsp;$udate</td>
+                <td align="middle" valign="center">&nbsp;$showstatus</td>              
                 <td align="middle" valign="center">&nbsp;
 <!--
 EOT;
-	showEditButton($adv[id]);
+	showEditButton($db_adroll[id]);
 print <<<EOT
 -->
                 </td>
@@ -174,11 +269,15 @@ print <<<EOT
 -->
 <form name="form" method="post" action="$basename" id="form" onsubmit="return checkfrm();" >
 <input type="hidden" name="job" id="job" value="$job" />
-<input type="hidden" name="adv_id" id="adv_id" value="$adv_id" />
-<input type="hidden" name="action" id="action" value="saveadvselector" />
-<input type="hidden" name="sel_province" id="sel_province" value="" />
-<input type="hidden" name="sel_sitetype" id="sel_sitetype" value="" />
-<input type="hidden" name="sel_domain" id="sel_domain" value="" />
+<input type="hidden" name="curid" id="curid" value="$curid" />
+<input type="hidden" name="action" id="action" value="save" />
+<input type="hidden" name="adv_ids" id="adv_ids" value="$db_advrole[adv_ids]" />
+<input type="hidden" name="creative_ids" id="creative_ids" value="" />
+<input type="hidden" name="status" id="status" value="$status" />
+<input type="hidden" name="hascpc" id="hascpc" value="$hascpc" />
+<input type="hidden" name="hascpa" id="hascpa" value="$hascpa" />
+<input type="hidden" name="hascpm" id="hascpm" value="$hascpm" />
+<input type="hidden" name="hascpd" id="hascpd" value="$hascpd" />
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>
 		<TR >
@@ -194,99 +293,110 @@ print <<<EOT
 		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
         <tbody>
 				<tr>
-					<td align=right>是否总规则(<font color=red>*</font>)：</td>
+					<td align=right width="15%">是否总规则(<font color=red>*</font>)：</td>
 					<td>
 <!--
 EOT;
-	if(!isset($db_advrole) || $db_advrole[is_all]==1){
-		echo '<input type="radio" name="is_all" id="is_all0" value="0" checked/><label for="is_all0">否</label> ';
+	if(!isset($db_advrole) || $db_advrole[is_all]==0){
+		echo '<input type="radio" name="is_all" id="is_all0" value="0" checked onclick="javascript:showHideRoleDefine(0);"/><label for="is_all0">否</label> ';
 	}else{
-		echo '<input type="radio" name="is_all" id="is_all0" value="0"/><label for="is_all0">否</label> ';
+		echo '<input type="radio" name="is_all" id="is_all0" value="0" onclick="javascript:showHideRoleDefine(0);"/><label for="is_all0">否</label> ';
 	}
-	if(isset($db_advrole) && $db_advrole[is_all]==0){
-		echo '<input type="radio" name="is_all" id="is_all1" value="1" checked/><label for="is_all1">是</label> ';
+	if(isset($db_advrole) && $db_advrole[is_all]==1){
+		echo '<input type="radio" name="is_all" id="is_all1" value="1" checked onclick="javascript:showHideRoleDefine(1);"/><label for="is_all1">是</label> ';
 	}else{
-		echo '<input type="radio" name="is_all" id="is_all1" value="1"/><label for="is_all1">是</label> ';
+		echo '<input type="radio" name="is_all" id="is_all1" value="1" onclick="javascript:showHideRoleDefine(1);"/><label for="is_all1">是</label> ';
 	}	
 print <<<EOT
--->
+-->（选择“是”表示对所有运营中的广告计划下的所有创意随机显示）
 					</td>
 				</tr>	        
-				<tr>
+				<tr id="divname">
 					<td align=right>规则名称(<font color=red>*</font>)：</td>
 					<td><input name="name" type="text" id="name" style="WIDTH: 261px"  value="$db_advrole[name]"/></td>
 				</tr>
-				<tr>
+				<tr id="divrange" style="display:$show_range">
 					<td align=right>规则范围(<font color=red>*</font>)：</td>
 					<td>
 <!--
 EOT;
-	if(!isset($db_advrole) || $db_advrole[is_cpc]==1){
-		echo '<input type="checkbox" name="is_cpc" id="is_cpc" checked value="1"/>包含CPC ';
+	if(isset($db_advrole) && $db_advrole[is_all]==0 && $db_advrole[is_cpc]==1){
+		echo '<input type="checkbox" name="is_cpc" id="is_cpc" checked value="1" onclick="javascript:chooseAdvlist();"/>包含CPC ';
 	}else{
-		echo '<input type="checkbox" name="is_cpc" id="is_cpc" value="1"/>包含CPC ';
+		echo '<input type="checkbox" name="is_cpc" id="is_cpc" value="1" onclick="javascript:chooseAdvlist();"/>包含CPC ';
 	}
-	if(isset($db_advrole) && $db_advrole[is_cpm]==1){
-		echo '<input type="checkbox" name="is_cpm" id="is_cpm" checked value="1"/>包含CPM ';
+	if(isset($db_advrole) && $db_advrole[is_all]==0 && $db_advrole[is_cpm]==1){
+		echo '<input type="checkbox" name="is_cpm" id="is_cpm" checked value="1" onclick="javascript:chooseAdvlist();"/>包含CPM ';
 	}else{
-		echo '<input type="checkbox" name="is_cpm" id="is_cpm" value="1"/>包含CPM ';
+		echo '<input type="checkbox" name="is_cpm" id="is_cpm" value="1" onclick="javascript:chooseAdvlist();"/>包含CPM ';
 	}
-	if(isset($db_advrole) && $db_advrole[is_cpa]==1){
-		echo '<input type="checkbox" name="is_cpa" id="is_cpa" checked value="1"/>包含CPA ';
+	if(isset($db_advrole) && $db_advrole[is_all]==0 && $db_advrole[is_cpa]==1){
+		echo '<input type="checkbox" name="is_cpa" id="is_cpa" checked value="1" onclick="javascript:chooseAdvlist();"/>包含CPA ';
 	}else{
-		echo '<input type="checkbox" name="is_cpa" id="is_cpa" value="1">包含CPA ';
+		echo '<input type="checkbox" name="is_cpa" id="is_cpa" value="1" onclick="javascript:chooseAdvlist();"/>包含CPA ';
 	}
-	if(isset($db_advrole) && $db_advrole[is_cpd]==1){
-		echo '<input type="checkbox" name="is_cpd" id="is_cpd" checked value="1"/>包含CPD ';
+	if(isset($db_advrole) && $db_advrole[is_all]==0 && $db_advrole[is_cpd]==1){
+		echo '<input type="checkbox" name="is_cpd" id="is_cpd" checked value="1" onclick="javascript:chooseAdvlist();"/>包含CPD ';
 	}else{
-		echo '<input type="checkbox" name="is_cpd" id="is_cpd" value="1"/>包含CPD ';
+		echo '<input type="checkbox" name="is_cpd" id="is_cpd" value="1" onclick="javascript:chooseAdvlist();"/>包含CPD ';
 	}		
 print <<<EOT
 -->					</td>
 				</tr>
-				<tr>
+				<tr id="divadv" style="display:$show_adv">
 					<td align=right>选择广告计划：</td>
 					<td align="left" valign="middle">
+					<div id="advlist" style="align:left;valign:middle">
 					<table border="0" cellspacing="3" cellpadding="0" height="100%">
-						<tr><td align="center" valign="middle" style="border:0px">
-						<select multiple style="width:120px;height:120px">
-						$db_advlist
-						</select>
-						</td>
-						<td align="center" valign="middle" style="border:0px"><input type="button" value="选择>>"/></td>
-						<td align="center" valign="top" style="border:0px">
-							<div><input type="checkbox"/>1</div>
-							<div><input type="checkbox"/>2</div>
-						</td>
-						</tr>
+<!--
+EOT;
+	$line = 0;
+	foreach($db_advlist as $db_adv){
+		if($line%3==0) echo "<tr>";
+		echo '<td align="left" valign="middle" style="border:0px">';
+		if(strpos(','.$db_advrole[adv_ids],$db_adv[id].',')>0){
+			echo '<input type="checkbox" id="adv_id" name="adv_id" value="'.$db_adv[id].'" onclick="javascript:chooseAdvCreativelist();" checked/>'.$db_adv[name].'</td>';
+		}else{
+			echo '<input type="checkbox" id="adv_id" name="adv_id" value="'.$db_adv[id].'" onclick="javascript:chooseAdvCreativelist();"/>'.$db_adv[name].'</td>';
+		}
+		if($line%3==2) echo "</tr>";
+		$line++;
+	}
+print <<<EOT
+-->
 					</table>
+					</div>
 					</td>
 				</tr>
-				<tr>
+				<tr id="divroll" style="display:$show_type">
 					<td align=right>轮播类型(<font color=red>*</font>)：</td>
 					<td>
 <!--
 EOT;
 	if(!isset($db_advrole) || $db_advrole[type]==0){
-		echo '<input type="radio" name="type" id="type0" value="0" checked/><label for="type0">所有创意随机</label> ';
+		echo '<input type="radio" name="type" id="type0" value="0" onclick="javascript:chooseAdvCreativelist();" checked/><label for="type0">所有创意随机</label> ';
 	}else{
-		echo '<input type="radio" name="type" id="type0" value="0"/><label for="type0">所有创意随机</label> ';
+		echo '<input type="radio" name="type" id="type0" value="0" onclick="javascript:chooseAdvCreativelist();"/><label for="type0">所有创意随机</label> ';
 	}
 	if(isset($db_advrole) && $db_advrole[type]==1){
-		echo '<input type="radio" name="type" id="type1" value="1" checked/><label for="type1">选定创意随机</label> ';
+		echo '<input type="radio" name="type" id="type1" value="1" onclick="javascript:chooseAdvCreativelist();" checked/><label for="type1">选定创意随机</label> ';
 	}else{
-		echo '<input type="radio" name="type" id="type1" value="1"/><label for="type1">选定创意随机</label> ';
+		echo '<input type="radio" name="type" id="type1" value="1" onclick="javascript:chooseAdvCreativelist();"/><label for="type1">选定创意随机</label> ';
 	}
 	if(isset($db_advrole) && $db_advrole[type]==2){
-		echo '<input type="radio" name="type" id="type2" value="2" checked/><label for="type2">自定义</label> ';
+		echo '<input type="radio" name="type" id="type2" value="2" onclick="javascript:chooseAdvCreativelist();" checked/><label for="type2">自定义时段(若同时段有多个创意则自动随机)</label>  ';
 	}else{
-		echo '<input type="radio" name="type" id="type2" value="2"/><label for="type2">自定义</label> ';
+		echo '<input type="radio" name="type" id="type2" value="2" onclick="javascript:chooseAdvCreativelist();"/><label for="type2">自定义时段(若同时段有多个创意则自动随机)</label>  ';
 	}	
 print <<<EOT
--->							
-						
-						
-						
+-->
+					</td>
+				</tr>
+				<tr id="divsetcreative" style="display:$show_creative">
+					<td align=right>请设置广告创意：</td>
+					<td align="center" valign="middle">
+					<div id="divcreative" class="tabselector" height="200px">
+					</div>
 					</td>
 				</tr>
 				<tr>
@@ -313,7 +423,15 @@ print <<<EOT
 					<td>
 						<textarea id="memo" name="memo" cols="30" rows="5">$db_advrole[memo]</textarea> 
 					</td>
-				</tr>																
+				</tr>	
+				<tr>
+					<td>&nbsp;</td>
+					<td colspan="3" align="left">
+					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消" />
+					</td>
+				</tr>
+         
 		</tbody>
 		</table>
 		</div>
@@ -322,6 +440,73 @@ print <<<EOT
 </tbody>
 </table>
 </form>
+<script>
+function checkfrm(){
+	if(isEmpty($("name").value)){
+		alert("请输入规则名称！");
+		$("name").focus();
+		return false;
+	}
+	if($("is_all0").checked){
+		var seladvids = "";
+		$$('input[type="checkbox"][name="adv_id"]').each(function(node){
+			if(node.checked) seladvids+=node.value+",";
+		});
+		if(isEmpty(seladvids)){
+			alert("请选择广告计划！");
+			return false;
+		}else{
+			$("adv_ids").value=seladvids;
+		}
+		var seltypes = "";
+		if($("type1").checked || $("type2").checked){
+			if($("divsetcreative").style.display=="none"){
+				alert("请设置广告创意！");
+				return false;
+			}else{
+				var creativeids="";
+				$$('input[type="checkbox"][name="creative_id"]').each(function(node){
+					if(node.checked) creativeids+=node.value+",";
+				});
+				if(isEmpty(creativeids)){
+					alert("请选择需要设置的广告创意");
+					return false;
+				}else{
+					if($("type1").checked){
+						$("creative_ids").value = creativeids;
+					}else if($("type2").checked){
+						var flag = false;
+						$$('input[type="checkbox"][name="creative_id"]').each(function(node){
+							if(node.checked){
+								 start = parseInt($("start_hour_"+node.value).value)+parseInt($("start_minute_"+node.value).value);
+								 end = parseInt($("end_hour_"+node.value).value)+parseInt($("end_minute_"+node.value).value);
+								 if(end<=start && flag==false) flag=true;
+							}
+						});
+						if(flag){
+							alert("选定的广告创意里结束时段应大于开始时段");
+							return false;
+						}else{
+							$("creative_ids").value = creativeids;
+						}
+					}
+				}
+			}
+		}
+	}
+	return true;
+}
+
+</script>
+
 <!--
 EOT;
+if($action=="edit"){
+	echo "<script>chooseAdvCreativelist();</script>";
+}
+print <<<EOT
+-->
+<!--
+EOT;
+	}
 }?>-->

@@ -1,4 +1,4 @@
-<?php
+<!--<?php
 if($action=="selcity"){
 	echo "<select name='province_id' id='province_id' style='WIDTH: 75px' onchange=updateCity(this);>";
 	echo $op_provincelist;
@@ -8,8 +8,7 @@ if($action=="selcity"){
 	echo "</select>";
 }else{
 include_once PrintEot('header');
-if(empty($action) || $action=="list"){
-print <<<EOT
+if(empty($action) || $action=="list"){print <<<EOT
 -->
 <form action="$basename" method="get" name="form">
 <input type="hidden" name="job" value="$job"/>
@@ -27,8 +26,7 @@ print <<<EOT
 EOT;
  showPageLink("all", "1", "全部数据");
  showPageLink("source", "0", "前台注册");
- showPageLink("source", "1", "后台添加");
-print <<<EOT
+ showPageLink("source", "1", "后台添加");print <<<EOT
 -->
             </td></tr>
          <tr>
@@ -38,7 +36,7 @@ print <<<EOT
 <!--
 EOT;
 	if(empty($searchtype) || $searchtype=="id")  echo '<option value="id" selected>站长ID</option>';
-    else echo '<option value="id"</option>';
+    else echo '<option value="id">站长ID</option>';
 	if($searchtype=="login_name") echo '<option value="login_name" selected>登录名称</option>';
 	else echo '<option value="login_name">登录名称</option>';
 	if($searchtype=="linkman") echo '<option value="linkman" selected>姓名</option>';
@@ -50,8 +48,7 @@ EOT;
 	if($searchtype=="qq") echo '<option value="qq" selected>QQ</option>';
 	else echo '<option value="qq">QQ</option>';
 	if($searchtype=="service") echo '<option value="service_id" selected>客服ID</option>';
-	else echo '<option value="service_id">客服ID</option>';
-print <<<EOT
+	else echo '<option value="service_id">客服ID</option>';print <<<EOT
 -->
 							</select>
 							<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>
@@ -68,17 +65,17 @@ print <<<EOT
 <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
 <!--
 EOT;
-						if($canaudit==true){
-							showButton(4,'审批','javascript:showAudit("'.$admin_file.'&action=audit'.$transtr.'&curpage='.$curpage.'");');
+if($canaudit==true){
+showButton(4,'审批','javascript:showAudit("'.$admin_file.'&action=audit'.$transtr.'&curpage='.$curpage.'");');
 							//showButton(6,'黑名单','javascript:ConfirmDel("'.$admin_file.'&action=black'.$transtr.'&curpage='.$curpage.'","是否确认这些站长加入黑名单？");');
 							//showButton(6,'导出','javascript:ConfirmExport("'.$admin_file.'&action=export'.$transtr.'&curpage='.$curpage.'","是否确认导出？（处理耗时受数据量影响很大）");');
-						}
-						if($canadd==true){
-							showButton(1,'新增',$admin_file.'&action=new'.$transtr);
-						}
-						if($candel==true){
-							showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","此操作不可恢复,确认删除吗？");');
-						}print <<<EOT
+}
+if($canadd==true){
+showButton(1,'新增',$admin_file.'&action=new'.$transtr);
+}
+if($candel==true){
+showButton(2,'删除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","此操作不可恢复,确认删除吗？");');
+}print <<<EOT
 -->                            
                         </td>
                     </tr>
@@ -113,14 +110,13 @@ $curidx = ($curpage-1)*$perpage;
 $curpageidx = 0;
 $showcount = count($db_afflist); 
 foreach($db_afflist as $affuser ){
-		$curidx = $curidx+1;
-		$curpageidx = $curpageidx+1;
-		$regsource = $cfg_affsource[$affuser[source]];
-		$status = $cfg_userstatus[$affuser[status]];
-		$cdate = date('Y/m/d H:i:s',$affuser[create_time]);
-		$udate = date('Y/m/d H:i:s',$affuser[update_time]);
-		$db_gender = $cfg_gender[$affuser[gender]];
-print <<<EOT
+$curidx = $curidx+1;
+$curpageidx = $curpageidx+1;
+$regsource = $cfg_affsource[$affuser[source]];
+$status = $cfg_userstatus[$affuser[status]];
+$cdate = date('Y/m/d H:i:s',$affuser[create_time]);
+$udate = date('Y/m/d H:i:s',$affuser[update_time]);
+$db_gender = $cfg_gender[$affuser[gender]];print <<<EOT
 -->      
             <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);"
                 onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
@@ -140,8 +136,7 @@ print <<<EOT
                 <td valign="middle" align="center">&nbsp;
 <!--
 EOT;
-	showEditButton($affuser[id]);
-print <<<EOT
+showEditButton($affuser[id]);print <<<EOT
 -->
 				</td>
             </tr>
@@ -155,8 +150,7 @@ EOT;
         <tr> <td> &nbsp;</td> <td align="right" height="35">
 <!--
 EOT;
-	showPageBreakInfo($showcount);
-print <<<EOT
+showPageBreakInfo($showcount);print <<<EOT
 --> 
 &nbsp;</td> </tr>
     </table>
@@ -167,8 +161,7 @@ print <<<EOT
 <!--
 EOT;
 }
-if($action=="new" || $action=="edit"){
-print <<<EOT
+if($action=="new" || $action=="edit"){print <<<EOT
 -->
 <form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
 <input type="hidden" name="action" value="save"/>
@@ -212,8 +205,7 @@ EOT;
 		echo '<input type="radio" name="biz_type" id="biz_type" value="0" checked>企业</input>';
 	}else{
 		echo '<input type="radio" name="biz_type" id="biz_type" value="1">企业</input>';
-	}
-print <<<EOT
+}print <<<EOT
 -->										
 					</td>
 					
@@ -226,16 +218,15 @@ print <<<EOT
 <!--
 EOT;
 	if($db_affilate[gender]==0){
-		echo "<input type='radio' name='gender' id='gender' value='0' checked>女</input>";		
+		echo "<input type='radio' name='gender' id='gender' value='0' checked>男</input>";		
 	}else{
-		echo "<input type='radio' name='gender' id='gender' value='0'>女</input>";
+		echo "<input type='radio' name='gender' id='gender' value='0'>男</input>";
 	}
 	if($db_affilate[gender]==1){
-		echo "<input type='radio' name='gender' id='gender' value='1' checked>男</input>";		
+		echo "<input type='radio' name='gender' id='gender' value='1' checked>女</input>";		
 	}else{
-		echo "<input type='radio' name='gender' id='gender' value='1'>男</input>";
-	}	
-print <<<EOT
+		echo "<input type='radio' name='gender' id='gender' value='1'>女</input>";
+}print <<<EOT
 -->				
 					</td>
 				
@@ -277,8 +268,7 @@ EOT;
 		echo '<option Value="2" selected>护照</option>';		
 	}else{
 		echo '<option Value="2">护照</option>';
-	}		
-print <<<EOT
+	}print <<<EOT
 -->					
 						</select>
 						</div></div>
@@ -388,8 +378,7 @@ function checkfrm(){
 <!--
 EOT;
 }
-if($action=="select"){
-print <<<EOT
+if($action=="select"){print <<<EOT
 -->
 <form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
 
@@ -434,8 +423,7 @@ $curpageidx = 0;
 $showcount = count($db_afflist); 
 foreach($db_afflist as $affuser ){
 	$curidx = $curidx+1;
-	$curpageidx = $curpageidx+1;	
-print <<<EOT
+	$curpageidx = $curpageidx+1;print <<<EOT
 --> 
             <tr height="20" style="cursor: hand" onclick="javascript:selAffiliate('$affuser[id]','$affuser[login_name]')" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
  				<input type="hidden" id="ids" name="ids" value="$affuser[id]"/>
@@ -458,21 +446,18 @@ print <<<EOT
             <td align="right" height="35">
 <!--
 EOT;
-	showPageBreakInfo($showcount);
-print <<<EOT
+	showPageBreakInfo($showcount);print <<<EOT
 -->
              &nbsp;</td>
         </tr>
     </table>
     <input type="hidden" id="count" name="count" value="$showcount" />
 </form>
-</body>
 
 <!--
 EOT;
 }
-if($action=="audit"){
-print <<<EOT
+if($action=="audit"){print <<<EOT
 -->
 <form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
 <input type="hidden" name="action" value="auditsave"/>
@@ -532,4 +517,4 @@ function checkfrm(){
 EOT;
 }
 }
-?>
+?>-->

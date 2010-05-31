@@ -583,7 +583,19 @@ print <<<EOT
 										</tr>
 									</table>
 									<table width="100%" border="0" cellspacing="0" cellpadding="2">
-										
+										<tr>
+										<td align="right" class="hei12b" width="80">广告主LOGO：</td>
+										<td>
+<!--
+EOT;
+	if(isset($db_merchant)){
+		echo "<a href='".$db_merchant[logo]."' target='_blank'><img src='".$db_merchant[logo]."' border='0' height='60px' align='absmiddle' title='点击看原图'/></a>";
+	}
+print <<<EOT
+-->									</td>
+											<td height="30" align="right" class="hei12b" width="80">开票台头：</td>
+											<td align="left" colspan="3">$db_merchant[ticket_title]</td>
+										</tr>
 										<tr>
 											<td height="30" align="right" class="hei12b" width="80">公司名称：</td>
 											<td align="left">$db_merchant[company]</td>
@@ -613,10 +625,6 @@ print <<<EOT
 											<td align="left" width="155">$db_merchant[credit]</td>
 											<td align="right" class="hei12b" width="80">销售人员：</td>
 											<td align="left">$db_merchant[seller_name]</td>
-										</tr>
-										<tr>
-											<td height="30" align="right" class="hei12b" width="80">开票台头：</td>
-											<td align="left" colspan="3">$db_merchant[ticket_title]</td>
 										</tr>
 									</table>
 									<table width="100%" border="0" cellspacing="0" cellpadding="0">
