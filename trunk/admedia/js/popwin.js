@@ -66,7 +66,7 @@ function showModelWin(url){
 
 function showMsgTpl(){
 	var dd= new Date();	
-	var url = "$basename?job=sitemsgtpl&action=showdlg&d="+dd.getMilliseconds();
+	var url = "admincp.php?job=sitemsgtpl&action=showdlg&d="+dd.getMilliseconds();
     var retval = window.showModalDialog(url,'','dialogHeight: 490px; dialogWidth: 500px; dialogTop: ' + (screen.availHeight - 250 - 30)/2
                    + 'px; dialogLeft: ' + (screen.availWidth - 490 - 10) / 2 + 'px; edge: Raised; center: Yes; help: Yes; resizable: Yes; '
                    + 'status: Yes;'); 
@@ -87,8 +87,63 @@ function selAffAdPlace(placeid,placename,view,ids){
 	window.close();
 }
 
-
 function selMsgtpl(subject,content){
 	window.returnValue = subject+"-"+content;
 	window.close();
+}
+
+function chooseAdvlist(){
+	var d = new Date();
+	var selfeetype="";
+	if($("is_cpc").checked){
+		selfeetype += "0,";
+	}
+	if($("is_cpm").checked){
+		selfeetype += "1,";
+	}
+	if($("is_cpa").checked){
+		selfeetype += "2,";
+	}
+	if($("is_cpd").checked){
+		selfeetype += "3,";
+	}
+	var seladvids = "";
+	$$('input[type="checkbox"][name="adv_id"]').each(function(node){
+		if(node.checked) seladvids+=node.value+",";
+	});	
+    var pars = "job=advrole&action=seladv&fee_type="+selfeetype+"&adv_ids="+seladvids+"&curid="+$("curid").value+"&d="+d.getMilliseconds();
+    new Ajax.Updater("advlist",'admincp.php', {method: 'get', parameters: pars});
+}
+
+function chooseAdvCreativelist(){
+	if($("type1").checked || $("type2").checked){
+		var seladvids = "";
+		$$('input[type="checkbox"][name="adv_id"]').each(function(node){
+			if(node.checked) seladvids+=node.value+",";
+		});
+		if(isEmpty(seladvids)==false){
+			$("divsetcreative").style.display="block";
+			if($("type1").checked) pars="job=advrole&action=selcreative&adv_ids="+seladvids+"&curid="+$("curid").value+"&type=1&d="+d.getMilliseconds();
+			if($("type2").checked) pars="job=advrole&action=selcreative&adv_ids="+seladvids+"&curid="+$("curid").value+"&type=2&d="+d.getMilliseconds();
+		    new Ajax.Updater("divcreative",'admincp.php', {method: 'get', parameters: pars});
+		}else{
+			$("divsetcreative").style.display="none";
+		}
+	}else if($("type0").checked){
+		$("divsetcreative").style.display="none";
+	}
+}
+
+function showHideRoleDefine(flag){
+	if(flag==1){
+		$("divrange").style.display="none";
+		$("divadv").style.display="none";
+		$("divroll").style.display="none";
+		$("divsetcreative").style.display="none";
+	}else{
+		$("divrange").style.display="block";
+		$("divadv").style.display="block";
+		$("divroll").style.display="block";
+		chooseAdvCreativelist();
+	}
 }
