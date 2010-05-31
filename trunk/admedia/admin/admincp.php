@@ -355,7 +355,7 @@ function showClientType($state){
 		default:
 		$str = "潜在客户"; break;
 	}
-	echo mb_convert_encoding($str,'utf-8','gbk');
+	echo iconv($str,'utf-8','gbk');
 }
 
 function showAdvAudit($status){
@@ -378,19 +378,6 @@ function showAdvStatus($status){
 	}
 	echo $strR;
 }
-
-function showStatus($state){
-	$strR = "<font color=red>等待审核</font>";
-	switch ($state){
-		case "0": $strR = "<font color=red>等待审核</font>"; break;
-		case "1": $strR = "<font color=blue>已审核</font>"; break;
-		case "2": $strR = "<font color=red>审核未通过</font>"; break;
-		case "3": $strR = "<font color=red>黑名单</font>"; break;
-		default: $strR = "<font color=red>等待审核</font>"; break;
-	}
-	echo mb_convert_encoding($strR,'utf-8','gbk');
-}
-
 
 function adminRightCheck($key){
 	global $rightset;
@@ -582,7 +569,7 @@ function loadBaseAdvSize($adsize=null){
 function showEditButton($curid){
 	global $canedit,$admin_file,$curpage,$transtr,$imgpath;
 	if($canedit){
-		echo "<a href='$admin_file&action=edit&curid=$curid&curpage=$curpage&$transt'><img align='absMiddle' alt='".mb_convert_encoding("查看/编辑","utf-8","gbk")."' border='0' src='$imgpath/admin/view.gif'/></a>";
+		echo "<a href='$admin_file&action=edit&curid=$curid&curpage=$curpage$transtr'><img align='absMiddle' alt='".iconv("gbk","utf-8","查看/编辑")."' border='0' src='$imgpath/admin/view.gif'/></a>";
 	}else{
 		echo "";
 	}
@@ -591,7 +578,7 @@ function showEditButton($curid){
 function showDisString($curid){
 	global $candis,$admin_file,$curid,$curpage,$transtr,$imgpath;
 	if ($candis) {
-		echo "<a href='$admin_file&action=dis&curid=$curid&curpage=$curpage&$transtr'><img align='absMiddle'alt='分配权限' border='0' src='$imgpath/admin/loginok.gif'/></a>";
+		echo "<a href='$admin_file&action=dis&curid=$curid&curpage=$curpage$transtr'><img align='absMiddle'alt='".iconv("分配权限","utf-8","gbk")."' border='0' src='$imgpath/admin/loginok.gif'/></a>";
 	}else{
 		echo "";
     }
@@ -605,7 +592,7 @@ function showDelButton($curid,$del="del"){
 	if(isset($adv_id)) $url .= "&adv_id=".$adv_id;		
 	if(isset($backurl)) $url .= "&backurl=".urlencode($backurl);		
 	if($candel){
-		echo "<a href=javascript:ConfirmUrlDel('$url','".mb_convert_encoding("此操作不能恢复，确定删除吗？","utf-8","gbk")."');><img align='absMiddle' alt='删除' border='0' src='$imgpath/admin/del.gif'/></a>";
+		echo "<a href=javascript:ConfirmUrlDel('$url','".iconv("gbk","utf-8","此操作不能恢复，确定删除吗？")."');><img align='absMiddle' alt='".iconv("删除","utf-8","gbk")."' border='0' src='$imgpath/admin/del.gif'/></a>";
 	}else{
 		echo "";
 	}
@@ -710,6 +697,6 @@ function showPageBreakInfo($currpagecount,$js=null){
 		}
 	}
 
-	echo mb_convert_encoding($pagebreak,"utf-8","gbk");
+	echo iconv("gbk","utf-8",$pagebreak);
 }
 ?>
