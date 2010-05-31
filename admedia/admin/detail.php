@@ -54,7 +54,7 @@ if($action=="affiliate"){
 	$db_advselectorlist = $objAdvertise->getAdvSelectorByAdvId($curid);
 	if($db_adv){
 		$objSystem = LOAD::loadDB("System");
-		$db_auditlist = $objSystem->getSysAuditAll($curid,4);	
+		$db_auditlist = $objSystem->getSysAuditAll($curid,5);	
 	}
 }else if($action=="newadvselector" || $action=="editadvselector"){
 	$objCommData = LOAD::loadDB("CommonData");

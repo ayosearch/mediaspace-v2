@@ -37,7 +37,7 @@ if($action=="new" || $action=="edit"){
 		$ids = substr($ids,0,strlen($ids)-1);
 	}
 	$arrfield = array("audit_id"=>$AdminUser[id],"audit_name"=>$AdminUser[login_name],"create_time"=>$timestamp,"target_ids"=>$ids,
-								"parent_id"=>0,"level"=>0,"action"=>$_POST[auditstatus],"content"=>$_POST[content],"itype"=>4);
+								"parent_id"=>0,"level"=>0,"auditstatus"=>$_POST[auditstatus],"content"=>$_POST[content],"itype"=>4);
 	$objSystem = LOAD::loadDB("System");	
 	$sysaudit_id = $objSystem->insertSysAudit($arrfield);
 	$objMerchant = LOAD::loadDB("Merchant");	
@@ -49,13 +49,15 @@ if($action=="new" || $action=="edit"){
 	$objMerchant = LOAD::loadDB("Merchant");	
 	if(empty($curid)){
 		$_POST[create_time] = $timestamp;
-		if(uploadFile($_FILES['logo_file']['tmp_name'],$cfg_upfilepath.'merlogo/'.$_FILES['logo_file']['name'])){
-			$_POST[logo] = $cfg_upfilepath.'merlogo/'.$_FILES['logo_file']['name'];			
+		$filename = $timestamp.$sec.str_replace(".","",$millsec).substr($_FILES['logo_file']['name'],strripos($_FILES['logo_file']['name'],'.'));	
+		if(uploadFile($_FILES['logo_file']['tmp_name'],$cfg_basepath.$cfg_upfilepath.'merlogo/'.$filename)){
+			$_POST[logo] = $cfg_upfilepath.'merlogo/'.$filename;			
 		}
 		$objMerchant->insertMerchant($_POST);
 	}else{
-		if(uploadFile($_FILES['logo_file']['tmp_name'],$cfg_upfilepath.'merlogo/'.$_FILES['logo_file']['name'])){
-			$_POST[logo] = $cfg_upfilepath.'merlogo/'.$_FILES['logo_file']['name'];			
+		$filename = $timestamp.$sec.str_replace(".","",$millsec).substr($_FILES['logo_file']['name'],strripos($_FILES['logo_file']['name'],'.'));	
+		if(uploadFile($_FILES['logo_file']['tmp_name'],$cfg_basepath.$cfg_upfilepath.'merlogo/'.$filename)){
+			$_POST[logo] = $cfg_upfilepath.'merlogo/'.$filename;	
 		}		
 		$objMerchant->updateMerchant($curid,$_POST);
 	}
