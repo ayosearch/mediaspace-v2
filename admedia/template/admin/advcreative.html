@@ -22,7 +22,8 @@ EOT;
  showPageLink("status", "1", "运营中");  
 print <<<EOT
 -->
-            </td></tr>    
+            </td></tr>
+			<tr>
             <td><b>快速查询：</b><select id="searchtype" name="searchtype">
 								<option value="name" selected>计划名称</option>
 								<option value="shortname">客户简称</option>
@@ -99,8 +100,8 @@ print <<<EOT
                 <td align="middle" valign="center" height="20">$curidx </td>
                 <td align="middle" valign="center"><input id="ids" name="ids" type="checkbox" value="$db_advcreative[id]" /></td>
                 <td align="middle" valign="center">&nbsp;$db_advcreative[name]</td>
-                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=advertise&curid=$adv[id]" class=NoLine>$db_advcreative[adv_name]</a></td>
-                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$adv[mer_id]" class=NoLine>$db_advcreative[mer_name]</a></td>
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=advertise&curid=$db_advcreative[adv_id]$transtr&backurl=$backurl" class=NoLine>$db_advcreative[adv_name]</a></td>
+                <td align="middle" valign="center">&nbsp;<a href="$basename?job=detail&action=merchant&curid=$db_advcreative[mer_id]$transtr&backurl=$backurl" class=NoLine>$db_advcreative[mer_name]</a></td>
                 <td align="middle" valign="center">&nbsp;$advctitype</td>
                 <td align="middle" valign="center">&nbsp;$db_advcreative[adformat]</td>
                 <td align="middle" valign="center">&nbsp;$db_advcreative[adsize]</td>

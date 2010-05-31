@@ -23,7 +23,8 @@ EOT;
  showPageLink("audit", "2", "审核未通过");
 print <<<EOT
 -->
-            </td></tr>    
+            </td></tr> 
+            <tr>
             <td><b>快速查询：</b><select id="searchtype">
 								<option value="name" selected>计划名称</option>
 								<option value="shortname">客户简称</option>
@@ -368,10 +369,7 @@ print <<<EOT
 						<input type="text" id="day_maxmoney" name="day_maxmoney" value="$db_adv[day_maxmoney]"/> 元
 					</td>			
 				</tr>							
-        </tbody>
-    </TD>
-    </TR>
-				
+
 				<tr>
 					<td align="center" height="50px" colspan=4>
 					<input type="submit" id="btnSubmit" value=" 确定 " class="text" NAME="btnSubmit"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
@@ -379,9 +377,13 @@ print <<<EOT
 					</td>
 				</tr>
          
-    </TBODY>
-    </TABLE>
- 
+</tbody>
+</table>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
  </form>
 
 <script type="text/javascript" language=javascript>

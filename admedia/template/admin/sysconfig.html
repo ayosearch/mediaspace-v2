@@ -109,19 +109,21 @@ print <<<EOT
 <!--
 EOT;
 	if($db_sysconfig[get_pass]=="0"){
+		$showquestion = "none";
 		echo '<input type="radio" name="get_pass" id="get_pass" value="0" onclick="javscript:showPassQuestion(0);" checked/>关闭 <input type="radio" id="get_pass" name="get_pass" value="1" onclick="javscript:showPassQuestion(1);"/>打开';
 	}
 	if($db_sysconfig[get_pass]=="1"){
+		$showquestion = "block";
 		echo '<input type="radio" name="get_pass" id="get_pass" value="0" onclick="javscript:showPassQuestion(0);"/>关闭 <input type="radio" id="get_pass" name="get_pass" value="1" checked onclick="javscript:showPassQuestion(1);"/>打开';
 	}	
 print <<<EOT
 -->
 					</td>
 				</tr>
-				<tr id="tdPassQuestion" style="display:none">
+				<tr id="tdPassQuestion" style="display:$showquestion">
 					<td align=right>站长密码问题<font color=red>*</font>：</td>
 					<td colspan=3>
-						<textarea name="pass_question" id="pass_question" style="width:400px" rows="3"></textarea>(多个用,分开)
+						<textarea name="pass_question" id="pass_question" style="width:400px" rows="3">$db_sysconfig[pass_question]</textarea>(多个用,分开)
 					</td>					
 				</tr>				
 
@@ -152,19 +154,19 @@ EOT;
 	}
 	if($db_sysconfig[pay_cycle]=="3"){
 		echo '<input type="radio" name="pay_cycle" id="pay_cycle" value="1" onclick="javscript:showPayDate(1);"/>周结 <input type="radio" id="pay_cycle" name="pay_cycle" value="2" onclick="javscript:showPayDate(2);"/>月结 <input type="radio" id="pay_cycle" name="pay_cycle" value="3" checked onclick="javscript:showPayDate(3);"/>季结 ';
-	}	
+	}
+	if($db_sysconfig[pay_cycle]=="1") $divstyle1= 'style="display:block"';
+	else $divstyle1 = 'style="display:none"';
+	if($db_sysconfig[pay_cycle]=="2") $divstyle2 = 'style="display:block"';
+	else $divstyle2 = 'style="display:none"';
+	if($db_sysconfig[pay_cycle]=="3") $divstyle3 = 'style="display:block"';
+	else $divstyle3 = 'style="display:none"';		
 print <<<EOT
 -->							
 						
 					</td>					
 				</tr>			
-                <tr id="tdPayDate1"
-<!--
-EOT;
-	if($db_sysconfig[pay_cycle]=="1") echo 'style="display:block"';
-	else echo 'style="display:none"';
-print <<<EOT
--->				>
+                <tr id="tdPayDate1" $divstyle1>
 					<td align=right>周结日期<font color=red>*</font>：</td>
 					<td colspan=3>
 						<select name="pay_week_day" id="pay_week_day" style="WIDTH: 120px">
@@ -183,14 +185,7 @@ print <<<EOT
 							</select>
 					</td>				
 				</tr>
-                <tr id="tdPayDate2"
-<!--
-EOT;
-	if($db_sysconfig[pay_cycle]=="2") echo 'style="display:block"';
-	else echo 'style="display:none"';
-print <<<EOT
--->
-                >
+                <tr id="tdPayDate2" $divstyle2>
 					<td align=right>月结日期<font color=red>*</font>：</td>
 					<td colspan=3><select name="pay_month_day" id="pay_month_day" style="width:80px">
 <!--
@@ -206,15 +201,8 @@ print <<<EOT
 --></select>
 					</td>				
 				</tr>
-                <tr id="tdPayDate3"
-<!--
-EOT;
-	if($db_sysconfig[pay_cycle]=="3") echo 'style="display:block"';
-	else echo 'style="display:none"';	
-print <<<EOT
--->                
->
-					<td align=right>季结日期<font color=red>*</font>：</td>
+                <tr id="tdPayDate3" $divstyle3>
+                <td align=right>季结日期<font color=red>*</font>：</td>
 					<td colspan=3>
 						<input type="text" id="pay_season_day_0" name="pay_season_day_0" style="WIDTH: 80px" readonly value="$pay_season_day[0]"/><A href="javascript:OpenCalendar('pay_season_day_0', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>,
 						<input type="text" id="pay_season_day_1" name="pay_season_day_1" style="WIDTH: 80px" readonly value="$pay_season_day[1]"//><A href="javascript:OpenCalendar('pay_season_day_1', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>,
@@ -264,27 +252,25 @@ print <<<EOT
 				</tr>	
 				<tr>
 					<td align=right>SMTP服务器<font color=red>*</font>：</td>
-					<td><input type="text" name="smtp_server" id="smtp_service"/></td>	
+					<td><input type="text" name="smtp_server" id="smtp_server" value="$db_sysconfig[smtp_server]"/></td>	
 					<td align=right>端 口号<font color=red>*</font>：</td>
-					<td><input type="text" name="smtp_port" id="smtp_port"/></td>										
+					<td><input type="text" name="smtp_port" id="smtp_port" value="$db_sysconfig[smtp_port]"/></td>										
 				</tr>
 				<tr>
 					<td align=right>系统邮件发件人<font color=red>*</font>：</td>
-					<td><input type="text" name="mail_user" id="mail_user"/></td>	
+					<td><input type="text" name="mail_user" id="mail_user" value="$db_sysconfig[mail_user]"/></td>	
 					<td align=right>系统邮件密码<font color=red>*</font>：</td>
-					<td><input type="text" name="mail_pass" id="mail_pass"/></td>										
+					<td><input type="text" name="mail_pass" id="mail_pass" value="$db_sysconfig[mail_pass]"/></td>										
 				</tr>
 				<tr>
 					<td align=right>短信下发地址<font color=red>*</font>：</td>
-					<td colspan="3"><input type="text" name="sms_url" id="sms_url" style="width:355"/>
-					参数:手机号-<input type="text" name="sms_mobile" id="sms_mobile" style="width:40px"/>
-					内容参数-<input type="text" name="sms_msg" id="sms_msg" style="width:40"/></td>										
+					<td colspan="3"><input type="text" name="sms_url" id="sms_url" style="width:355"  value="$db_sysconfig[sms_url]"/>
+					参数:手机号-<input type="text" name="sms_mobile" id="sms_mobile" style="width:40px"  value="$db_sysconfig[sms_mobile]"/>
+					内容参数-<input type="text" name="sms_msg" id="sms_msg" style="width:40"  value="$db_sysconfig[sms_msg]"/></td>										
 				</tr>				
 				<tr>
 					<td colspan="4" align="center">
-					<input type="submit" id="btnSubmit" value=" 保存 ">
-					&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					<input type="submit" id="btnSubmit" value=" 保存 >>">
 					</td>
 				</tr>
     </tbody>

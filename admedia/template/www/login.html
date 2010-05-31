@@ -1,10 +1,73 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<!--<?php print <<<EOT
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=GB18030">
-<title>Insert title here</title>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<script src="js/png_IE6.js" type="text/javascript"></script>
+<script src="js/prototype.js" type="text/javascript"></script>
+<script src="js/public.js" type="text/javascript"></script>
+<title>新浪广告管理平台</title>
+<link href="css/login.css" rel="stylesheet" type="text/css" />
+<script>
+function checkfrm(){
+	if(isEmpty($("aff_name").value)){
+		alert("请输入登录名称");
+		$("aff_name").focus();
+		return false;
+	}
+	if(isEmpty($("aff_pass").value)){
+		alert("请输入登录密码");
+		$("aff_pass").focus();
+		return false;
+	}
+	if(isEmpty($("aff_code").value)){
+		alert("请输入验证码");
+		$("aff_code").focus();
+		return false;
+	}	
+	return true;	
+}
+</script>
 </head>
-<body>
 
+<body id="login">
+<form name="form" id="form" action="$REQUEST_URI" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="ts" value="$timestamp"/>
+<div class="content">
+<div class="manage">
+<div class="left">
+<dl>
+<dt></dt>
+<dd class="dd01">用户名：</dd>
+<dd class="dd02"><input name="aff_name" id="aff_name" type="text" /></dd>
+<dd class="dd00"></dd>
+<dd class="dd01">密码：</dd>
+<dd class="dd02"><input name="aff_pass" id="aff_pass" type="password" /></dd>
+<dd class="dd00"></dd>
+<dd class="dd01">验证码：</dd>
+<dd class="dd03"><input name="aff_code" id="aff_code" type="text" /></dd>
+<dd class="dd04"><a href="javascript:changeImg();" title="看不清？点击换一张！"><IMG src="valicode.php?ts=$timestamp" align="absMiddle" border="0" name="imageshow" id="imageshow"/></a></dd>
+<dd class="dd00"></dd>
+
+</dl>
+</div>
+<div class="right">
+<dl>
+<dt></dt>
+<dd><input name="" type="image" src="/www/img/login_loginbtn.gif" /></dd>
+<dd><a href="?job=regedit"><img src="/www/img/login_regbtn.gif"  border="0"/></a></dd>
+</dl>
+</div>
+</div>
+</div>
+</form>
 </body>
 </html>
+<!--
+EOT;
+$output = trim(str_replace(array('<!--<!--<!---->','<!--<!---->','<!---->',"\r"),'',ob_get_contents())," \n");
+ob_end_clean();
+$db_obstart && function_exists('ob_gzhandler') ? ob_start('ob_gzhandler') : ob_start();
+echo $output;
+?>-->
