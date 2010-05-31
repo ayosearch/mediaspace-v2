@@ -12,9 +12,8 @@ class PM_SystemDB extends BaseDB{
 	
 	function checkSystem($key){
 		$sql = "select count(key_name) as count from pm_sysconfig where key_name=".sqlEscape($key);
-		$data = $this->_db->get_one($sql);
-		if(!$data) return false;
-		return true;
+		$count = $this->_db->get_value($sql);
+		return $count;
 	}
 	
 	function updateSystem($key,$val){
@@ -28,7 +27,8 @@ class PM_SystemDB extends BaseDB{
 	}
 	
 	function getSystem($key){
-		$data = $this->_db->get_one("SELECT * FROM pm_sysconfig WHERE key_value=".sqlEscape($key));
+		$sql = "SELECT * FROM pm_sysconfig WHERE key_name=".sqlEscape($key)." limit 1";
+		$data = $this->_db->get_one($sql);
 		if (!$data) return null;
 		return $data;
 	}

@@ -62,11 +62,23 @@ class PM_AdvertiseDB extends BaseDB{
 		return $data;
 	}
 	
+	function getAdvertiseByIds($ids){
+		$sql = "select * from pm_advertise where id in (".$ids.")";
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);	
+	}
+	
 	function getAdvertiseStatusList($status){
 		$sql = "SELECT * FROM pm_advertise where status=".intval($status);
 		$query = $this->_db->query($sql);
 		return $this->_getAllResultFromQuery($query);	
 	}
+	
+	function getAdvertiseFeetypeStatusList($fee_type,$status){
+		$sql = "SELECT * FROM pm_advertise where fee_type in (".$fee_type.") and status=".intval($status);
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);	
+	}	
 	
 	function getAdvertiseAll(){
 		$sql = "SELECT * FROM pm_advertise";
@@ -142,6 +154,13 @@ class PM_AdvertiseDB extends BaseDB{
 		$data = $this->_db->get_one("SELECT * FROM pm_advcreative WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
+	}
+	
+	function getAdvCreativeAll($status,$adv_ids=null){
+		$sql = "SELECT a.*,b.name as adv_name FROM pm_advcreative a left join pm_advertise b on a.adv_id=b.id where a.status=".intval($status);
+		if($adv_ids!=null) $sql = $sql." and a.adv_id in (".$adv_ids.")";
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);	
 	}
 
 	function getAdvCreativePageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -234,7 +253,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}		
 	
 	function getAdvPagesStruct() {
-		return array('mer_id','adv_id','name','url','code','memo','start_date','end_date','create_time','start_hour','end_hour','status');
+		return array('mer_id','adv_id','name','url','code','memo','start_date','end_date','create_time','update_time','start_hour','end_hour','status');
 	}
 	
 	function _checkAdvPagesData($data){
@@ -440,7 +459,7 @@ class PM_AdvertiseDB extends BaseDB{
 	
 	//广告轮播计划定义----------------------------------------------------------------------------------------------------
 	function insertAdvRollPlan($fieldsData){
-		$fieldsData = $this->_checkAdvertiseData($fieldsData);
+		$fieldsData = $this->_checkAdvRollPlanData($fieldsData);
 		if (!$fieldsData) return null;
 		$this->_db->update("INSERT INTO pm_advrollplan SET " . $this->_getUpdateSqlString($fieldsData));
 		$insertId = $this->_db->insert_id();
@@ -448,7 +467,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}
 	
 	function updateAdvRollPlan($id,$updateData){
-		$updateData = $this->_checkAdvertiseData($updateData);
+		$updateData = $this->_checkAdvRollPlanData($updateData);
 		if (!$updateData) return null;
 		$this->_db->update("UPDATE pm_advrollplan SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -458,6 +477,11 @@ class PM_AdvertiseDB extends BaseDB{
 		$this->_db->update("DELETE FROM pm_advrollplan WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
 	}
+	
+	function deleteBatchAdvRollPlan($ids){
+		$this->_db->update("DELETE FROM pm_advrollplan WHERE id in (". $ids .")");
+		return $this->_db->affected_rows();
+	}	
 	
 	function getAdvRollPlan($id){
 		$data = $this->_db->get_one("SELECT * FROM pm_advrollplan WHERE id=".intval($id));
@@ -485,21 +509,29 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = "$sql where $stwhere";
 		$count = $this->_db->get_value($sql);
 		return $count;
-	}	
+	}
+	
+	function checkAdvRollPlanIsAll(){
+		$sql = "SELECT COUNT(id) as count FROM pm_advrollplan where is_all=1";
+		if($stwhere!=null)
+			$sql = "$sql where $stwhere";
+		$count = $this->_db->get_value($sql);
+		return $count>0;
+	}
 	
 	function getAdvRollPlanStruct() {
-		return array('id','name','is_cpc','is_cpm','is_cpa','type','is_all','is_auto','status','create_time','update_time');
+		return array('name','is_cpc','is_cpm','is_cpa','is_cpd','type','is_all','status','create_time','update_time','adv_ids','memo');
 	}
 	
 	function _checkAdvRollPlanData($data){
 		if (!is_array($data) || !count($data)) return null;
-		$data = $this->_checkAllowField($data,$this->getAdvRollPlanPageList());
+		$data = $this->_checkAllowField($data,$this->getAdvRollPlanStruct());
 		return $data;
 	}		
 	
 	//广告轮播定义明细----------------------------------------------------------------------------------------------------
 	function insertAdvRollDetail($fieldsData){
-		$fieldsData = $this->_checkAdvertiseData($fieldsData);
+		$fieldsData = $this->_checkAdvRollDetailData($fieldsData);
 		if (!$fieldsData) return null;
 		$this->_db->update("INSERT INTO pm_advrolldetail SET " . $this->_getUpdateSqlString($fieldsData));
 		$insertId = $this->_db->insert_id();
@@ -507,7 +539,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}
 	
 	function updateAdvRollDetail($id,$updateData){
-		$updateData = $this->_checkAdvertiseData($updateData);
+		$updateData = $this->_checkAdvRollDetailData($updateData);
 		if (!$updateData) return null;
 		$this->_db->update("UPDATE pm_advrolldetail SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -518,10 +550,22 @@ class PM_AdvertiseDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function deleteAdvRollDetailByPlanId($roleid){
+		$sql = "delete from pm_advrolldetail where roll_id=".intval($roleid);
+		$this->_db->update($sql);
+		return $this->_db->affected_rows();
+	}
+	
 	function getAdvRollDetail($id){
 		$data = $this->_db->get_one("SELECT * FROM pm_advrolldetail WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
+	}
+	
+	function getAdvRollDetailByPlanId($role_id){
+		$sql = "select * from pm_advrolldetail where roll_id=".intval($role_id);
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);			
 	}
 	
 	function getAdvRollDetailPageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -544,10 +588,10 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = "$sql where $stwhere";
 		$count = $this->_db->get_value($sql);
 		return $count;
-	}		
+	}
 	
 	function getAdvRollDetailStruct() {
-		return array('id','mer_id','adv_id','creative_id','roll_id','start_time','end_time','start_time','update_time');
+		return array('mer_id','adv_id','creative_id','roll_id','start_time','end_time','create_time','update_time');
 	}
 	
 	function _checkAdvRollDetailData($data){

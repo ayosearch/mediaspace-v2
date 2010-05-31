@@ -20,13 +20,13 @@ class PM_Memcache {
 	 * 根据默认配置自动连接Memcahce服务器,当参数为TRUE时
 	 *
 	 * @param bool $connect
-	 * @return PW_Memcache
+	 * @return PM_Memcache
 	 */
 	function PM_Memcache($connect = true) {
 		if ($this->exists()) {
 			$this->cache = new Memcache;
 			if ($connect) {
-				$this->config = $GLOBALS['cfg_memcache'] ? $GLOBALS['cfg_memcache'] : array('host'=>'localhost','port'=>11211);
+				$this->config = $GLOBALS["cfg_memcache"] ? $GLOBALS["cfg_memcache"] : array('host'=>'127.0.0.1','port'=>11211);
 				$this->connect();
 			}
 		}
@@ -181,7 +181,7 @@ class PM_Memcache {
 	function __getKeyPrefix($key){
 		static $_prefix=null;
 		if (!$_prefix) {
-			$_prefix = substr(md5($GLOBALS['db_hash']),18,5);
+			$_prefix = substr(md5($GLOBALS['cfg_hash']),18,5);
 		}
 		return $_prefix.'_'.$key;
 	}
