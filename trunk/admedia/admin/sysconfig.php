@@ -1,17 +1,21 @@
 <?php
 	
+	$memcache = LOAD::loadClass("Memcache",null);
 	$objSystem = LOAD::loadDB("System");
-
+	require_once R_P."require/service.php";	
+	
 	if($action=="save"){
 		foreach($cfg_sysconfig as $key_name=>$key_val){
 			$arrfield = array("key_name"=>"$key_name","key_value"=>$_POST["$key_name"]);
 			if($objSystem->checkSystem($key_name)==0){
 				$objSystem->insertSystem($arrfield);
+				setSysConfigVal($key_name,$_POST["$key_name"]);
 			}else{
 				$objSystem->updateSystem("$key_name",$_POST["$key_name"]);
+				setSysConfigVal($key_name,$_POST[$key_name]);
 			}
-		}	
-		ObHeader($admin_file);		
+		}
+		ObHeader($admin_file);	
 	}
 
 	$db_sc = $objSystem->getSystemAll();

@@ -39,7 +39,7 @@ if(isset($action) && $action=="new"){
 		$ids = substr($ids,0,strlen($ids)-1);
 	}
 	$arrfield = array("audit_id"=>$AdminUser[id],"audit_name"=>$AdminUser[login_name],"create_time"=>$timestamp,"target_ids"=>$ids,
-								"parent_id"=>0,"level"=>0,"action"=>$aduitstatus,"content"=>$_POST[content],"itype"=>1);
+								"parent_id"=>0,"level"=>0,"auditstatus"=>$aduitstatus,"content"=>$_POST[content],"itype"=>1);
 	$objSystem = LOAD::loadDB("System");	
 	$sysaudit_id = $objSystem->insertSysAudit($arrfield);
 	$objAffUser = LOAD::loadDB("Affiliate");	
