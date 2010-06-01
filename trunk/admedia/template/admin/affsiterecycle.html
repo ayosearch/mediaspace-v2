@@ -1,0 +1,171 @@
+<!--<?php
+include_once PrintEot('header');
+print <<<EOT
+-->
+
+<form action="$basename" method="get" name="form">
+<input type="hidden" name="job" value="$job"/>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>站长管理 &gt;&gt; 站点信息</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>
+         <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("status", "0", "等待审核");
+ showPageLink("status", "1", "已审核");
+ showPageLink("status", "2", "审核未通过");
+ showPageLink("status", "3", "冻结");
+ showPageLink("enablecpc", "0", "不允许投放CPC");
+ showPageLink("enablecpc", "1", "允许投放CPC");
+print <<<EOT
+-->
+            </td></tr>
+         <tr>
+        <tr>
+             <td><b>快速查询：</b><select name="searchtype">
+<!--
+EOT;
+	if(empty($searchtype) || $searchtype=="aff_id")  echo '<option value="aff_id" selected>站长ID</option>';
+    else echo '<option value="aff_id">站长ID</option>';
+	if(empty($searchtype) || $searchtype=="name")  echo '<option value="name">站点名称</option>';
+    else echo '<option value="name">站点名称</option>';
+	if(empty($searchtype) || $searchtype=="url")  echo '<option value="url">站点地址</option>';
+    else echo '<option value="url">站点地址</option>'; 
+print <<<EOT
+-->
+							</select>
+							<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>
+						开始时间：<input name="start_date" type="text"  class="text" readonly value="$start_date"/><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_date" type="text" class="text" readonly value="$end_date"/><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<input type="submit" value="查询" class="text"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input id="Hidden1" name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+                                <img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline"
+                                    width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+	if($candel==true){
+		showButton(2,'侧地清除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+	}
+print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">
+                    序号</td>
+                <td align="middle" class="title" height="20" valign="center">
+                    <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
+                </td>
+                
+                <td align="middle" class="title" height="20" valign="center">站点名称-站点地址</td>
+                <td align="middle" class="title" height="20" valign="center">所属站长</td>
+                <td align="middle" class="title" height="20" valign="center">站点类型</td>
+                <td align="middle" class="title" height="20" valign="center">日访问量</td>
+                <td align="middle" class="title" height="20" valign="center">日独立IP</td>
+                <td align="middle" class="title" height="20" valign="center">允许CPC</td>
+                <td align="middle" class="title" height="20" valign="center">允许轮播</td>
+                <td align="middle" class="title" height="20" valign="center">站点状态</td>
+                <td align="middle" class="title" height="20" valign="center">编辑</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_affwebsitelist); 
+foreach($db_affwebsitelist as $affwebsite ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('Y/m/d H:i:s',$affwebsite[create_time]);
+		$status= $cfg_userstatus[$affwebsite[status]];
+print <<<EOT
+-->
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center">$curidx </td>
+                <td align="middle" class="hei" valign="center">
+                    <input id="ids" name="ids" type="checkbox" value="$affwebsite[id]" />
+                </td>
+                <td>&nbsp;$affwebsite[name]&nbsp;-&nbsp;<a href="$affwebsite[url]" target=_blank class=NoLine>$affwebsite[url]</a></td>
+                <td valign="middle" align="center">&nbsp;<a href="$basename?job=detail&action=affiliate&curid=$affwebsite[aff_id]&backurl=$backurl">$affwebsite[aff_name]($affwebsite[aff_id])</a></td>
+                <td valign="middle" align="center">&nbsp;$affwebsite[sitetype]</td>
+                <td valign="middle" align="center">&nbsp;$affwebsite[day_pv]</td>
+                <td valign="middle" align="center">&nbsp;$affwebsite[day_ip]</td>
+                <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+	if($affwebsite[enable_cpc]=="0"){
+		echo "<font color=red>不允许</font>";
+	}else{
+		echo "<font color=green>允许</font>";
+	}
+print <<<EOT
+-->
+				</td>
+                <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+	if($affwebsite[enable_roll]=="0"){
+		echo "<font color=red>不允许</font>";
+	}else{
+		echo "<font color=green>允许</font>";
+	}
+print <<<EOT
+-->
+				</td>				
+                <td valign="middle" align="center">&nbsp;$status</td>                   
+                <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+	showEditButton($affwebsite[id]);
+print <<<EOT
+-->
+                </td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td>
+                &nbsp;</td>
+            <td align="right" height="35">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             &nbsp;</td>
+        </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+
+</form>
+
+<!--
+EOT;
+?>-->

@@ -1,0 +1,149 @@
+<!--<?php
+include_once PrintEot('header');
+print <<<EOT
+-->
+
+<form action="$basename" method="get" name="form">
+<input type="hidden" name="job" value="$job"/>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>站长管理 &gt;&gt; 站长基本信息管理</strong>
+            </td>
+        </tr>
+    </table>
+    <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="96%" align=center>
+         <tr>
+            <td colspan=2 height=30 class="zmenu"><b>数据分类：</b>
+<!--
+EOT;
+ showPageLink("all", "1", "全部数据");
+ showPageLink("source", "0", "前台注册");
+ showPageLink("source", "1", "后台添加");print <<<EOT
+-->
+            </td></tr>
+         <tr>
+        <tr>
+             <td><b>快速查询：</b>
+             				   <select name="searchtype" style="font-size:12px;">
+<!--
+EOT;
+	if(empty($searchtype) || $searchtype=="id")  echo '<option value="id" selected>站长ID</option>';
+    else echo '<option value="id">站长ID</option>';
+	if($searchtype=="login_name") echo '<option value="login_name" selected>登录名称</option>';
+	else echo '<option value="login_name">登录名称</option>';
+	if($searchtype=="linkman") echo '<option value="linkman" selected>姓名</option>';
+	else echo '<option value="linkman">姓名</option>';
+	if($searchtype=="telephone") echo '<option value="telephone" selected>固定电话</option>';
+	else echo '<option value="telephone">固定电话</option>';
+	if($searchtype=="email") echo '<option value="email" selected>电子邮件</option>';
+	else echo '<option value="email">电子邮件</option>';
+	if($searchtype=="qq") echo '<option value="qq" selected>QQ</option>';
+	else echo '<option value="qq">QQ</option>';
+	if($searchtype=="service") echo '<option value="service_id" selected>客服ID</option>';
+	else echo '<option value="service_id">客服ID</option>';print <<<EOT
+-->
+							</select>
+							<input type="text" name="searchkey" Width="60" style="font-size:12px;" class="text" value="$searchkey"/>
+						开始时间：<input name="start_date" type="text"  class="text" readonly value="$start_date"/><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						结束时间：<input name="end_date" type="text" class="text" readonly value="$end_date"/><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<input type="submit" value="查询" class="text"/>
+						</td>
+            <td align="right" valign="center">
+                <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
+                    <input name="allSelect" type="hidden" value="all" />
+                    <tr>
+                        <td align="middle" valign="center">
+                            <a href="javascript:document.location.reload();">
+<img align="absMiddle" border="0" height="15" src="$imgpath/admin/reserch.gif" style="text-decoration: underline" width="17" /><span style="color: #547054"> 刷新</span></a>
+<!--
+EOT;
+if($candel==true){
+showButton(2,'彻底清除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&Page='.$curpage.'","此操作不可恢复,确认删除吗？");');
+}print <<<EOT
+-->
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td height="2">
+            </td>
+        </tr>
+    </table>
+    <div class="tab">
+        <table id="Table52" border="0" cellpadding="3" cellspacing="0" align=center>
+            <tr>
+                <td align="middle" class="title" height="20" valign="center">序号</td>
+                <td align="middle" class="title" height="20" valign="center"><input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选</td>
+                <td align="middle" class="title" height="20" valign="center">站长编号</td>
+                <td align="middle" class="title" height="20" valign="center">登陆名称</td>
+                <td align="middle" class="title" height="20" valign="center">姓名</td>
+                <td align="middle" class="title" height="20" valign="center">QQ</td>
+                <td align="middle" class="title" height="20" valign="center">手机</td>                
+                <td align="middle" class="title" height="20" valign="center">所属客服</td>      
+                <td align="middle" class="title" height="20" valign="center">注册来源</td>   
+                <td align="middle" class="title" height="20" valign="center">注册时间</td>      
+                <td align="middle" class="title" height="20" valign="center">更新时间</td>  
+                <td align="middle" class="title" height="20" valign="center">状态</td>
+                <td align="middle" class="title" height="20" valign="center">编辑</td>
+            </tr>
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_afflist); 
+foreach($db_afflist as $affuser ){
+$curidx = $curidx+1;
+$curpageidx = $curpageidx+1;
+$regsource = $cfg_affsource[$affuser[source]];
+$status = $cfg_userstatus[$affuser[status]];
+$cdate = date('Y/m/d H:i:s',$affuser[create_time]);
+$udate="";
+($affuser[update_time]>0) && $udate = date('Y/m/d H:i:s',$affuser[update_time]);
+$db_gender = $cfg_gender[$affuser[gender]];print <<<EOT
+-->      
+            <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);"
+                onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
+                <td align="middle" valign="center" width="40px">$curidx</td>
+                <td align="middle" class="hei" valign="center" width="40px"><input id="ids" name="ids" type="checkbox" value="$affuser[id]" />
+                </td>
+                <td valign="middle" align="center" width="40px">&nbsp;$affuser[id]</td>
+                <td valign="middle" align="center">&nbsp;<a href='$basename?job=detail&action=affiliate&curid=$affuser[id]&backurl=$backurl' class=NoLine>$affuser[login_name]</a></td>
+                <td valign="middle" align="center">&nbsp;$affuser[linkman]($db_gender)</td>
+                <td valign="middle" align="center">&nbsp;$affuser[qq]</td>
+                <td valign="middle" align="center">&nbsp;$affuser[mobile]</td>
+                <td align="center" valign="middle">&nbsp;$affuser[service_name]</td>       
+                 <td align="center" valign="middle">&nbsp;$regsource</td> 
+                <td valign="middle" align="center" width="135px">&nbsp;$cdate</td>          
+                <td valign="middle" align="center" width="135px">&nbsp;$udate</td>    
+                <td valign="middle" align="center">&nbsp;$status</td>
+                <td valign="middle" align="center">&nbsp;
+<!--
+EOT;
+showEditButton($affuser[id]);print <<<EOT
+-->
+				</td>
+            </tr>
+<!--
+EOT;
+}print <<<EOT
+-->
+        </table>
+    </div>
+    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr> <td> &nbsp;</td> <td align="right" height="35">
+<!--
+EOT;
+showPageBreakInfo($showcount);print <<<EOT
+--> 
+&nbsp;</td> </tr>
+    </table>
+    <input type="hidden" id="count" name="count" value="$showcount" />
+    <iframe id="ifrExport" border="0" name="ifrExport" marginWidth="0" marginHeight="0" frameBorder="no" width="0" height="0" scrolling="no"></IFRAME>
+</form>
+
+<!--
+EOT;
+?>-->
