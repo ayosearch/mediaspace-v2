@@ -115,7 +115,8 @@ $curpageidx = $curpageidx+1;
 $regsource = $cfg_affsource[$affuser[source]];
 $status = $cfg_userstatus[$affuser[status]];
 $cdate = date('Y/m/d H:i:s',$affuser[create_time]);
-$udate = date('Y/m/d H:i:s',$affuser[update_time]);
+$udate="";
+($affuser[update_time]>0) && $udate = date('Y/m/d H:i:s',$affuser[update_time]);
 $db_gender = $cfg_gender[$affuser[gender]];print <<<EOT
 -->      
             <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);"

@@ -115,7 +115,7 @@ foreach($db_afflist as $affuser ){
 		$status = $cfg_userstatus[$affuser[status]];
 		$cdate = date('Y/m/d H:i:s',$affuser[create_time]);
  		$udate = ""; 
-		($affuser[update_time]>0) && $udate = date('Y/m/d H:i:s',$affuser[update_time]);
+		if($affuser[update_time]>0) $udate = date('Y/m/d H:i:s',$affuser[update_time]);
 		$db_gender = $cfg_gender[$affuser[gender]];
 print <<<EOT
 -->      

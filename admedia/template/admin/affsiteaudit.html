@@ -98,10 +98,9 @@ print <<<EOT
                     <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
                 </td>
                 
-                <td align="middle" class="title" height="20" valign="center">站长名称</td>
+                <td align="middle" class="title" height="20" valign="center">站点名称-站点地址</td>
+                <td align="middle" class="title" height="20" valign="center">所属站长</td>
                 <td align="middle" class="title" height="20" valign="center">站点类型</td>
-                <td align="middle" class="title" height="20" valign="center">站点名称</td>
-                <td align="middle"  class="title" height="20" valign="center">站点地址</td>
                 <td align="middle" class="title" height="20" valign="center">日访问量</td>
                 <td align="middle" class="title" height="20" valign="center">日独立IP</td>
                 <td align="middle" class="title" height="20" valign="center">允许CPC</td>
@@ -126,10 +125,9 @@ print <<<EOT
                 <td align="middle" class="hei" valign="center">
                     <input id="ids" name="ids" type="checkbox" value="$affwebsite[id]" />
                 </td>
+                <td>&nbsp;$affwebsite[name]&nbsp;-&nbsp;<a href="$affwebsite[url]" target=_blank class=NoLine>$affwebsite[url]</a></td>
                 <td valign="middle" align="center">&nbsp;<a href="$basename?job=detail&action=affiliate&curid=$affwebsite[aff_id]&backurl=$backurl">$affwebsite[aff_name]($affwebsite[aff_id])</a></td>
                 <td valign="middle" align="center">&nbsp;$affwebsite[sitetype]</td>
-                <td valign="middle" align="center">&nbsp;$affwebsite[name]</td>
-                <td valign="middle" align="center">&nbsp;<a href="$affwebsite[url]" target=_blank class=NoLine>$affwebsite[url]</a></td>                
                 <td valign="middle" align="center">&nbsp;$affwebsite[day_pv]</td>
                 <td valign="middle" align="center">&nbsp;$affwebsite[day_ip]</td>
                 <td valign="middle" align="center">&nbsp;
