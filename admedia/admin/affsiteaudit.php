@@ -61,7 +61,7 @@ if(isset($action) && $action=="new"){
 	$objAffUser->updateAffWebSiteStatus($ids,0,3);
 	ObHeader("$basename?job=affsiteaudit".$transtr);	
 }else if(empty($action)){
-	$stwhere = "";
+	$stwhere = " a.is_del=0 and ";
 	(strlen($status)>0) && $stwhere .= " a.status=".intval($status)." and ";			
 	(strlen($enablecpc)>0) && $stwhere .= " a.enable_cpc=".intval($enablecpc)." and ";		
 	(strlen($start_date)>0) && $stwhere .= " a.create_time>=".__strtotime($start_date)." and ";	
