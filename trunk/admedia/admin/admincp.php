@@ -355,7 +355,7 @@ function showClientType($state){
 		default:
 		$str = "潜在客户"; break;
 	}
-	echo iconv($str,'utf-8','gbk');
+	echo iconv('gbk','utf-8',$str);
 }
 
 function showAdvAudit($status){
@@ -578,7 +578,7 @@ function showEditButton($curid){
 function showDisString($curid){
 	global $candis,$admin_file,$curid,$curpage,$transtr,$imgpath;
 	if ($candis) {
-		echo "<a href='$admin_file&action=dis&curid=$curid&curpage=$curpage$transtr'><img align='absMiddle'alt='".iconv("分配权限","utf-8","gbk")."' border='0' src='$imgpath/admin/loginok.gif'/></a>";
+		echo "<a href='$admin_file&action=dis&curid=$curid&curpage=$curpage$transtr'><img align='absMiddle'alt='".iconv("gbk","utf-8","分配权限")."' border='0' src='$imgpath/admin/loginok.gif'/></a>";
 	}else{
 		echo "";
     }
@@ -592,7 +592,7 @@ function showDelButton($curid,$del="del"){
 	if(isset($adv_id)) $url .= "&adv_id=".$adv_id;		
 	if(isset($backurl)) $url .= "&backurl=".urlencode($backurl);		
 	if($candel){
-		echo "<a href=javascript:ConfirmUrlDel('$url','".iconv("gbk","utf-8","此操作不能恢复，确定删除吗？")."');><img align='absMiddle' alt='".iconv("删除","utf-8","gbk")."' border='0' src='$imgpath/admin/del.gif'/></a>";
+		echo "<a href=javascript:ConfirmUrlDel('$url','".iconv("gbk","utf-8","此操作不能恢复，确定删除吗？")."');><img align='absMiddle' alt='".iconv("gbk","utf-8","删除")."' border='0' src='$imgpath/admin/del.gif'/></a>";
 	}else{
 		echo "";
 	}
