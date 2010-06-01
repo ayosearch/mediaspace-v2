@@ -101,7 +101,7 @@ class PM_AdvertiseDB extends BaseDB{
 	}
 
 	function getAdvertiseTotalCount($stwhere=null){
-		$sql = "SELECT COUNT(id) as count FROM pm_advertise";
+		$sql = "SELECT COUNT(a.id) as count FROM pm_advertise a";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
 		$count = $this->_db->get_value($sql);

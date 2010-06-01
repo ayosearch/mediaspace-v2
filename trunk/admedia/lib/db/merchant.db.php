@@ -167,7 +167,7 @@ class PM_MerchantDB extends basedb{
 		if ( !$fieldsData ){
 			return null;
 		}
-		$this->_db->update( "INSERT INTO pm_merchant SET ".$this->_getupdatesqlstring( $fieldsData ) );
+		$this->_db->update( "INSERT INTO pm_merchant SET ".$this->_getUpdateSqlString( $fieldsData ) );
 		$insertId = $this->_db->insert_id( );
 		return $insertId;
 	}
@@ -177,7 +177,7 @@ class PM_MerchantDB extends basedb{
 		if ( !$updateData ){
 			return null;
 		}
-		$this->_db->update( "UPDATE pm_merchant SET ".$this->_getupdatesqlstring( $updateData )." WHERE id=".intval( $id )." LIMIT 1" );
+		$this->_db->update( "UPDATE pm_merchant SET ".$this->_getUpdateSqlString( $updateData )." WHERE id=".intval( $id )." LIMIT 1" );
 		return $this->_db->affected_rows( );
 	}
 	
@@ -239,7 +239,7 @@ class PM_MerchantDB extends basedb{
 	}
 
 	function getMerchantTotalCount( $stwhere = null ){
-		$sql = "SELECT COUNT(id) as count FROM pm_merchant";
+		$sql = "SELECT COUNT(a.id) as count FROM pm_merchant a";
 		if ( $stwhere != null ){
 			$sql = "{$sql} where {$stwhere}";
 		}
