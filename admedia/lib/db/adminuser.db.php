@@ -16,8 +16,8 @@ class PM_AdminUserDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
-	function deleteSysModule($id){
-		$this->_db->update("DELETE FROM pm_sysmodule WHERE id=". intval($id) ." LIMIT 1");
+	function deleteSysModule($ids){
+		$this->_db->update("DELETE FROM pm_sysmodule WHERE id in (". $ids.")");
 		return $this->_db->affected_rows();
 	}
 	
@@ -102,6 +102,12 @@ class PM_AdminUserDB extends BaseDB{
 		return $data;
 	}
 	
+	function getSysOperateAll(){
+		$sql = "select * from pm_sysoperate";
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);			
+	}
+	
 	function getSysOperatePageList($page, $perPage){
 		$page = intval($page);
 		$perPage = intval($perPage);
@@ -142,10 +148,29 @@ class PM_AdminUserDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function deleteSysCellOperateByColId($col_ids){
+		$this->_db->update("DELETE FROM pm_syscelloperate WHERE col_id in (". $col_ids.")" );
+		return $this->_db->affected_rows();
+	}	
+	
+	function checkSysCellOperate($col_id,$op_id){
+		$sql = "select count(id) from pm_syscelloperate where col_id=".$col_id." and op_id=".$op_id;
+		$count = $this->_db->get_value($sql);
+		return $count>0;
+	}
+	
 	function getSysCellOperate($id){
 		$data = $this->_db->get_one("SELECT * FROM pm_syscelloperate WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
+	}
+	
+	function getSysCellOperateAll($stwhere=null){
+		$sql = "select a.*,b.op_name as op_name from pm_SysCellOperate a, pm_sysoperate b where a.op_id=b.id and a.is_del=0";
+		if($stwhere!=null)
+			$sql .= " and ".$stwhere;
+		$query = $this->_db->query($sql);
+		return $this->_getAllResultFromQuery($query);	
 	}
 	
 	function getSysCellOperatePageList($page, $perPage){
