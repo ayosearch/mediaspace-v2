@@ -8,7 +8,7 @@ print <<<EOT
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
-                <strong>站长管理 &gt;&gt; 站点信息</strong>
+                <strong>回收站 &gt;&gt; 站长站点信息</strong>
             </td>
         </tr>
     </table>
@@ -57,7 +57,7 @@ print <<<EOT
 <!--
 EOT;
 	if($candel==true){
-		showButton(2,'侧地清除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
+		showButton(2,'彻底清除','javascript:ConfirmDel("'.$admin_file.'&action=del'.$transtr.'&curpage='.$curpage.'","此操作不可恢复,确认删除吗？");');
 	}
 print <<<EOT
 -->
@@ -82,13 +82,14 @@ print <<<EOT
                 
                 <td align="middle" class="title" height="20" valign="center">站点名称-站点地址</td>
                 <td align="middle" class="title" height="20" valign="center">所属站长</td>
-                <td align="middle" class="title" height="20" valign="center">站点类型</td>
+                <td align="middle" class="title" height="20" valign="center">站点类型</td>            
                 <td align="middle" class="title" height="20" valign="center">日访问量</td>
                 <td align="middle" class="title" height="20" valign="center">日独立IP</td>
                 <td align="middle" class="title" height="20" valign="center">允许CPC</td>
                 <td align="middle" class="title" height="20" valign="center">允许轮播</td>
-                <td align="middle" class="title" height="20" valign="center">站点状态</td>
-                <td align="middle" class="title" height="20" valign="center">编辑</td>
+                <td align="middle" class="title" height="20" valign="center">创建时间</td>    
+                <td align="middle" class="title" height="20" valign="center">更新时间</td>
+                <td align="middle" class="title" height="20" valign="center">站点状态</td>                    
             </tr>
 <!--
 EOT;
@@ -99,6 +100,9 @@ foreach($db_affwebsitelist as $affwebsite ){
 		$curidx = $curidx+1;
 		$curpageidx = $curpageidx+1;
 		$cdate = date('Y/m/d H:i:s',$affwebsite[create_time]);
+		$udate = "";
+		if($affwebsite[update_time]>0)
+			$udate = date('Y/m/d H:i:s',$affwebsite[create_time]);
 		$status= $cfg_userstatus[$affwebsite[status]];
 print <<<EOT
 -->
@@ -134,14 +138,9 @@ EOT;
 print <<<EOT
 -->
 				</td>				
-                <td valign="middle" align="center">&nbsp;$status</td>                   
-                <td valign="middle" align="center">&nbsp;
-<!--
-EOT;
-	showEditButton($affwebsite[id]);
-print <<<EOT
--->
-                </td>
+                <td valign="middle" align="center">&nbsp;$cdate </td>
+                <td valign="middle" align="center">&nbsp;$udate </td>                
+                <td valign="middle" align="center">&nbsp;$status</td>                                   
             </tr>
 <!--
 EOT;
