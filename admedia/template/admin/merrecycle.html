@@ -7,7 +7,7 @@ print <<<EOT
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
-                <strong>回收站-广告主</strong>
+                <strong>回收站 &gt;&gt; 广告主信息</strong>
             </td>
         </tr>
     </table>
@@ -77,7 +77,6 @@ print <<<EOT
                 <td align="middle" class="title" height="20" valign="center">销售</td>
                 <td align="middle" class="title" height="20" valign="center">添加日期</td>
                 <td align="middle" class="title" height="20" valign="center">状态</td>                  
-                <td align="middle" class="title" height="20" valign="center">操作</td>
             </tr>
 <!--
 EOT;
@@ -116,14 +115,7 @@ print <<<EOT
                 </td>             
                 <td align="middle" valign="center">&nbsp;$merchant[seller_name]</td>
                 <td align="middle" valign="center" width="145px">&nbsp;$cdate</td>
-                <td align="middle" valign="center" width="55px">$status</td>                   
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showEditButton($merchant[id]);
-print <<<EOT
--->
-                </td>
+                <td align="middle" valign="center" width="55px">$status</td>
             </tr>
 <!--
 EOT;

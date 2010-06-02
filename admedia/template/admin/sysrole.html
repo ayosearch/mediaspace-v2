@@ -206,10 +206,39 @@ function checkfrm(){
 
 <!--
 EOT;
-}print <<<EOT
+}else if($action=="dis"){print <<<EOT
 -->
-
+<form action="$admin_file" method="post" name="form">
+ <center>
+    <table border="0" cellpadding="0" cellspacing="0" width="100%">
+        <tr>
+            <td align="left" class="tittab">
+                <strong>系统管理 &gt;&gt; 角色管理 &gt;&gt; 分配权限</strong>
+            </td>
+        </tr>
+    </table>
+    <div class="addpro">
+    <table width="100%" border="0" cellspacing="5" cellpadding="0">
+				<tr>
+					<td height=30><b>角色名称：$db_sysrole[name]</b></td>
+				</tr>
+			</table>
+			<table width="100%" border="0" cellspacing="5" cellpadding="0">
+				<div runat="server" id="divList">$showhtml</div>
+			</table>
+			<input id="txtLimit" name="txtLimit" type="hidden" value="$txtlimit/>
+			<table width="100%" border="0" cellspacing="5" cellpadding="0">
+				<tr>
+					<td align="center" height="30"><input type="submit" runat="server" id="btnSubmit" value=" 确定 " NAME="btnSubmit" onserverclick="btnSubmit_ServerClick">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+						<input type="button" onclick="javascript:history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
+			</table>
+	</div>
+    </center>
+    </form>
 <!--
 EOT;
+}
 ?>-->
 
