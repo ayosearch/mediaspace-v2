@@ -16,14 +16,24 @@
 	}else if($action=="save"){
 		if(empty($curid)){
 			$_POST[create_time] = $timestamp;
-			$objSysUser->insertSysModule($_POST);
+			$curid = $objSysUser->insertSysModule($_POST);
 		}else{
 			$objSysUser->updateSysModule($curid,$_POST);
+		}
+		$db_sysoperatelist = $objSysUser->getSysOperateAll();
+		foreach($db_sysoperatelist as $db_sysoperate){
+			if($objSysUser->checkSysCellOperate($curid,$db_sysoperate[id])==false){
+				$objSysUser->insertSysCellOperate($curid,$db_sysoperate[id],0);
+			}
 		}
 		ObHeader($admin_file.$transtr);
 		exit;
 	}else if($action=="del"){
-		$objSysUser->deleteSysModule($curid);
+		if(strpos($ids,',')>0){
+			$ids = substr($ids,0,strlen($ids)-1);		
+			$objSysUser->deleteSysModule($ids);
+			$objSysUser->deleteSysCellOperateByColId($ids);
+		}
 	}
 	unset($objSysUser);
 	include PrintEot($job);
