@@ -576,7 +576,7 @@ function showEditButton($curid){
 }
 
 function showDisString($curid){
-	global $candis,$admin_file,$curid,$curpage,$transtr,$imgpath;
+	global $candis,$admin_file,$curpage,$transtr,$imgpath;
 	if ($candis) {
 		echo "<a href='$admin_file&action=dis&curid=$curid&curpage=$curpage$transtr'><img align='absMiddle'alt='".iconv("gbk","utf-8","·ÖÅäÈ¨ÏÞ")."' border='0' src='$imgpath/admin/loginok.gif'/></a>";
 	}else{
