@@ -1,4 +1,5 @@
 <?php 
+
 	$objSysUser = LOAD::loadDB("AdminUser");	
 	if(empty($action)){
 		$totalnum = $objSysUser->getSysModuleTotalCount();
@@ -22,11 +23,13 @@
 		}
 		$db_sysoperatelist = $objSysUser->getSysOperateAll();
 		foreach($db_sysoperatelist as $db_sysoperate){
-			if($objSysUser->checkSysCellOperate($curid,$db_sysoperate[id])==false){
-				$objSysUser->insertSysCellOperate($curid,$db_sysoperate[id],0);
+			$count = $objSysUser->checkSysCellOperate($curid,$db_sysoperate[id]);
+			if($count==0){
+				$arrfield = array("col_id"=>"$curid","op_id"=>"$db_sysoperate[id]","is_del"=>"0");
+				$objSysUser->insertSysCellOperate($arrfield);
 			}
 		}
-		ObHeader($admin_file.$transtr);
+		ObHeader($admin_file."&curpage=$curpage".$transtr);
 		exit;
 	}else if($action=="del"){
 		if(strpos($ids,',')>0){
