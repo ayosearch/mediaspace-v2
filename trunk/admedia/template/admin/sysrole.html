@@ -224,8 +224,9 @@ EOT;
 				</tr>
 			</table>
 			<table width="100%" border="0" cellspacing="5" cellpadding="0">
-				<div runat="server" id="divList">$showhtml</div>
+				$showhtml
 			</table>
+			<br/>
 			<input id="txtLimit" name="txtLimit" type="hidden" value="$txtlimit/>
 			<table width="100%" border="0" cellspacing="5" cellpadding="0">
 				<tr>
@@ -237,6 +238,32 @@ EOT;
 	</div>
     </center>
     </form>
+    <br/>
+    <br/>
+<script language=javascript>
+var Limit = 10;
+function SelectOneColumn(Colid){
+	for(var i = 4 ; i <= Limit ; i ++ ){
+		$(Colid + '_' + i).checked = $("col_"+Colid).checked;
+		var LimitID =$(Colid + '_' + i).value;
+		if($(Colid).checked == true){
+			if($('txtLimit').value.indexOf(',' + LimitID + ',') == -1)
+				$('txtLimit').value = $('txtLimit').value + LimitID + ','
+		}else{
+			if($('txtLimit').value.indexOf(',' + LimitID + ',') != -1)
+				$('txtLimit').value = $('txtLimit').value.replace(',' + LimitID + ',',',');
+		}
+	}
+}
+function SelectLimit(){
+	var LimitID = event.srcElement.value;
+	var LimitList = $('txtLimit').value;
+	if(LimitList.indexOf(',' + LimitID + ',') == -1)
+		$('txtLimit').value = LimitList + LimitID + ',';
+	else
+		$('txtLimit').value = LimitList.replace(',' + LimitID + ',',',');
+}
+</script>
 <!--
 EOT;
 }
