@@ -154,9 +154,9 @@ class PM_AdminUserDB extends BaseDB{
 	}	
 	
 	function checkSysCellOperate($col_id,$op_id){
-		$sql = "select count(id) from pm_syscelloperate where col_id=".$col_id." and op_id=".$op_id;
+		$sql = "select count(id) as count from pm_syscelloperate where col_id=".$col_id." and op_id=".$op_id;
 		$count = $this->_db->get_value($sql);
-		return $count>0;
+		return $count;
 	}
 	
 	function getSysCellOperate($id){
@@ -172,6 +172,13 @@ class PM_AdminUserDB extends BaseDB{
 		$query = $this->_db->query($sql);
 		return $this->_getAllResultFromQuery($query);	
 	}
+	
+	function getSysCellOperateById($col_id,$op_id){
+		$sql = "select a.*,b.op_name as op_name from pm_SysCellOperate a, pm_sysoperate b where a.op_id=b.id and a.is_del=0 and a.col_id=".$col_id." and a.op_id=".$op_id;
+		$data = $this->_db->get_one($sql);
+		if (!$data) return null;
+		return $data;
+	}	
 	
 	function getSysCellOperatePageList($page, $perPage){
 		$page = intval($page);
