@@ -31,6 +31,13 @@ function ObContents($output){
 	return $output;
 }
 
+function ObHeader($URL) {
+	echo '<meta http-equiv="expires" content="0">';
+	echo '<meta http-equiv="Pragma" content="no-cache">';
+	echo '<meta http-equiv="Cache-Control" content="no-cache">';
+	echo "<meta http-equiv='refresh' content='0;url=$URL'>";exit;
+}
+
 function ObStart(){
 	ObGetMode() == 1 ? ob_start('ob_gzhandler') : ob_start();
 }

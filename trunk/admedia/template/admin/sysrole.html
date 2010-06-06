@@ -177,17 +177,17 @@ print <<<EOT
 					<td align=right>自定义角色说明：</td>
 					<td><textarea id="memo" rows="4" cols="30" name="memo">$db_sysrole[memo]</textarea></td>
 				</tr>
-				<tr>
-					<td colspan="2" align="center">
-					<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<input type="button" onclick="history.go(-1);" value=" 取消 ">
-					</td>
-				</tr>
          
     </tbody>
  </table>
  </div></TD>
   </TR>
+  				<tr>
+					<td colspan="2" align="center" class="noLine">
+					<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="history.go(-1);" value=" 取消 ">
+					</td>
+				</tr>
  </TBODY>
 
  </TABLE>
@@ -208,7 +208,11 @@ function checkfrm(){
 EOT;
 }else if($action=="dis"){print <<<EOT
 -->
-<form action="$admin_file" method="post" name="form">
+<form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
+<input type="hidden" name="curid"' id=""curid"" value="$curid"/>
+<input type="hidden" name="action"' id="action" value="savedispatch"/>
+<input type="hidden" name="curpage"' id="curpage" value="$curpage"/>
+<input id="txtlimit" name="txtlimit" type="hidden" value="$txtlimit"/>
  <center>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
@@ -220,14 +224,13 @@ EOT;
     <div class="addpro">
     <table width="100%" border="0" cellspacing="5" cellpadding="0">
 				<tr>
-					<td height=30><b>角色名称：$db_sysrole[name]</b></td>
+					<td height=30><b>&nbsp;&nbsp;角色名称：$db_sysrole[name]</b></td>
 				</tr>
 			</table>
 			<table width="100%" border="0" cellspacing="5" cellpadding="0">
 				$showhtml
 			</table>
 			<br/>
-			<input id="txtLimit" name="txtLimit" type="hidden" value="$txtlimit/>
 			<table width="100%" border="0" cellspacing="5" cellpadding="0">
 				<tr>
 					<td align="center" height="30"><input type="submit" runat="server" id="btnSubmit" value=" 确定 " NAME="btnSubmit" onserverclick="btnSubmit_ServerClick">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -243,25 +246,52 @@ EOT;
 <script language=javascript>
 var Limit = 10;
 function SelectOneColumn(Colid){
+	var bflag = false;
 	for(var i = 4 ; i <= Limit ; i ++ ){
 		$(Colid + '_' + i).checked = $("col_"+Colid).checked;
-		var LimitID =$(Colid + '_' + i).value;
-		if($(Colid).checked == true){
-			if($('txtLimit').value.indexOf(',' + LimitID + ',') == -1)
-				$('txtLimit').value = $('txtLimit').value + LimitID + ','
-		}else{
-			if($('txtLimit').value.indexOf(',' + LimitID + ',') != -1)
-				$('txtLimit').value = $('txtLimit').value.replace(',' + LimitID + ',',',');
-		}
+		//var LimitID =$(Colid + '_' + i).value;
+		SelectOne($(Colid + '_' + i),$(Colid + '_' + i).checked);
+		//if($("col_"+Colid).checked == true){
+		//	if(tmplimit.indexOf(',' + LimitID + ',') == -1)
+		//		$('txtlimit').value += tmplimit + LimitID;
+		//}else{
+		//	if(tmplimit.indexOf(',' + LimitID + ',') != -1){
+		//		$('txtlimit').value = tmplimit.replace(","+ LimitID+",",",");
+		//	}
+		//}
 	}
 }
-function SelectLimit(){
-	var LimitID = event.srcElement.value;
-	var LimitList = $('txtLimit').value;
-	if(LimitList.indexOf(',' + LimitID + ',') == -1)
-		$('txtLimit').value = LimitList + LimitID + ',';
-	else
-		$('txtLimit').value = LimitList.replace(',' + LimitID + ',',',');
+
+function SelectOne(obj,flag){
+	var LimitID = obj.value;
+	var LimitList = $('txtlimit').value;
+	if(LimitList.substring(0,1)!=",") LimitList=","+LimitList;
+	if(flag==true && LimitList.indexOf(',' + LimitID + ',') == -1)//LimitList.indexOf(',' + LimitID + ',') == -1)
+		$('txtlimit').value = LimitList + LimitID + ',';
+	else if(flag==false){
+		$('txtlimit').value =LimitList.replace(',' + LimitID + ',',',');
+	}
+	if($('txtlimit').value.substring(0,1)==",")  $('txtlimit').value = $('txtlimit').value.substring(1);
+}
+
+function SelectLimt(obj){
+	var LimitID = obj.value;
+	var LimitList = $('txtlimit').value;
+	if(LimitList.substring(0,1)!=",") LimitList=","+LimitList;
+	if(LimitList.indexOf(',' + LimitID + ',') == -1)//LimitList.indexOf(',' + LimitID + ',') == -1)
+		$('txtlimit').value = LimitList + LimitID + ',';
+	else{
+		$('txtlimit').value =LimitList.replace(',' + LimitID + ',',',');
+	}
+	if($('txtlimit').value.substring(0,1)==",")  $('txtlimit').value = $('txtlimit').value.substring(1);
+}
+
+function checkfrm(){
+	if(isEmpty($('txtlimit').value)==true){
+		alert("您没有分配权限");
+		return false;
+	}
+	return true;
 }
 </script>
 <!--

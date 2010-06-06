@@ -21,7 +21,7 @@ function setSysConfigVal($key,$val){
 function getBaseSortListByKey($key){
 	global $memcache;
 	$list = $memcache->get("BASESORT_".$key);
-	if($val==null || !isset($val) || empty($val)){
+	if($list==null || !isset($list) || empty($list)){
 		$objCommData = LOAD::loadDB("CommonData");
 		$list = $objCommData->getBaseSortKeyList($key);
 		if($list) $memcache->set("BASESORT_".$key,$list);
@@ -30,8 +30,9 @@ function getBaseSortListByKey($key){
 	return $list;
 }
 
-function setBasSortListByKey($key,$val){
+function setBaseSortListByKey($key,$val){
 	global $memcache;
 	$memcache->set("BASESORT_".$key,$val);
 }
+
 ?>

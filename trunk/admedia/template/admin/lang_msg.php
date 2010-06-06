@@ -22,6 +22,7 @@ $lang['msg'] = array (
 "reg_syscheck" => "注册成功，请等待系统管理员审核您的注册信息！",
 "aff_login_vcerror" => "登录失败，验证吗错误！",
 "aff_login_error" => "登录失败，用户名或密码不存在！",
-"aff_login_exception" => "登录失败，系统出现异常！"
+"aff_login_exception" => "登录失败，系统出现异常！",
+"aff_login_expire" => '登录超时，请重新登录！'
 );
 ?>

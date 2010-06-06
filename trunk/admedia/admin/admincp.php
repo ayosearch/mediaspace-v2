@@ -136,13 +136,6 @@ function checkSelId($selid) {
 	}
 }
 
-function ObHeader($URL) {
-	echo '<meta http-equiv="expires" content="0">';
-	echo '<meta http-equiv="Pragma" content="no-cache">';
-	echo '<meta http-equiv="Cache-Control" content="no-cache">';
-	echo "<meta http-equiv='refresh' content='0;url=$URL'>";exit;
-}
-
 function ipLimit() {
 	global $db_iplimit;
 	if ($db_iplimit) {
@@ -698,5 +691,14 @@ function showPageBreakInfo($currpagecount,$js=null){
 	}
 
 	echo iconv("gbk","utf-8",$pagebreak);
+}
+
+function writeSysLog($op_type,$op_name,$op_content){
+	global $objSysUser,$AdminUser;
+	if(!isset($objSysUser)){
+		$objSysUser = LOAD::loadDB("AdminUser");
+	}
+	$arrfield = array("user_id"=>$AdminUser[id],"user_name"=>$AdminUser[login_name],"platform"=>"sys","op_type"=>$op_type,"op_name"=>$op_name,"op_content"=>$op_content);
+	$objSysUser->insertSysOpLog($arrfield);
 }
 ?>
