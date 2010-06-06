@@ -1,0 +1,29 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{margin:0; padding:0; border:0;}
+body,td,th{font-family: Arial, Helvetica, sans-serif; font-size: 12px;}
+
+
+/* login */
+#login{background-color:#7787a1;}
+#login .content{width:100%; height:517px; background:url(/www/img/login_bg.gif) left top repeat-x; margin-top:141px; overflow:hidden;}
+#login .manage{width:489px; height:351px; background:url(/www/img/login_managebg.png) left top no-repeat; margin:83px auto; overflow:hidden;}
+#login .manage .left{width:250px; height:130px; margin:168px 0 0 74px; float:left; overflow:hidden;}
+#login .manage .left dl{width:250px; height:130px; float:left; overflow:hidden;}
+#login .manage .left dl dt{width:100%; height:13px; float:left;}
+#login .manage .left dl .dd00{width:100%; height:1px; float:left; margin-top:10px;}
+#login .manage .left dl .dd01{width:48px; height:22px; margin-left:8px; line-height:22px; line-height:26px\9; +line-height:26px; _line-height:27px; color:#000; text-align:right; padding-right:6px; float:left;}
+#login .manage .left dl .dd02{width:171px; height:22px; float:left;}
+#login .manage .left dl .dd02 input{width:171px; height:22px; line-height:21px; color:#666; text-align:left; padding-left:6px; background:url(/www/img/login_input01.gif) top left no-repeat;}
+#login .manage .left dl .dd03{width:71px; height:22px; float:left; color:#000;}
+#login .manage .left dl .dd03 input{width:71px; height:22px; line-height:21px; color:#666; text-align:left; padding-left:6px; background:url(/www/img/login_input02.gif) top left no-repeat;}
+#login .manage .left dl .dd04{width:53px; height:22px; float:left; margin-left:20px;}
+#login .manage .left dl .dd05{width:62px; height:22px; line-height:22px; color:#000; float:left;}
+#login .manage .left dl .dd05 input{vertical-align:top; height:23px; height:22px\9; +height:18px; _height:23px;}
+#login .manage .right{width:62px; height:130px; float:left; margin:168px 0 0 14px;}
+#login .manage .right dl{width:62px; height:130px; float:left;}
+#login .manage .right dl dt{width:100%; height:14px; float:left;}
+#login .manage .right dl dd{width:62px; height:53px; margin-bottom:10px; float:left;}
+
+
