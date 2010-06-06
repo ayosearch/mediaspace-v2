@@ -69,6 +69,7 @@ $cfg_sysconfig = array(
 	"smtp_server"=>"","smtp_port"=>"","mail_user"=>"","mail_pass"=>"","sms_url"=>"","sms_mobile"=>"","sms_msg"=>""
 );
 $cfg_sysrole = array("超级管理员","站长客服","广告编辑(AE)","广告销售","其它");
+$cfg_syspaycycle = array("周结","月结","季结");
 $cfg_affsource = array("前台注册","后台添加");
 $cfg_blackstatus = array("<font color=red>锁定</font>","<font color=green>释放</font>");
 $cfg_merclienttype = array("潜在客户","正常客户","失效客户");

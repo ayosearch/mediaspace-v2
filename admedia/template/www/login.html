@@ -3,30 +3,36 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
-<script src="js/png_IE6.js" type="text/javascript"></script>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script src="js/prototype.js" type="text/javascript"></script>
 <script src="js/public.js" type="text/javascript"></script>
-<title>ĞÂÀË¹ã¸æ¹ÜÀíÆ½Ì¨</title>
+<title>æ–°æµªå¹¿å‘Šç®¡ç†å¹³å°</title>
 <link href="css/login.css" rel="stylesheet" type="text/css" />
 <script>
 function checkfrm(){
 	if(isEmpty($("aff_name").value)){
-		alert("ÇëÊäÈëµÇÂ¼Ãû³Æ");
+		alert("è¯·è¾“å…¥ç™»å½•åç§°");
 		$("aff_name").focus();
 		return false;
 	}
 	if(isEmpty($("aff_pass").value)){
-		alert("ÇëÊäÈëµÇÂ¼ÃÜÂë");
+		alert("è¯·è¾“å…¥ç™»å½•å¯†ç ");
 		$("aff_pass").focus();
 		return false;
 	}
 	if(isEmpty($("aff_code").value)){
-		alert("ÇëÊäÈëÑéÖ¤Âë");
+		alert("è¯·è¾“å…¥éªŒè¯ç ");
 		$("aff_code").focus();
 		return false;
 	}	
 	return true;	
+}
+function changeImg(){
+	var d = new Date();
+	var Imgobj=$("imageshow");
+	if(typeof(Imgobj)!="undefined"){
+	     Imgobj.src="valicode.php?ts="+d.getMilliseconds();
+	 }
 }
 </script>
 </head>
@@ -39,15 +45,15 @@ function checkfrm(){
 <div class="left">
 <dl>
 <dt></dt>
-<dd class="dd01">ÓÃ»§Ãû£º</dd>
+<dd class="dd01">ç”¨æˆ·åï¼š</dd>
 <dd class="dd02"><input name="aff_name" id="aff_name" type="text" /></dd>
 <dd class="dd00"></dd>
-<dd class="dd01">ÃÜÂë£º</dd>
+<dd class="dd01">å¯†ç ï¼š</dd>
 <dd class="dd02"><input name="aff_pass" id="aff_pass" type="password" /></dd>
 <dd class="dd00"></dd>
-<dd class="dd01">ÑéÖ¤Âë£º</dd>
+<dd class="dd01">éªŒè¯ç ï¼š</dd>
 <dd class="dd03"><input name="aff_code" id="aff_code" type="text" /></dd>
-<dd class="dd04"><a href="javascript:changeImg();" title="¿´²»Çå£¿µã»÷»»Ò»ÕÅ£¡"><IMG src="valicode.php?ts=$timestamp" align="absMiddle" border="0" name="imageshow" id="imageshow"/></a></dd>
+<dd class="dd04"><a href="javascript:changeImg();" title="çœ‹ä¸æ¸…ï¼Ÿç‚¹å‡»æ¢ä¸€å¼ ï¼"><IMG src="valicode.php?ts=$timestamp" align="absMiddle" border="0" name="imageshow" id="imageshow"/></a></dd>
 <dd class="dd00"></dd>
 
 </dl>
@@ -55,7 +61,7 @@ function checkfrm(){
 <div class="right">
 <dl>
 <dt></dt>
-<dd><input name="" type="image" src="/www/img/login_loginbtn.gif" /></dd>
+<dd><input name="submit" type="image" src="/www/img/login_loginbtn.gif" /></dd>
 <dd><a href="?job=regedit"><img src="/www/img/login_regbtn.gif"  border="0"/></a></dd>
 </dl>
 </div>
@@ -64,10 +70,9 @@ function checkfrm(){
 </form>
 </body>
 </html>
-<!--
 EOT;
 $output = trim(str_replace(array('<!--<!--<!---->','<!--<!---->','<!---->',"\r"),'',ob_get_contents())," \n");
 ob_end_clean();
 $db_obstart && function_exists('ob_gzhandler') ? ob_start('ob_gzhandler') : ob_start();
 echo $output;
-?>-->
+?>

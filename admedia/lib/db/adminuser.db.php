@@ -215,6 +215,12 @@ class PM_AdminUserDB extends BaseDB{
 		return $this->_db->affected_rows();
 	}
 	
+	function updateSysRoleOperateIds($curid,$operate_ids){
+		$sql = "update pm_sysrole set operate_ids = ".sqlEscape($operate_ids)." where id=".intval($curid);
+		$this->_db->update($sql);
+		return $this->_db->affected_rows();
+	}
+	
 	function deleteSysRole($id){
 		$this->_db->update("DELETE FROM pm_sysrole WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -411,7 +417,7 @@ class PM_AdminUserDB extends BaseDB{
 	}
 	
 	function checkSysUser($login_name){
-		$sql = "select * from pm_sysuser where login_name=".sqlEscape($login_name);
+		$sql = "select count(id) as count from pm_sysuser where login_name=".sqlEscape($login_name);
 		$count = $this->_db->get_value($sql);
 		if($count>0) return false;
 		return true;
@@ -456,7 +462,7 @@ class PM_AdminUserDB extends BaseDB{
 	
 	//用户操作日志----------------------------------------------------------------------------------------------------
 	function insertSysOpLog($fieldsData){
-		$fieldsData = $this->_checkSysUserLogData($fieldsData);
+		$fieldsData = $this->_checkSysOpLogData($fieldsData);
 		if (!$fieldsData) return null;
 		$sql = "INSERT INTO pm_sysoplog SET " . $this->_getUpdateSqlString($fieldsData);
 		$this->_db->update($sql);
@@ -465,7 +471,7 @@ class PM_AdminUserDB extends BaseDB{
 	}
 	
 	function updateSysOpLog($id,$updateData){
-		$updateData = $this->_checkSysUserLogData($updateData);
+		$updateData = $this->_checkSysOpLogData($updateData);
 		if (!$updateData) return null;
 		$this->_db->update("UPDATE pm_sysoplog SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
 		return $this->_db->affected_rows();
@@ -510,7 +516,7 @@ class PM_AdminUserDB extends BaseDB{
 	
 	function _checkSysOpLogData($data){
 		if (!is_array($data) || !count($data)) return null;
-		$data = $this->_checkAllowField($data,$this->getSysUserLogStruct());
+		$data = $this->_checkAllowField($data,$this->getSysOpLogStruct());
 		return $data;
 	}		
 

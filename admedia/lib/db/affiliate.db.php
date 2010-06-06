@@ -155,6 +155,7 @@ class  PM_AffiliateDB extends BaseDB{
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
+
 		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
 		return $this->_getAllResultFromQuery($query);	
 	}

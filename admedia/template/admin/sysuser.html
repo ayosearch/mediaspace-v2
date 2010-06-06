@@ -94,7 +94,7 @@ print <<<EOT
 				&nbsp;
 <!--
 EOT;
-	showDelButton($sysuser[id]);
+	showDisString($sysuser[id]);
 print <<<EOT
 -->
                 </td>
@@ -244,6 +244,103 @@ print <<<EOT
 		}		
 		return true;
 	}
+</script>
+<!--
+EOT;
+}else if($action=="dis"){
+print <<<EOT
+-->
+
+<form name="form" action="$admin_file" method="post" id="form"> 
+<input type="hidden" id="action" name="action" value="disave"/>
+<input type="hidden" id="delflag" name="delflag" value="0"/>
+<input type="hidden" id="curid" name="curid" value="$curid"/>
+<input type="hidden" id="userName" name="userName" value="$userName"/>
+<input type="hidden" id="curpage" name="curpage" value="$curpage"/>
+<input type="hidden" id="ownIds" name="ownIds" value="$ownIds"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 分配用户</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+        <tbody>
+		 
+        <tr><td class=2 height=10></td></tr>
+				<tr>
+					<td width="10%" align=left height="25"><b>用户名：</b></td>
+					<td><b><font color=red>$db_sysuser[login_name]</font></b>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type="button" onclick="history.go(-1);" value=" 返回 "/>
+					</td>
+				</tr>
+				<tr><td height=10></td></tr>
+				<tr>
+					<td align=left height="25"><b>下属用户：</b></td>
+					<td>
+						&nbsp;$ownUserList
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" align=center height="25">&nbsp;&nbsp;&nbsp;
+<!--
+EOT;
+	if(!empty($ownUserList)){
+		echo '<input type="submit" name="btnDelete" id="btnDelete" value=" 删除 "/>';
+	}
+print <<<EOT
+ -->
+						
+					</td>
+				</tr>
+				
+				<tr>
+					<td align=left height="25"><b>添加下属用户：</b></td>
+					<td align=left height="25">&nbsp;
+						$notOwnUserList
+					</td>
+				</tr>
+				<tr>
+					<td colspan="2" height=25 align=center>&nbsp;&nbsp;&nbsp;
+						<input type="submit" name="btnAdd" id="btnAdd" value=" 添加 "/>
+					</td>
+				</tr>
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+
+<script type="text/jscript" language="javascript">
+function SelectUser(){
+	var UserID = event.srcElement.value;
+	var UserList = ","+$("ownIds").value;
+	if(UserList.indexOf(',' + UserID + ',') == -1)
+		$("ownIds").value = UserList + UserID + ',';
+	else
+		$("ownIds").value = UserList.replace(',' + UserID + ',',',');
+	if($("ownIds").value.substring(0,1)==",") $("ownIds").value = $("ownIds").value.substring(1);
+}
+
+function RemoveUser(){
+	var UserID = event.srcElement.value;
+	var UserList = $("ownIds").value;
+	if((","+UserList).indexOf(',' + UserID + ',') >= 0)
+		$("ownIds").value = (","+UserList).replace(',' + UserID + ',',',');		
+	else
+		$("ownIds").value = UserList + UserID + ',';
+	if($("ownIds").value.substring(0,1)==",") $("ownIds").value = $("ownIds").value.substring(1);	
+}
 </script>
 
 <!--

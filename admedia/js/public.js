@@ -172,20 +172,6 @@ function query(url,conStr) {
   zyform.submit();
 }
 
-function correctStr(value) {
-	var result = "";
-	result = value;
-	while (result.indexOf("'")>=0) {
-		result = result.replace("'","’");
-	}
-
-	while (result.indexOf("\"")>=0) {
-		result = result.replace("\"","”");
-	}
-	return result;
-
-}
-
 function checkStr(value) {
 	if (isEmpty(value)) return false;	
 	if (containStr(value,"',\"")) {
