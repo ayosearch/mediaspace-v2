@@ -1,0 +1,97 @@
+@charset "utf-8";
+/* CSS Document */
+
+*{margin:0; padding:0; border:0; font-size:12px; font-family:Arial, Helvetica, sans-serif;}
+html{overflow-x:hidden;}
+.cleatdiv{clear:both; line-height:0; height:0; font-size:0;}
+.code{background:#ececec;}
+.right_box{width:100%; min-height:718px; min-height:697px\9; +min-height:764px; _min-height:700px; _height:740px; overflow:hidden; _overflow:visible; border-top:1px solid #c3c3c3; border-left:1px solid #c3c3c3; margin-top:12px; background-color:#fff;}
+.right_tit{width:99.2%; height:29px; border:1px solid #c9c9c9; margin:6px 6px 1px 6px; background:url(../img/right_tit.gif) left top repeat-x;}
+.right_tit dl{width:100%;}
+.right_tit dl dt{width:28px; height:29px; background:url(../img/right_ico.gif) center no-repeat; float:left;}
+.right_tit dl dd{width:200px; height:29px; font-size:12px; color:#000; font-weight:bold; line-height:29px; line-height:32px\9; +line-height:29px; _line-height:29px; text-align:left;}
+
+.code_body{width:99.2%; min-height:30px; _height:30px; overflow:hidden; _overflow:visible; border:1px solid #e3e5e3; background:#fff; margin:0 6px 4px 6px; padding-top:12px;}
+.code_body dl{width:100%; margin:10px 0 20px 24px;}
+.code_body dl .dd00{width:100%; height:4px; clear:both; font-size:0; line-height:0;}
+.code_body dl .dd01{width:76px; height:27px; float:left; margin:6px 0 0 6px;}
+.code_body dl .dd01 input{width:76px; height:27px; background:url(/www/img/adlist_02.gif) center no-repeat; text-align:center; color:#7e61de; line-height:27px; line-height:30px\9; +line-height:29px;}
+.code_body dl .dd02{width:120px; height:27px; text-align:left; line-height:27px; color:#585858; float:left; font-size:14px; margin-left:18px; margin-top:6px;}
+.code_body dl .dd02 input{vertical-align:top; height:27px; height:27px\9; +height:17px; _height:27px;}
+.code_body dl .dd02 strong{padding-left:6px; font-size:14px;}
+.code_body dl .dd03{width:320px; height:27px; float:left; margin-top:6px; margin-top:6px\9; +margin-top:5px; _margin-top:5px; margin-left:13px; margin-left:15px\9; +margin-left:8px; _margin-left:10px;}
+.code_body dl .dd03 input{width:320px; height:27px; background:url(/www/img/code_input01.gif) center no-repeat; text-align:left; color:#666; line-height:27px; padding-left:10px;}
+.code_body dl .dd04{width:37px; height:20px; float:left; margin-top:9px; margin-left:12px;}
+.code_body dl .dd05{width:320px; height:135px; float:left; margin-top:6px; margin-left:18px; margin-left:20px\9; +margin-left:10px;}
+.code_body dl .dd05 textarea{width:320px; height:109px; background:url(/www/img/code_input02.gif) top left no-repeat; overflow-y:hidden;}
+.code_body dl .dd05 input{width:103px; height:23px; float:right; background:url(/www/img/next_run.gif) center no-repeat; text-align:center; line-height:23px; margin:4px 0; color:#fff; cursor:pointer;}
+.code_body dl .dd06{width:320px; height:135px; float:left; margin-top:6px; margin-left:18px; margin-left:20px\9; +margin-left:10px;}
+.code_body dl .dd06 textarea{width:320px; height:109px; background:url(/www/img/code_input02.gif) top left no-repeat; overflow-y:hidden;}
+.code_body dl .dd06 input{width:69px; height:23px; float:right; background:url(/www/img/next_copy.gif) center no-repeat; text-align:center; line-height:23px; margin:4px 0; color:#fff; cursor:pointer;}
+
+
+.file_chr{background:url(../img/code_input01.gif) top left no-repeat; width:252px; height:27px; padding-left:6px; text-align:left; margin-left:6px; margin-left:8px\9; +margin-left:-3px; margin-top:-3px; margin-top:-3px\9; +margin-top:-4px; _margin-top:-3px; line-height:27px;}
+.file_chr1{background:url(../img/member_input.gif) top left no-repeat; width:252px; height:27px; padding-left:6px; text-align:left; margin-left:6px; margin-left:8px\9; +margin-left:-3px; margin-top:-3px; margin-top:-3px\9; +margin-top:-4px; _margin-top:-3px; line-height:27px;}
+
+
+
+.newID{width:99.2%; min-height:30px; _height:30px; overflow:hidden; _overflow:visible; border:1px solid #e3e5e3; background:#fff; margin:0 6px 4px 6px; padding-top:12px;}
+.newID dl{width:100%; margin:10px 0 20px 24px;}
+.newID dl dt{width:132px; height:39px; background:url(/www/img/botton_113.png) center no-repeat; text-align:center; line-height:39px; color:#fff; font-size:14px; font-weight:bold; margin-top:12px; margin-bottom:12px;}
+.newID dl dd{float:left; font-size:12px; color:#666;}
+.newID dl .dd00{width:120px; height:4px; clear:both; font-size:0; line-height:0; float:none;}
+.newID dl .dd01{width:120px; height:27px; float:left; background:url(/www/img/member_01.gif) center no-repeat; color:#7e61de; line-height:27px; line-height:27px\9; +line-height:29px; text-align:center; margin:6px 0 0 6px;}
+.newID dl .dd01 strong{font-size:14px; color:#f00;}
+.newID dl .dd02{width:120px; height:27px; text-align:left; line-height:27px; color:#585858; font-size:14px; margin-left:18px; margin-top:6px;}
+.newID dl .dd02 input,.newID dl .dd09 input,.newID dl .dd10 input,.newID dl .dd11 input,.newID dl .dd12 input,.newID dl .dd13 input,.newID dl .dd17 input{vertical-align:top; height:27px; height:27px\9; +height:17px; _height:17px;}
+.newID dl .dd02 strong,.newID dl .dd09 strong,.newID dl .dd10 strong,.newID dl .dd11 strong,.newID dl .dd12 strong,.newID dl .dd13 strong,.newID dl .dd17 strong{padding-left:6px; font-size:14px; font-size:12px;}
+.newID dl .dd03{width:320px; height:27px; margin-top:6px; margin-top:6px\9; +margin-top:5px; _margin-top:5px; margin-left:13px; margin-left:15px\9; +margin-left:8px; _margin-left:10px;}
+.newID dl .dd03 input{width:320px; height:27px; background:url(/www/img/code_input01.gif) center no-repeat; text-align:left; color:#666; line-height:27px; padding-left:10px;}
+.newID dl .dd04{width:37px; height:20px; margin-top:9px; margin-left:12px;}
+.newID dl .dd05{width:320px; height:135px; margin-top:6px; margin-left:18px; margin-left:20px\9; +margin-left:10px;}
+.newID dl .dd05 textarea{width:320px; height:109px; background:url(/www/img/code_input02.gif) top left no-repeat; overflow-y:hidden;}
+.newID dl .dd05 input{width:103px; height:23px; float:right; background:url(/www/img/next_run.gif) center no-repeat; text-align:center; line-height:23px; margin:4px 0; color:#fff; cursor:pointer;}
+.newID dl .dd06{width:320px; height:135px; margin-top:6px; margin-left:18px; margin-left:20px\9; +margin-left:10px;}
+.newID dl .dd06 textarea{width:320px; height:109px; background:url(../img/code_input02.gif) top left no-repeat; overflow-y:hidden;}
+.newID dl .dd06 input{width:69px; height:23px; float:right; background:url(/www/img/next_copy.gif) center no-repeat; text-align:center; line-height:23px; margin:4px 0; color:#fff; cursor:pointer;}
+.newID dl .dd07{min-width:252px; _width:252px; overflow:hidden; _overflow:visible; min-height:25px; _height:25px; overflow:hidden; _overflow:visible; margin-top:7px; margin-top:7px\9; +margin-top:6px; margin-left:18px; margin-left:18px\9; +margin-left:10px; _margin-left:10px;}
+.newID dl .dd07 input{width:252px; height:25px; background:url(/www/img/member_input.gif) top left no-repeat; text-align:left; padding-left:6px; line-height:25px; color:#666;}
+.newID dl .dd07 span{font-size:14px; line-height:24px; line-height:25px\9; +line-height:25px; _line-height:26px; padding-left:12px;}
+.newID dl .dd07 p{width:400px; height:120px; font-size:14px; color:#666; line-height:20px; padding-left:12px;}
+.newID dl .dd08{width:300px; height:27px; text-align:left; color:#f00; line-height:27px; margin-left:14px; margin-top:7px;}
+.newID dl .dd08 input{width:103px; height:23px; background:url(../img/next_run.gif) center no-repeat; text-align:center; line-height:23px; line-height:23px\9; +line-height:23px; _line-height:23px; color:#fff; cursor:pointer;}
+.newID dl .dd09{width:60px; height:27px; text-align:left; line-height:27px; color:#585858; font-size:14px; margin-left:18px; margin-top:6px; _margin-top:14px;}
+.newID dl .dd10{width:90px; height:27px; text-align:left; line-height:27px; color:#585858; font-size:14px; margin-left:18px; margin-top:6px; _margin-top:14px;}
+.newID dl .dd11{width:110px; height:27px; text-align:left; line-height:27px; color:#585858; font-size:14px; margin-left:18px; margin-top:6px; _margin-top:14px;}
+.newID dl .dd12{width:118px; height:27px; text-align:left; line-height:27px; color:#585858; font-size:14px; margin-left:18px; margin-top:6px; _margin-top:14px;}
+.newID dl .dd13{width:160px; height:27px; text-align:left; line-height:27px; color:#585858; font-size:14px; margin-left:18px; margin-top:6px; _margin-top:14px;}
+.newID dl .dd14{width:112px; height:25px; margin-top:7px; margin-top:7px\9; +margin-top:6px; margin-left:18px; margin-left:20px\9; +margin-left:11px; _margin-left:13px;}
+.newID dl .dd14 input{width:112px; height:25px; background:url(../img/data_time.gif) top left no-repeat; text-align:left; padding-left:6px; line-height:27px; color:#666;}
+.newID dl .dd15{width:108px; height:23px; text-align:left; color:#f00; line-height:23px; margin-left:10px; margin-top:8px;}
+.newID dl .dd15 input{width:103px; height:23px; background:url(../img/next_run.gif) center no-repeat; text-align:center; line-height:23px; line-height:23px\9; +line-height:23px; _line-height:23px; color:#fff; cursor:pointer;}
+.newID dl .dd16{width:77px; height:23px; text-align:left; color:#f00; line-height:23px; margin-left:8px; margin-top:8px;}
+.newID dl .dd16 input{width:69px; height:23px; background:url(/www/img/next_copy.gif) center no-repeat; text-align:center; line-height:23px; line-height:23px\9; +line-height:23px; _line-height:23px; color:#fff; cursor:pointer;}
+.newID dl .dd17{width:280px; height:27px; text-align:left; line-height:27px; color:#585858; font-size:14px; margin-left:18px; margin-top:6px; _margin-top:14px;}
+
+
+
+.newchange{width:60%; min-height:30px; _height:30px; overflow:hidden; _overflow:visible; background:#fff; margin:0 6px 4px 6px;}
+.newchange dl{width:90%; margin-left:40px; margin-bottom:40px;}
+.newchange dt{width:90%; height:30px; line-height:30px; text-align:left;}
+.newchange dt strong{padding-left:8px; font-size:14px; color:#f00;}
+.newchange dd{width:90%; height:27px; margin-top:8px; margin-left:40px;}
+.newchange dd input{width:91px; height:27px; background:url(/www/img/botton_098.gif) center no-repeat; font-size:15px;  line-height:27px; text-align:center; cursor:pointer; letter-spacing:12px; color:#fff; font-weight:bold; padding-left:12px; padding-left:13px\9; +padding-left:4px; _padding-left:6px; margin-right:12px;}
+
+
+.editzhan{width:60%; min-height:30px; _height:30px; overflow:hidden; _overflow:visible; background:#fff; margin:0 6px 4px 6px;}
+.editzhan dl{width:90%; margin-left:40px; margin-bottom:40px;}
+.editzhan dt{width:90%; height:30px; line-height:30px; text-align:left;}
+.editzhan dt strong{padding-left:8px; font-size:14px; color:#f00;}
+.editzhan dd{width:90%; height:27px; margin-top:8px; margin-left:40px;}
+.editzhan dd input{width:91px; height:27px; background:url(/www/img/botton_098.gif) center no-repeat; font-size:15px;  line-height:27px; text-align:center; cursor:pointer; color:#fff; font-weight:bold; margin-right:12px;}
+
+
+
+
+
+
