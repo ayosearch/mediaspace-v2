@@ -1,0 +1,64 @@
+<!--<?php print <<<EOT
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="js/png_IE6.js" type="text/javascript"></script>
+<title>站长-左侧</title>
+<link href="css/zhanzhang_left.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="zz_left">
+
+<div class="left_grxx">
+<div class="left_tit left_txt">个人信息</div>
+<div class="left_main">
+<dl>
+<dt>$AffUser[login_name]</dt>
+<dd>站内短信：<strong>$AffUser[msg_count]</strong>条</dd>
+<dd>收款人姓名：<strong>$AffUser[linkman]</strong></dd>
+<dd>最后登录时间：<br /><strong>$last_date</strong></dd>
+<dd>最后登陆IP：<br /><strong>$AffUser[last_ip]</strong></dd>
+</dl>
+</div>
+<div class="left_bottom"></div>
+</div>
+
+<div class="left_list">
+<div class="left_tit left_txt">快速通道</div>
+<div class="left_main">
+<dl>
+<dd class="dd01"><input name=""  type="button" class="left_btn" value="获取代码"  onclick="top.frames.right.location='$basename?job=adcode';"/></dd>
+<dd class="dd01"><input name=""  type="button" class="left_btn" value="结算支付"  onclick="top.frames.right.location='$basename?job=payment';"/></dd>
+<dd class="dd01"><input name=""  type="button" class="left_btn" value="查看报表"  onclick="top.frames.right.location='$basename?job=report';"/></dd>
+<dd class="dd01"><input name=""  type="button" class="left_btn" value="站点管理"  onclick="top.frames.right.location='$basename?job=website';"/></dd>
+</dl>
+</div>
+<div class="left_bottom"></div>
+</div>
+
+<div class="left_list">
+<div class="left_tit left_txt">最新公告</div>
+<div class="left_main">
+<dl><!--
+EOT;
+foreach($db_bulletinlist as $db_bulletin){
+$title = $db_bulletin[title];
+if ($db_bulletin[is_red]==1)  $title ="<font color='red'>".$title."</font>";
+print <<<EOT
+--><dd class="dd02"><a href="$basename?job=bulletin&curid=$db_bulletin[id]" target="right"><strong>・</strong> $title</a></dd><!--
+EOT;
+}print <<<EOT
+-->
+</dl>
+</div>
+<div class="left_bottom"></div>
+<div class="cleardiv"></div>
+</div>
+
+</body>
+</html>
+<!--
+EOT;
+?>-->

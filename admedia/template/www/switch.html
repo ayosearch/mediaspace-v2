@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>收缩</title>
+<link href="css/switch.css" rel="stylesheet" type="text/css" />
+</head>
+
+<script language="javascript">
+
+function switchSysBar(){
+if (parent.document.getElementById('attachucp').cols=="186,39,*"){
+document.getElementById('leftbar').style.display="block";
+document.getElementById('rightbar').style.display="none";
+parent.document.getElementById('attachucp').cols="0,39,*";
+}
+else{
+parent.document.getElementById('attachucp').cols="186,39,*";
+document.getElementById('leftbar').style.display="none"
+document.getElementById('rightbar').style.display="block"
+}
+}
+function load(){
+if (parent.document.getElementById('attachucp').cols=="0,39,*"){
+document.getElementById('leftbar').style.display="block";
+document.getElementById('rightbar').style.display="none";
+}
+}
+
+</script>
+
+
+<body marginheight="0" marginwidth="0" topmargin="0" leftmargin="0" onload="load()" class="switch_bg">
+<div id="leftbar" class="switch_btn" style="display:none;">
+<a onClick="switchSysBar()" href="javascript:void(0);">
+<img height="188" width="13" alt="展开左侧菜单" src="/www/img/switch_right.gif"/>
+</a>
+</div>
+<div id="rightbar" class="switch_btn">
+<a onClick="switchSysBar()" href="javascript:void(0);">
+<img height="188" width="13" alt="隐藏左侧菜单" src="/www/img/switch_left.gif"/>
+</a>
+</div>
+</body>
+</html>
