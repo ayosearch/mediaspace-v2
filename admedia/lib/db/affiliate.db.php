@@ -119,7 +119,12 @@ class  PM_AffiliateDB extends BaseDB{
 	}
 	
 	function deleteAffWebSite($id){
-		$this->_db->update("DELETE FROM pm_affwebsite WHERE id in (". sqlEscape($id) .") LIMIT 1");
+		$this->_db->update("UPDATE pm_affwebsite set is_del=1 WHERE id in (". sqlEscape($id) .")");
+		return $this->_db->affected_rows();
+	}
+	
+	function clearAffWebSite($id){
+		$this->_db->update("DELETE FROM pm_affwebsite WHERE id in (". sqlEscape($id) .")");
 		return $this->_db->affected_rows();
 	}
 	
@@ -134,8 +139,10 @@ class  PM_AffiliateDB extends BaseDB{
 		return $this->_getAllResultFromQuery($query);	
 	}
 	
-	function getAffSiteStatusList($aff_id,$status){
-		$sql = "SELECT * FROM pm_affwebsite where aff_id=".intval($aff_id)." and status=".intval($status)." ORDER BY id DESC";
+	function getAffSiteStatusList($aff_id,$status=null){
+		$sql = "SELECT * FROM pm_affwebsite where aff_id=".intval($aff_id);
+		if($status!=null) $sql .= " and status=".intval($status);
+		$sql .= " ORDER BY id DESC";
 		$query = $this->_db->query($sql);
 		return $this->_getAllResultFromQuery($query);	
 	}	
@@ -238,6 +245,28 @@ class  PM_AffiliateDB extends BaseDB{
 		$count = $this->_db->get_value($sql);
 		return $count;
 	}
+	
+	function getAdvApplyFrontPageList($page, $perPage,$stwhere=null,$storderby=null){
+		$page = intval($page);
+		$perPage = intval($perPage);
+		if ($page <= 0 || $perPage <= 0) return array();
+		$offset = ($page - 1) * $perPage;
+		$sql = "select * from (SELECT a.*,b.status as apply_status FROM pm_advertise a left join pm_affadvapply b on a.id=b.adv_id) as tbl";
+		if($stwhere!=null)
+			$sql = $sql." where ".$stwhere;
+		if($storderby!=null)
+			$sql = $sql." order by ".$storderby." DESC";
+		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query);	
+	}
+	
+	function getAdvApplyFrontTotalCount($stwhere=null){
+		$sql = "select count(id) as count from (SELECT a.*,b.status as apply_status FROM pm_advertise a left join pm_affadvapply b on a.id=b.adv_id) as tbl ";
+		if($stwhere!=null)
+			$sql = $sql." where ".$stwhere;
+		$count = $this->_db->get_value($sql);
+		return $count;
+	}	
 	
 	function getAffAdvApplyStruct() {
 		return array('aff_id','adv_id','site_id','sysaudit_id','create_time','status','memo');

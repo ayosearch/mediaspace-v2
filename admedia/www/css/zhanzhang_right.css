@@ -41,6 +41,7 @@ html{overflow-x:hidden;}
 .ad_right dl .dd01{width:121px; height:34px; font-weight:bold; color:#6e6d6d; line-height:34px; padding-left:12px; text-align:left; height:34px; background:url(../img/adlist_01.gif) left top no-repeat; margin:0 0 0 18px;}
 .ad_right dl .dd02{width:252px; margin-left:191px; margin-left:191px\9; +margin-left:94px; _margin-left:94px; float:left; background:#fff;}
 .ad_right dl .dd02 input{background:url(/www/img/adlist_search_input.gif) top left no-repeat; line-height:25px; padding-left:6px; width:252px; height:25px;}
+.ad_right dl .dd16 input{margin-top:0; margin-top:10px\9; +margin-top:4px; }
 .ad_right dl .dd03{width:55px; height:25px; background:none; float:left; margin-left:4px; margin-left:4px\9; +margin-left:50px; _margin-left:50px;}
 .ad_right dl dd{ float:left; width:76px; height:34px; background:url(../img/adlist_02.gif) center no-repeat; line-height:34px; text-align:center; color:#7e61de; float:left; margin-left:12px; vertical-align:middle;}
 .ad_right dl dd strong{color:#b24d3d; font-weight:normal;}

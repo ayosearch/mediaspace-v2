@@ -11,7 +11,7 @@ $jspath = "$cfg_vdir/$cfg_jspath";
 $csspath = "$cfg_vdir/$cfg_csspath";
 $onlineip = ClientIp();
 
-InitGetPost(array('job','action','curpage','perpage','curid'));
+InitGetPost(array('job','action','curpage','perpage','curid','ids','all','searchkey','transtr'));
 
 $index_file = $pmServer['PHP_SELF'];
 $basename = $index_file;
@@ -135,6 +135,15 @@ function loadBaseSortList($key,$selval=null){
 	}
 	unset($db_basesortlist,$db_basesort);
 	return $op_basesortlist;
+}
+
+function showPageLink($strparam,$strval,$strtext){
+	global $index_file;
+	if($_GET[$strparam] == $strval){
+		echo "<a href='$index_file&$strparam=$strval'><b><font color=red>".$strtext."</font></b></a> ";
+	}else{
+		echo "<a href='$index_file&$strparam=$strval'>".$strtext."</a> ";
+	}
 }
 
 function showPageBreakInfo($currpagecount,$js=null){

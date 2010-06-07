@@ -29,7 +29,7 @@ html{overflow-x:hidden;}
 .admin_list dl .dd02{width:10%; height:30px; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
 .admin_list dl .dd02 a,.admin_list dl .dd02 a:link{color:#f00; text-decoration:none;}
 .admin_list dl .dd02 a:hover{color:#039; text-decoration:underline;}
-.admin_list dl .dd03{width:30%; width:30%\9; +width:29.6%; _width:29.8%; height:30px; background:#f9f7f7; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
+.admin_list dl .dd03{width:15%; width:15%\9; +width:19.6%; _width:19.8%; height:30px; background:#f9f7f7; text-align:center; line-height:30px; color:#a3a1a1; font-weight:bold; border-bottom:1px solid #e3e5e3; float:left;}
 .admin_list dl .dd03 a,.admin_list dl .dd03 a:link{color:#00c0ff; text-decoration:none; padding-right:8px;}
 .admin_list dl .dd03 a:hover{color:#630; text-decoration:underline;}
 

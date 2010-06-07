@@ -1,7 +1,4 @@
 <?php
-	$memcache = LOAD::loadClass("Memcache",null);
-	require_once R_P."require/service.php";	
-
 	$affpaycycle = $cfg_syspaycycle[getSysConfigByKey("pay_cycle")];
 	
 	$objAdvertise = LOAD::loadDB("Advertise");
