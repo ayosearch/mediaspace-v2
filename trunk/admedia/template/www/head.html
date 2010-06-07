@@ -1,0 +1,66 @@
+<!--<?php print <<<EOT
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="js/png_IE6.js" type="text/javascript"></script>
+<title>站长-导航</title>
+<link href="css/zhanzhang_head.css" rel="stylesheet" type="text/css" />
+<link href="css/nav.css" rel="stylesheet" type="text/css" />
+<script>
+function myShowTime(){
+    d=new Date();
+    month  = d.getMonth()+1;
+    if(month<10) month = "0"+month;
+    day  = d.getDate();
+    if(day<10) day = "0"+day;
+    hour  = d.getHours();
+    if(hour<10) hour = "0"+hour;
+    minutes  = d.getMinutes();
+    if(minutes<10) minutes = "0"+minutes;    
+	if(parseInt(d.getSeconds())<10)
+		showtime.innerText=d.getYear()+"-"+month+"-"+day+" "+hour+":"+minutes+":0"+d.getSeconds();
+	else	
+		showtime.innerText=d.getYear()+"-"+month+"-"+day+" "+hour+":"+minutes+":"+d.getSeconds();
+	window.status="感谢使用广告分销平台!"
+	setTimeout(myShowTime,'1000')
+}
+
+</script>
+</head>
+
+<body class="zz_body" onLoad="myShowTime();">
+
+<div class="zz_head">
+<dl>
+<dt>欢迎您：$AffUser[login_name]  　当前时间：<span id="showtime"></span></dt>
+<dd><a href="$basename?job=help" target="_top"><img border="0" src="/www/img/head_help.gif" /></a></dd>
+<dd><a href="$basename?job=exit" target="_top"><img border="0" src="/www/img/head_ex.gif" /></a></dd>
+</dl>
+</div>
+
+<div class="nav">
+<dl>
+<dt></dt>
+<dd class="dd05"><a target="right" href="$basename?job=right"><img src="/www/img/nav_sy_01.gif" width="39" height="55" /></a></dd>
+<dd class="dd01"></dd>
+<dd class="dd02"><a target="right" href="$basename?job=advertise"><img src="/www/img/nav_gglb_01.gif" width="57" height="55" /></a></dd>
+<dd class="dd01"></dd>
+<dd class="dd03"><a target="right" href="$basename?job=advplace"><img src="/www/img/nav_ggwgl_01.gif" width="70" height="55" /></a></dd>
+<dd class="dd01"></dd>
+<dd class="dd02"><a target="right" href="$basename?job=advdata"><img src="/www/img/nav_sjbb_01.gif" width="57" height="55" /></a></dd>
+<dd class="dd01"></dd>
+<dd class="dd02"><a target="right" href="$basename?job=payment"><img src="/www/img/nav_zfjs_01.gif" width="57" height="55" /></a></dd>
+<dd class="dd01"></dd>
+<dd class="dd02"><a target="right" href="$basename?job=myself"><img src="/www/img/nav_hyxx_01.gif" width="57" height="55" /></a></dd>
+<dd class="dd01"></dd>
+<dd class="dd02"><a target="right" href="$basename?job=msg"><img src="/www/img/nav_wdxx_01.gif" width="57" height="55" /></a></dd>
+<dd class="dd04"></dd>
+</dl>
+</div>
+</body>
+</html>
+<!--
+EOT;
+?>-->

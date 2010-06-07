@@ -1,0 +1,110 @@
+<!--<?php print <<<EOT
+-->
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="js/png_IE6.js" type="text/javascript"></script>
+<title>站长-右侧</title>
+<link href="css/zhanzhang_right.css" rel="stylesheet" type="text/css" />
+</head>
+
+<body class="zz_right">
+<div class="right_box">
+
+<div class="right_tit">
+<dl>
+<dt></dt>
+<dd>站长个人页面--首页关注信息</dd>
+</dl>
+</div>
+<div class="right_manage">
+<dl>
+<dt></dt>
+<dd>05月25日收入：30元</dd>
+<dd>未结算收入：160元</dd>
+<dd>等待支付：100元</dd>
+<dd>昨日收入：50元</dd>
+<dd>上次结算日期：2010-05-29</dd>
+<dd>上次结算金额：3210元</dd>
+<dd class="dd01"></dd>
+</dl>
+</div>
+
+
+<div class="right_data">
+<dl>
+<dd class="dd01"><strong>名称</strong></dd>
+<dd class="dd02"><strong>计费类型</strong></dd>
+<dd class="dd03"><strong>结算周期</strong></dd>
+<dd class="dd02"><strong>价格</strong></dd>
+<dd class="dd04"><strong>添加时间</strong></dd>
+<dd class="dd05"><strong>操作</strong></dd>
+
+
+<dd class="dd06"><strong>最新广告</strong></dd>
+<!--
+EOT;
+foreach($db_advtimelist as $db_adv){
+	$cdate = date('Y/m/d',$db_adv[create_time]);
+	$feetype = $cfg_advfeetype[$db_adv[fee_type]];
+print <<<EOT
+-->
+<dd class="dd01">$db_adv[name]</dd>
+<dd class="dd02">$feetype</dd>
+<dd class="dd03">$affpaycycle</dd>
+<dd class="dd02">$db_adv[aff_price] $db_adv[aff_unit]</dd>
+<dd class="dd04">$cdate</dd>
+<dd class="dd05"><a href="$basename?job=adcode&curid=$db_adv[id]">获取代码</a></dd>
+<!--
+EOT;
+}
+print <<<EOT
+ -->
+<dd class="dd06"><strong>联盟推荐</strong></dd>
+<!--
+EOT;
+foreach($db_advlevellist as $db_adv){
+	$cdate = date('Y/m/d',$db_adv[create_time]);
+	$feetype = $cfg_advfeetype[$db_adv[fee_type]];
+print <<<EOT
+-->
+<dd class="dd01">$db_adv[name]</dd>
+<dd class="dd02">$feetype</dd>
+<dd class="dd03">affpaycycle</dd>
+<dd class="dd02">$db_adv[aff_price] $db_adv[aff_unit]</dd>
+<dd class="dd04">$cdate</dd>
+<dd class="dd05"><a href="$basename?job=adcode&curid=$db_adv[id]">获取代码</a></dd>
+<!--
+EOT;
+}
+print <<<EOT
+ -->
+ 
+<dd class="dd06"><strong>当日统计数</strong></dd>
+<dd class="dd03"></dd>
+<dd class="dd02"><strong>浏览量</strong></dd>
+<dd class="dd03"><strong>结算数(次)</strong></dd>
+<dd class="dd02"><strong>CPL(%)</strong></dd>
+<dd class="dd03"><strong>收入</strong></dd>
+<dd class="dd07"><strong>详细情况</strong></dd>
+
+<dd class="dd03">广告类型 1</dd>
+<dd class="dd02"></dd>
+<dd class="dd03"></dd>
+<dd class="dd02"></dd>
+<dd class="dd03"></dd>
+<dd class="dd07"></dd>
+ 
+ 
+ 
+</dl>
+</div>
+
+
+</div>
+</body>
+</html>
+<!--
+EOT;
+?>-->
