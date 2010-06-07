@@ -37,6 +37,7 @@ $cfg_dateformat='Y-m-d H:i:s';
 $cfg_timezone='-8';
 $cfg_ftpweb='';
 $cfg_userstatus = array("<font color=blue>等待审核</font>","<font color=green>审核通过</font>","<font color=red>审核未通过</font>","<font color=red>进入复审</font>","<font color=black>黑名单</font>");
+$cfg_affapplystatus = array("<font color=blue>申请中 </font>","<font color=green>复审中 </font>","<font color=red>申请通过</font>","<font color=red>申请被驳回</font>");
 $cfg_gender = array('男','女');
 $cfg_affbiztype= array('个人','企业');
 $cfg_affcerttype= array('身份证','军官证','护照');
@@ -62,7 +63,7 @@ $cfg_icstyle='8';
 $cfg_ictype='1';
 $cfg_icsize='90	30	4';
 $cfg_sysconfig = array(
-	"site_audit"=>"0","low_cpc_price"=>"0","low_cpm_price"=>"0","low_cpa_price"=>"0","low_cpd_price"=>"0",
+	"site_audit"=>"0","adplace_audit"=>"0","low_cpc_price"=>"0","low_cpm_price"=>"0","low_cpa_price"=>"0","low_cpd_price"=>"0",
 	"day_low_limit"=>"0","domain_audit"=>"0","aff_reg"=>"0","aff_vcreg"=>"0","get_pass"=>"0","pass_question"=>"",
 	"pay_low_price"=>"0","pay_tax"=>"0","pay_manual_fee"=>"0","pay_cycle"=>"1","pay_day"=>"3",
 	"cpc_deduct"=>"0","cpm_deduct"=>"0","cpa_deduct"=>"0","cpd_deduct"=>"0","admin_ip_limit"=>"0","admin_ip_list"=>"",

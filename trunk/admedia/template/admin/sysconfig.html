@@ -46,7 +46,22 @@ print <<<EOT
 						CPA-<input type="text" name="low_cpa_price" id="low_cpa_price" style="width:30px" value='$db_sysconfig[low_cpa_price]'/>
 						CPD-<input type="text" name="low_cpd_price" id="low_cpd_price" style="width:30px" value='$db_sysconfig[low_cpd_price]'/>
 					</td>					
-				</tr>         				
+				</tr>     
+                <tr>
+					<td align=right>广告位审核策略<font color=red>*</font>：</td>
+					<td colspan="3">
+<!--
+EOT;
+	if(!isset($db_sysconfig[adplace_audit]) || $db_sysconfig[adplace_audit]=="0"){
+		echo '<input type="radio" name="adplace_audit" id="adplace_audit" value="0" checked/>自动通过 <input type="radio" id="adplace_audit" name="adplace_audit" value="1"/>人工审核';
+	}
+	if($db_sysconfig[adplace_audit]=="1"){
+		echo '<input type="radio" name="adplace_audit" id="adplace_audit" value="0"/>自动通过 <input type="radio" id="adplace_audit" name="adplace_audit" value="1" checked/>人工审核';
+	}
+print <<<EOT
+-->
+				</td>
+				</tr>		
                 <tr>
 					<td align=right>每日最低限额<font color=red>*</font>：</td>
 					<td>
