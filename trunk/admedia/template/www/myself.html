@@ -1,104 +1,110 @@
+<!--<?php print <<<EOT
+-->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script src="js/png_IE6.js" type="text/javascript"></script>
-<title>站长-右侧</title>
-<link href="style/member.css" rel="stylesheet" type="text/css" />
+<title>绔欓暱-鍙充晶</title>
+<link href="css/member.css" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body class="code">
 <div class="right_box">
-<!--right title-->
+
 <div class="right_tit">
 <dl>
 <dt></dt>
-<dd>站长个人页面--会员信息</dd>
+<dd>绔欓暱涓汉椤甸潰--浼氬憳淇℃伅</dd>
 </dl>
 </div>
 <div class="member_body">
+<form name="form" id="form" action="$index_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="job" id="job" value="regedit"/>
+<input type="hidden" name="action" id="action" value="save"/>
 <dl>
-<dd class="dd01"><input name="" type="button" class="input01" /></dd>
-<dd class="dd01"><input name="" type="button" class="input02" /></dd>
+<dd class="dd01"><input name="editInfo" type="button" class="input01" /></dd>
+<dd class="dd01"><input name="editBank" type="button" class="input01" /></dd>
+<dd class="dd01"><input name="editPass" type="button" class="input02" /></dd>
 <dd class="cleardd"></dd>
 
-<dd class="dd02">联系人姓名 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">用户联系人姓名，必须中文</dd>
+<dd class="dd02">浼氬憳ID </dd>
+<dd class="dd03">$AffUser[id]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">手机 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">用户的手机，判断手机位数</dd>
+<dd class="dd02">鐧诲綍鍚嶇О </dd>
+<dd class="dd03">$AffUser[login_name]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">联系电话</dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">用户的座机，选择填写</dd>
+<dd class="dd02">鐪熷疄濮撳悕 <strong>*</strong></dd>
+<dd class="dd03">$AffUser[linkman]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">忘记密码问题 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">必须包含字母或者中文</dd>
+<dd class="dd02">璇佷欢绫诲瀷 <strong>*</strong></dd>
+<dd class="dd03">$certtype</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">答案 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">不能和问题相同</dd>
+<dd class="dd02">璇佷欢鍙风爜 </dd>
+<dd class="dd03">$AffUser[cert_code]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">QQ</dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">选填</dd>
+<dd class="dd02">EMAIL </dd>
+<dd class="dd03">$AffUser[email]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">MSN</dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">选填</dd>
+<dd class="dd02">鎵�鍦ㄧ渷甯� </dd>
+<dd class="dd03">$AffUser[province_id]-$AffUser[city_id]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">EMAIL <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">必填</dd>
+<dd class="dd02">鎬у埆 </dd>
+<dd class="dd03">$sex</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">银行账户名 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">确认是汉字</dd>
+<dd class="dd02">鍟嗕笟绫诲瀷 </dd>
+<dd class="dd03">$biztype</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">银行名称 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">此处为选择下拉框</dd>
+<dd class="dd02">閭瘎鍦板潃 </dd>
+<dd class="dd03">$AffUser[address]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">银行开户行 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">必须是汉字，用户填写</dd>
+<dd class="dd02">鎵嬫満鍙风爜 </dd>
+<dd class="dd03">$AffUser[mobile]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">银行帐号 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">必须是数字，用户填写</dd>
+<dd class="dd02">鐢佃瘽鍙风爜 </dd>
+<dd class="dd03">$AffUser[telephone]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">银行帐号确认 <strong>*</strong></dd>
-<dd class="dd03"><input name="" type="text" /></dd>
-<dd class="dd04">必须是数字，用户填写</dd>
+<dd class="dd02">QQ </dd>
+<dd class="dd03">$AffUser[qq]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">银行地址 <strong>*</strong></dd>
-<dd class="dd05"><select name=""></select></dd>
-<dd class="dd05"><select name=""></select></dd>
+<dd class="dd02">MSN </dd>
+<dd class="dd03">$AffUser[msn]</dd>
+<dd class="dd04"></dd>
 <dd class="dd00"></dd>
-
-<dd class="ddbtn"><input name="" type="button" value="确认修改" /></dd>
-<dd class="dd00"></dd>
-
 
 </dl>
+</form>
 </div>
 </div>
 </body>
 </html>
+<!--
+EOT;
+?>-->
