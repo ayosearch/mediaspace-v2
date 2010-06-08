@@ -39,7 +39,7 @@ $cfg_ftpweb='';
 $cfg_userstatus = array("<font color=blue>等待审核</font>","<font color=green>审核通过</font>","<font color=red>审核未通过</font>","<font color=red>进入复审</font>","<font color=black>黑名单</font>");
 $cfg_affapplystatus = array("<font color=blue>申请中 </font>","<font color=green>复审中 </font>","<font color=red>申请通过</font>","<font color=red>申请被驳回</font>");
 $cfg_gender = array('男','女');
-$cfg_affbiztype= array('个人','企业');
+$cfg_affbiztype= array('个人','公司');
 $cfg_affcerttype= array('身份证','军官证','护照');
 $cfg_newstype = array('系统公告','活动公告','作弊公示','汇款招领 ');
 $cfg_helptype = array('常见问题','FAQ');
