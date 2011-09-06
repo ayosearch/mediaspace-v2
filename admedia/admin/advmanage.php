@@ -1,4 +1,5 @@
 <?php 
+include_once('rolecontrol.php');	
 InitGetPost(array('audit','all','auditstatus','start_date','end_date'));
 
 !empty($audit) && $transtr .= "&audit=$audit";
@@ -35,6 +36,7 @@ if($action=="new"){
 	if(!isset($_POST[filter_likeip])) $_POST[filter_likeip]=0;
 	if(!isset($_POST[filter_agentip])) $_POST[filter_agentip]=0;
 	if(!isset($_POST[filter_foreignip])) $_POST[filter_foreignip]=0;		
+	
 	if(empty($curid)){
 		$filename = $timestamp.$sec.str_replace(".","",$millsec).substr($_FILES['file_logo']['name'],strripos($_FILES['file_logo']['name'],'.'));	
 		if(uploadFile($_FILES['file_logo']['tmp_name'],$cfg_basepath.$cfg_upfilepath.'advimg/'.$filename)){
@@ -44,7 +46,25 @@ if($action=="new"){
 		$_POST[update_time]=$timestamp;		
 		$_POST[start_time]=__strtotime($_POST[start_time]." ".$_POST[start_hour].":00:00");
 		$_POST[end_time]=__strtotime($_POST[end_time]." ".$_POST[end_hour].":00:00");
-		$objAdvertise->insertAdvertise($_POST);		
+		
+		$objMerchant = LOAD::loadDB("Merchant");
+		$db_mercontract = $objMerchant->getMerContract($_POST[contract_id]);
+		if($db_mercontract){
+			$mercontract_sdate = __strtotime($db_mercontract[start_date]." 00:00:00");
+			$mercontract_edate = __strtotime($db_mercontract[end_date]." 00:00:00");
+			if($_POST[start_time]<$mercontract_sdate){
+				$basename = $GLOBALS['pmServer']['HTTP_REFERER'];			
+				adminMsg("adv_sdate_up_contract_sdate");
+				exit;
+			}
+			if($_POST[end_time]>$mercontract_edate){
+				$basename = $GLOBALS['pmServer']['HTTP_REFERER'];			
+				adminMsg("adv_edate_low_contract_edate");
+				exit;
+			}
+		}
+		$objAdvertise->insertAdvertise($_POST);	
+		writeSysLog(1, "新增广告计划", $AdminUser[login_name]."新增广告计划:".implode(",",$_POST));	
 	}else{
 		$filename = $timestamp.$sec.str_replace(".","",$millsec).substr($_FILES['file_logo']['name'],strripos($_FILES['file_logo']['name'],'.'));	
 		if(uploadFile($_FILES['file_logo']['tmp_name'],$cfg_basepath.$cfg_upfilepath.'advimg/'.$filename)){
@@ -53,9 +73,10 @@ if($action=="new"){
 		$_POST[update_time]=$timestamp;
 		$_POST[start_time]=__strtotime($_POST[start_time]." ".$_POST[start_hour].":00:00");
 		$_POST[end_time]=__strtotime($_POST[end_time]." ".$_POST[end_hour].":00:00");
-		$objAdvertise->updateAdvertise($curid,$_POST);		
+		$objAdvertise->updateAdvertise($curid,$_POST);
+		writeSysLog(2, "修改广告计划", $AdminUser[login_name]."修改广告计划:".$curid.",内容:".implode(",",$_POST));	
 	}
-	ObHeader("$basename?job=advmanage");	
+	ObHeader($admin_file.$transtr);
 	exit;
 }else if($action=="auditsave"){
 	if(strpos($ids,',')>0){
@@ -65,8 +86,9 @@ if($action=="new"){
 								"parent_id"=>0,"level"=>0,"auditstatus"=>$_POST[auditstatus],"content"=>$_POST[content],"itype"=>5);
 	$objSystem = LOAD::loadDB("System");	
 	$sysaudit_id = $objSystem->insertSysAudit($arrfield);
-	$objAdvertise = LOAD::loadDB("Advertise");	
+	$objAdvertise = LOAD::loadDB("Advertise");
 	$objAdvertise->updateAdvertiseAudit($ids,$sysaudit_id,$auditstatus);
+	writeSysLog(4, "审核广告计划", $AdminUser[login_name]."审核广告计划:".$ids.",状态:".$auditstatus);		
 	echo "<script>window.returnValue='1';window.close();</script>";
 	unset($objSystem,$objAdvertise,$arrfield);
 	exit;
@@ -78,8 +100,9 @@ if($action=="new"){
 	if(strlen($ids)>0){
 		$objAdvertise = LOAD::loadDB("Advertise");
 		$objAdvertise->deleteBatchAdvertise($ids);
+		writeSysLog(3, "删除广告计划", $AdminUser[login_name]."删除广告计划:".$ids.",状态:".$auditstatus);		
 	}
-	ObHeader("$basename?job=advmanage$transtr");	
+	ObHeader($admin_file.$transtr);
 	exit;
 }else if(empty($action)){
 	$stwhere = "";

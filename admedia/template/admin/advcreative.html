@@ -148,7 +148,7 @@ EOT;
 if($action=="new" || $action=="edit"){
 print <<<EOT
 -->
-<form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
+<form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();" enctype="multipart/form-data">
 <input type="hidden" name="action" id="action" value="save"/>
 <input type="hidden" name="curid" id="curid" value="$curid"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
@@ -161,18 +161,18 @@ print <<<EOT
 <table cellspacing=0 cellpadding=0 width="100%" border=0 id="Table23">  
     <tbody>
       <tr>
-        <td valign=top>
+        <td valign=top width="50%">
 		<div class="addpro">
 		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
         <tbody>
 				<tr>
-					<td align=right width=20%>所属广告计划(<font color="red">*</font>)：</td>
+					<td align=right width=30%>所属广告计划(<font color="red">*</font>)：</td>
 					<td>
 						<select id="adv_id" name="adv_id" style="width:235px"><option value="">请选择...</option>$op_advlist</select>
 					</td>
 				</tr>
 				<tr>
-					<td align=right width=20%>创意名称(<font color="red">*</font>)：</td>
+					<td align=right width=30%>创意名称(<font color="red">*</font>)：</td>
 					<td>
 					    <input type="text" id="name" name="name" style="width:235px" value="$db_advcreative[name]"/>
 					</td>
@@ -188,30 +188,40 @@ print <<<EOT
 					<td>
 <!--
 EOT;
-	if(!isset($db_advpage) || $db_advpage[content_type]==0){
-		echo '<input type="radio" id="content_type0" name="content_type" value="0" onclick="showHideDiv(0)" checked/><label for="content_type0" onclick="showHideDiv(0)">文字</label>';
+	if(!isset($db_advcreative) || $db_advcreative[content_type]==0){
+		echo '<input type="radio" id="content_type0" name="content_type" value="0" onclick="showHideDiv(0)" checked/><label for="content_type0" onclick="showHideDiv(0);">文字</label>';
 	}else{
-		echo '<input type="radio" id="content_type0" name="content_type" value="0" onclick="showHideDiv(0)"/><label for="content_type0" onclick="showHideDiv(0)">文字</label>';
+		echo '<input type="radio" id="content_type0" name="content_type" value="0" onclick="showHideDiv(0)"/><label for="content_type0" onclick="showHideDiv(0);>文字</label>';
 	}
-	if(isset($db_advpage) && $db_advpage[content_type]==1){
-		echo '<input type="radio" id="content_type1" name="content_type" value="1" onclick="showHideDiv(1)" checked/><label for="content_type1" onclick="showHideDiv(1)">图片</label>';
+	if(isset($db_advcreative) && $db_advcreative[content_type]==1){
+		echo '<input type="radio" id="content_type1" name="content_type" value="1" onclick="showHideDiv(1)" checked/><label for="content_type1" onclick="showHideDiv(1);">图片</label>';
 	}else{
-		echo '<input type="radio" id="content_type1" name="content_type" value="1" onclick="showHideDiv(1)"/><label for="content_type1" onclick="showHideDiv(1)">图片</label>';
+		echo '<input type="radio" id="content_type1" name="content_type" value="1" onclick="showHideDiv(1)"/><label for="content_type1" onclick="showHideDiv(1);">图片</label>';
 	}
-	if(isset($db_advpage) && $db_advpage[content_type]==2){
-		echo '<input type="radio" id="content_type2" name="content_type" value="2" onclick="showHideDiv(2)" checked/><label for="content_type2" onclick="showHideDiv(2)">原始代码</label>';
+	if(isset($db_advcreative) && $db_advcreative[content_type]==2){
+		echo '<input type="radio" id="content_type2" name="content_type" value="2" onclick="showHideDiv(2)" checked/><label for="content_type2" onclick="showHideDiv(2);">原始代码</label>';
 	}else{
-		echo '<input type="radio" id="content_type2" name="content_type" value="2" onclick="showHideDiv(2)"/><label for="content_type2" onclick="showHideDiv(2)">原始代码</label>';
+		echo '<input type="radio" id="content_type2" name="content_type" value="2" onclick="showHideDiv(2)"/><label for="content_type2" onclick="showHideDiv(2);">原始代码</label>';
 	}
+	//$demourl = urlencode($cfg_domain.$cfg_vdir."/admin/blank.php");
 print <<<EOT
 -->
 					</td>
 				</tr>
 				<tr>							
 					<td align=right>创意内容(<font color="red">*</font>)：</td>
-					<td><div id="div0"><input id="txt_word" name="txt_word" style="width:235px" value="$db_advcreative[res_content]"/></div>
-						<div id="div1" style="display:none"><input type="file" id="img_file" name="img_file" style="width:235px"/></div>
-						<div id="div2" style="display:none"><textarea name="txt_code" id="txt_code" style="width:235px;height:60px"></textarea></div>	
+					<td>
+<!--
+EOT;
+	$word_display="display:none";$img_display="display:none";$code_display="display:none";
+	if(!isset($db_advcreative) || $db_advcreative[content_type]==0) $word_display = "display:block";
+	if(isset($db_advcreative) && $db_advcreative[content_type]==1) $img_display = "display:block";
+	if(isset($db_advcreative) && $db_advcreative[content_type]==2) $code_display = "display:block";
+print <<<EOT
+-->
+<div id="div0" style="$word_display"><input id="txt_word" name="txt_word" style="width:205px" value="$db_advcreative[res_content]"/>&nbsp;<a href="#" onclick="PreView(0);">预览</a></div>
+<div id="div1" style="$img_display"><input type="file" id="img_file" name="img_file" style="width:205px"/>&nbsp;<a href="#" onclick="PreView(1);">预览</a></div>
+<div id="div2" style="$code_display"><textarea name="txt_code" id="txt_code" style="width:205px;height:60px">&nbsp;</textarea><a href="#" onclick="PreView(2);">预览</a></div>
 					</td>
 				</tr>
 				<tr>							
@@ -220,7 +230,7 @@ print <<<EOT
 					    <select id="page_id" name="page_id" style="width:235px"><option value="">请选择...</option>$op_advpagelist</select>
 					</td>
 				</tr>
-				<tr>
+				<tr id="tdsize" style="display:none">
 					<td align=right>广告尺寸(<font color="red">*</font>)：</td>
 					<td>
 					    <select id="adsize" name="adsize" style="width:235px"><option value="">请选择...</option>$op_advsizelist</select>
@@ -229,7 +239,34 @@ print <<<EOT
 				<tr>
 					<td align=right>创意说明：</td>
 					<td>
-						<textarea id="memo" name="memo" cols="35" rows="10"/>$db_advcreative[memo]</textarea>
+						<textarea id="memo" name="memo" cols="45" rows="6"/>$db_advcreative[memo]</textarea>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>广告代码：</td>
+					<td><textarea id="demo_code" name="demo_code" cols="45" rows="6" onmouseover="this.select();" readonly/>
+<!--
+EOT;
+	$advcode = "";
+	if(isset($db_advcreative) && $db_advcreative[content_type]==0){
+		//$t = pwdCode($timestamp+$sec*10+intval($millsec*100000000));
+		$advcode = '&lt;a href="'.$cfg_domain.$cfg_vdir.'/i/?act=1&amp;id='.$curid.'-{aff_id}-{site_id}-{place_id}&amp;c={vali_code}"&gt;'.$db_advcreative[res_content].'&lt;/a&gt;';
+		$code = urlencode($advcode);		
+	}
+	if(isset($db_advcreative) && $db_advcreative[content_type]==1){
+		$advcode = '&lt;a href="'.$cfg_domain.$cfg_vdir.'/i/?act=1&amp;id='.$curid.'-{aff_id}-{site_id}-{place_id}&amp;c={vali_code}"&gt;&lt;img src="'.$cfg_domain.$cfg_vdir.'/i/?act=0&amp;id='.$curid.'-{aff_id}-{site_id}-{place_id}&amp;c={vali_code}"/&gt;&lt;/a&gt;';
+		$imgcode =  '&lt;a href="'.$cfg_domain.$cfg_vdir.'/i/?act=1&amp;id='.$curid.'-{aff_id}-{site_id}-{place_id}&amp;c={vali_code}"&gt;&lt;img border="0" src="'.$cfg_vdir.$db_advcreative[res_content].'"/&gt;&lt;/a&gt;';
+		$code = urlencode($imgcode);
+	}
+	if(isset($db_advcreative) && $db_advcreative[content_type]==2){
+			$advcode = str_replace("{aff_id}",$aff_id,$db_advplace[res_content]);
+			$advcode = str_replace("{site_id}",$site_id,$advcode);
+			$advcode = str_replace("{place_id}",$site_id,$advcode);
+			$advcode = str_replace("{vali_code}",$valicode,$advcode);
+	}
+
+print <<<EOT
+-->$advcode</textarea>
 					</td>
 				</tr>
 				<tr>
@@ -241,12 +278,40 @@ print <<<EOT
     </tbody>
 
  </TABLE>  
+ </div>
 
-    </TD></TR></TBODY></TABLE>  
+    </TD>
+    <td align="center" valign="middle" width="40%">
+    <center>
+    	<iframe id="framecode" frameborder="0" src="$admin_file&action=innercode&code=$code" height="480px" width="100%" SCROLLING=NO ></iframe>
+    </center>
+	</td>
+    </TR></TBODY></TABLE>  
 
  </form>
 
 <script type="text/javascript" language=javascript>
+function PreView(type){
+	var id = "$curid";
+	if(id=="") id = "{crt_id}";
+	if(type==0 && isEmpty($("txt_word"))==false){
+		var code =  '<a href="$cfg_domain$cfg_vdir/i/?act=1&id='+id+'-{aff_id}-{site_id}-{place_id}&c={vali_code}">'+$("txt_word").value+'</a>';
+		var framecode = '&lt;a href="$cfg_domain$cfg_vdir/i/?act=1&id='+id+'-{aff_id}-{site_id}-{place_id}&c={vali_code}"&gt;'+$("txt_word").value+'&lt;/a&gt;';
+		$("demo_code").value = code;
+		$("framecode").src = "$admin_file&action=innercode&code="+encodeURIComponent(framecode);
+	}
+	if(type==1 && isEmpty($("img_file"))==false){
+		var code =  '<a href="$cfg_domain$cfg_vdir/i/?act=1&id='+id+'-{aff_id}-{site_id}-{place_id}&c={vali_code}"><img src="http://$cfg_domain$cfg_vdir/i/act=0&id='+id+'-{aff_id}-{site_id}-{place_id}&c={vali_code}" border ="0"/></a>';
+		var framecode = '&lt;a href="$cfg_domain$cfg_vdir/i/?act=1&id='+id+'-{aff_id}-{site_id}-{place_id}&c={vali_code}"&gt;&lt;img src="'+$("img_file").value+'"/&gt;&lt;/a&gt;';
+		$("demo_code").value = code;
+		$("framecode").src = "$admin_file&action=innercode&code="+encodeURIComponent(framecode);
+	}
+	if(type==2 && isEmpty($("txt_code"))==false){
+		var code = $("txt_code").value;
+		$("demo_code").value = code;
+		$("framecode").src = "$admin_file&action=innercode&code="+encodeURIComponent(framecode);
+	}
+}
 function checkfrm(){
 	if(isEmpty($('adv_id').value)==true){
 		alert('请选择广告计划！');
@@ -278,7 +343,7 @@ function checkfrm(){
 		$('txt_code').focus();
 		return false;
 	}
-	if(isEmpty($('adsize').value)==true){
+	if($('content_type0').checked==false && isEmpty($('adsize').value)==true){
 		alert('请选择广告尺寸！');
 		$('adsize').focus();
 		return false;
@@ -286,6 +351,8 @@ function checkfrm(){
     return true;
 }
 function showHideDiv(selidx){
+	if(selidx>0) $('tdsize').show();
+	else $("tdsize").hide();
 	for(var i=0;i<3;i++){
 		if(selidx==i){
 			$('div'+i).style.display='block';

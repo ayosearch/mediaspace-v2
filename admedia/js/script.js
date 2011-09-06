@@ -1461,9 +1461,10 @@ function showCalendar(id, format) {
     cal.create();
   }
   calendar.setDateFormat(format);    // set the specified date format
+  try{
   calendar.parseDate(el.value);      // try to parse the text in field
   calendar.sel = el;                 // inform it what input field we use
-
+  }catch(err){alert(err);}
   // the reference element that we pass to showAtElement is the button that
   // triggers the calendar.  In this example we align the calendar bottom-right
   // to the button.

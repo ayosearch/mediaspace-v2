@@ -5,8 +5,8 @@ class PM_AdvertiseDB extends BaseDB{
 		$fieldsData = $this->_checkAdvertiseData($fieldsData);
 		if (!$fieldsData) return null;
 		$sql = "INSERT INTO pm_advertise SET " . $this->_getUpdateSqlString($fieldsData);
-		$this->_db->update($sql);
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update($sql);
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
@@ -14,76 +14,86 @@ class PM_AdvertiseDB extends BaseDB{
 		$updateData = $this->_checkAdvertiseData($updateData);
 		if (!$updateData) return null;
 		$sql = "UPDATE pm_advertise SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1";
-		$this->_db->update($sql);
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update($sql);
+		return $this->_db_adspace->affected_rows();
+	}
+	
+	function updateAdvertiseFlag($ids,$log_flag,$log_uptime){
+		$sql = "update pm_advertise set log_flag='".$log_flag."',log_uptime=".intval($log_uptime)." where ids in (".$ids.")";
+		$this->_db_adspace->update($sql);
+		return $this->_db_adspace->affected_rows();		
 	}
 	
 	function updateAdvertiseAudit($id,$sysaudit_id=0,$audit){
 		global $timestamp;
 		if($sysaudit_id==0)
-			$sql = "update pm_advertise set audit=".intval($audit).",audit_time=$timestamp where id in (".$id.")";
+			$sql = "update pm_advertise set audit=".intval($audit).",audit_time=$timestamp where id in (".$id.") and status!=2";
 		else
-			$sql = "update pm_advertise set audit=".intval($audit).",audit_time=$timestamp, sysaudit_id=".intval($sysaudit_id)." where id in (".$id.")";
-		$this->_db->update($sql);
-		return $this->_db->affected_rows();
+			$sql = "update pm_advertise set audit=".intval($audit).",audit_time=$timestamp, sysaudit_id=".intval($sysaudit_id)." where id in (".$id.") and status!=2";
+		$this->_db_adspace->update($sql);
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function updateAdvertiseStatus($id,$status){
-		$sql = "update pm_advertise set status=".intval($status)." where id in (".$id.")";
-		$this->_db->update($sql);
-		return $this->_db->affected_rows();
+		global $timestamp;		
+		$sql = "update pm_advertise set status=".intval($status).",update_time=".$timestamp." where id in (".$id.")";
+		$this->_db_adspace->update($sql);
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function updateAdvertiseShow($curid){
-		$sql = "update pm_advertise set log_v_created=1 where id=".intval($curid);
-		$this->_db->update($sql);
-		return $this->_db->affected_rows();
+		global $timestamp;				
+		$sql = "update pm_advertise set log_v_created=1,update_time=".$timestamp." where id=".intval($curid);
+		$this->_db_adspace->update($sql);
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function updateAdvertiseClick($curid){
-		$sql = "update pm_advertise set log_c_created=1 where id=".intval($curid);
-		$this->_db->update($sql);
-		return $this->_db->affected_rows();
+		global $timestamp;
+		$sql = "update pm_advertise set log_c_created=1,update_time=".$timestamp." where id=".intval($curid);
+		$this->_db_adspace->update($sql);
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvertise($id){
-		$this->_db->update("DELETE FROM pm_advertise WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_advertise WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBatchAdvertise($ids){
-		$this->_db->update("UPDATE pm_advertise set is_del=1 WHERE ids in (". sqlEscape($ids) .")");
-		return $this->_db->affected_rows();
-	}	
+		global $timestamp;		
+		$this->_db_adspace->update("UPDATE pm_advertise set is_del=1,update_time=".$timestamp." WHERE ids in (". sqlEscape($ids) .")");
+		return $this->_db_adspace->affected_rows();
+	}
 	
 	function getAdvertise($id){
-		$data = $this->_db->get_one("SELECT a.*,b.short_name as mer_name FROM pm_advertise a,pm_merchant b where a.mer_id=b.id and a.id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT a.*,b.short_name as mer_name FROM pm_advertise a,pm_merchant b where a.mer_id=b.id and a.id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getAdvertiseByIds($ids){
 		$sql = "select * from pm_advertise where id in (".$ids.")";
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 	
 	function getAdvertiseStatusList($status){
 		$sql = "SELECT * FROM pm_advertise where status=".intval($status);
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 	
 	function getAdvertiseFeetypeStatusList($fee_type,$status){
 		$sql = "SELECT * FROM pm_advertise where fee_type in (".$fee_type.") and status=".intval($status);
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}	
 	
 	function getAdvertiseAll(){
 		$sql = "SELECT * FROM pm_advertise";
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 	
 	function getAdvertisePageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -96,15 +106,15 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvertiseTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(a.id) as count FROM pm_advertise a";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}	
 	
@@ -127,40 +137,42 @@ class PM_AdvertiseDB extends BaseDB{
 		$fieldsData = $this->_checkAdvCreativeData($fieldsData);
 		if (!$fieldsData) return null;
 		$sql = "INSERT INTO pm_advcreative SET " . $this->_getUpdateSqlString($fieldsData);
-		$this->_db->update($sql);
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update($sql);
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateAdvCreative($id,$updateData){
 		$updateData = $this->_checkAdvCreativeData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_advcreative SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_advcreative SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function updateAdvCreativeStatus($ids,$status){
 		$sql = "UPDATE pm_advcreative SET status=".intval($status)." WHERE id in (". $ids .")";
-		$this->_db->update($sql);
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update($sql);
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvCreative($id){
-		$this->_db->update("DELETE FROM pm_advcreative WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_advcreative WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getAdvCreative($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_advcreative WHERE id=".intval($id));
+		$sql = "SELECT a.*,b.name as adv_name,c.short_name as mer_name FROM pm_advcreative a,pm_advertise b,pm_merchant c WHERE a.adv_id=b.id and a.mer_id=c.id and a.id=".intval($id);
+		$data = $this->_db_adspace->get_one($sql);
 		if (!$data) return null;
 		return $data;
 	}
 	
-	function getAdvCreativeAll($status,$adv_ids=null){
-		$sql = "SELECT a.*,b.name as adv_name FROM pm_advcreative a left join pm_advertise b on a.adv_id=b.id where a.status=".intval($status);
-		if($adv_ids!=null) $sql = $sql." and a.adv_id in (".$adv_ids.")";
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+	function getAdvCreativeAll($status,$adv_ids="-1",$content_type=-1){
+		$sql = "SELECT a.*,b.name as adv_name FROM pm_advcreative a left join pm_advertise b on a.adv_id=b.id where a.is_del=0 and a.status=".intval($status);
+		if($adv_ids!="-1") $sql = $sql." and a.adv_id in (".$adv_ids.")";
+		if($content_type!=-1 && strlen($content_type)>0) $sql = $sql." and a.content_type = ".intval($content_type);
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvCreativePageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -175,15 +187,15 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvCreativeTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_advcreative";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}		
 	
@@ -202,32 +214,32 @@ class PM_AdvertiseDB extends BaseDB{
 	function insertAdvPages($fieldsData){
 		$fieldsData = $this->_checkAdvPagesData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_advpages SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_advpages SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateAdvPages($id,$updateData){
 		$updateData = $this->_checkAdvPagesData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_advpages SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_advpages SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvPages($id){
-		$this->_db->update("UPDATE pm_advpages SET is_del=1 WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_advpages SET is_del=1 WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getAdvPages($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_advpages WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_advpages WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getAdvPagesList($status){
-		$query = $this->_db->query("SELECT * FROM pm_advpages WHERE status=".intval($status));
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM pm_advpages WHERE status=".intval($status));
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}	
 	
 	function getAdvPagesPageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -240,15 +252,15 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvPagesTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(a.id) as count FROM pm_advpages a";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}		
 	
@@ -267,39 +279,39 @@ class PM_AdvertiseDB extends BaseDB{
 		$fieldsData = $this->_checkAdvSelectorData($fieldsData);
 		if (!$fieldsData) return null;
 		$sql = "INSERT INTO pm_advselector SET " . $this->_getUpdateSqlString($fieldsData);
-		$this->_db->update($sql);
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update($sql);
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateAdvSelector($id,$updateData){
 		$updateData = $this->_checkAdvertiseData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_advselector SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_advselector SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvSelector($id){
-		$this->_db->update("DELETE FROM pm_advselector WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_advselector WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getAdvSelector($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_advselector WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_advselector WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function checkAdvSelector($adv_id,$isfilter,$itype){
 		$sql = "select count(id) from pm_advselector where adv_id=".intval($adv_id)." and is_filter=".intval($isfilter)." and itype=".sqlEscape($itype);
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count>0;
 	}
 	
 	function getAdvSelectorByAdvId($adv_id){
 		$sql = "SELECT * FROM pm_advselector where adv_id=".intval($adv_id)." order by itype,id desc";
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}	
 	
 	function getAdvSelectorPageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -312,15 +324,15 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvSelectorTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_advselector";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}		
 	
@@ -338,30 +350,30 @@ class PM_AdvertiseDB extends BaseDB{
 	function insertAdvBuyAffPlaces($fieldsData){
 		$fieldsData = $this->_checkAdvBuyAffPlacesData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_advbuyaffplaces SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_advbuyaffplaces SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateAdvBuyAffPlaces($id,$updateData){
 		$updateData = $this->_checkAdvBuyAffPlacesData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_advbuyaffplaces SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_advbuyaffplaces SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvBuyAffPlaces($id){
-		$this->_db->update("DELETE FROM pm_advbuyaffplaces WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_advbuyaffplaces WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvBatchBuyAffPlaces($ids){
-		$this->_db->update("update pm_advbuyaffplaces set is_del=1 WHERE id in (". sqlEscape($ids) .")");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("update pm_advbuyaffplaces set is_del=1 WHERE id in (". sqlEscape($ids) .")");
+		return $this->_db_adspace->affected_rows();
 	}	
 	
 	function getAdvBuyAffPlaces($id){
-		$data = $this->_db->get_one("SELECT a.*,b.login_name as aff_name,c.name as site_name,d.name as place_name FROM pm_advbuyaffplaces a,pm_affiliate b,pm_affwebsite c,pm_affadvplace d WHERE a.aff_id=b.id and a.site_id=c.id and a.place_id=d.id and a.id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT a.*,b.login_name as aff_name,c.name as site_name,d.name as place_name FROM pm_advbuyaffplaces a,pm_affiliate b,pm_affwebsite c,pm_affadvplace d WHERE a.aff_id=b.id and a.site_id=c.id and a.place_id=d.id and a.id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
@@ -376,15 +388,15 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvBuyAffPlacesTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(a.id) as count FROM pm_advbuyaffplaces a";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}	
 	
@@ -402,25 +414,25 @@ class PM_AdvertiseDB extends BaseDB{
 	function insertAdvAccess($fieldsData){
 		$fieldsData = $this->_checkAdvertiseData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_advaccess SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_advaccess SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateAdvAccess($id,$updateData){
 		$updateData = $this->_checkAdvertiseData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_advaccess SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_advaccess SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvAccess($id){
-		$this->_db->update("DELETE FROM pm_advaccess WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_advaccess WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getAdvAccess($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_advaccess WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_advaccess WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
@@ -435,15 +447,15 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvAccessTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_advaccess";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}		
 	
@@ -461,30 +473,30 @@ class PM_AdvertiseDB extends BaseDB{
 	function insertAdvRollPlan($fieldsData){
 		$fieldsData = $this->_checkAdvRollPlanData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_advrollplan SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_advrollplan SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateAdvRollPlan($id,$updateData){
 		$updateData = $this->_checkAdvRollPlanData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_advrollplan SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_advrollplan SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvRollPlan($id){
-		$this->_db->update("DELETE FROM pm_advrollplan WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_advrollplan WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBatchAdvRollPlan($ids){
-		$this->_db->update("DELETE FROM pm_advrollplan WHERE id in (". $ids .")");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_advrollplan WHERE id in (". $ids .")");
+		return $this->_db_adspace->affected_rows();
 	}	
 	
 	function getAdvRollPlan($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_advrollplan WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_advrollplan WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
@@ -499,15 +511,15 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvRollPlanTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_advrollplan";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 	
@@ -515,7 +527,7 @@ class PM_AdvertiseDB extends BaseDB{
 		$sql = "SELECT COUNT(id) as count FROM pm_advrollplan where is_all=1";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count>0;
 	}
 	
@@ -533,39 +545,39 @@ class PM_AdvertiseDB extends BaseDB{
 	function insertAdvRollDetail($fieldsData){
 		$fieldsData = $this->_checkAdvRollDetailData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_advrolldetail SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_advrolldetail SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateAdvRollDetail($id,$updateData){
 		$updateData = $this->_checkAdvRollDetailData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_advrolldetail SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_advrolldetail SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvRollDetail($id){
-		$this->_db->update("DELETE FROM pm_advrolldetail WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_advrolldetail WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteAdvRollDetailByPlanId($roleid){
 		$sql = "delete from pm_advrolldetail where roll_id=".intval($roleid);
-		$this->_db->update($sql);
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update($sql);
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getAdvRollDetail($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_advrolldetail WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_advrolldetail WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getAdvRollDetailByPlanId($role_id){
 		$sql = "select * from pm_advrolldetail where roll_id=".intval($role_id);
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);			
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);		
 	}
 	
 	function getAdvRollDetailPageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -578,15 +590,15 @@ class PM_AdvertiseDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getAdvRollDetailTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_advrolldetail";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 	

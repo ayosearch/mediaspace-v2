@@ -35,4 +35,6 @@ $cdate = date('Y/m/d H:i:s',$adv[create_time]);
 //$chars = md5(uniqid(mt_rand(), true));
 
 //echo $chars;
+
 ?>
+<img src="testimg.php"/>

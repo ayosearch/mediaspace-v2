@@ -45,9 +45,9 @@ class PM_DataLogDB extends BaseDB{
 						  KEY idx_click (aff_id,site_id,place_id,adv_id,creative_id)
 						) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		
-		$result = $this->_db->query($sqlX);
+		$result = $this->_db_adspace->query($sqlX);
 		if($result){
-			if($this->_db->query($sqlY))
+			if($this->_db_adspace->query($sqlY))
 				return true;		
 		}
 		return false;
@@ -100,13 +100,51 @@ class PM_DataLogDB extends BaseDB{
 						  KEY idx_click (aff_id,site_id,place_id,adv_id,creative_id)
 						) ENGINE=MyISAM DEFAULT CHARSET=utf8;";
 		
-		$result = $this->_db->query($sqlX);
+		$result = $this->_db_adspace->query($sqlX);
 		if($result){
-			if($this->_db->query($sqlY))
+			if($this->_db_adspace->query($sqlY))
 				return true;		
 		}
 		return false;
-	}	
+	}
+	
+	function insertShowLog($adv_id,$flag,$fieldsData){
+		$fieldsData = $this->_checkShowLogData($fieldsData);
+		if (!$fieldsData) return null;
+		$sql = "INSERT INTO log_show_".$adv_id."_".$flag." SET " . $this->_getUpdateSqlString($fieldsData);
+		$this->_db_adspace->update($sql);
+		$insertId = $this->_db_adspace->insert_id();
+		return $insertId;
+	}
+	
+	function getShowLogStruct() {
+		return array('aff_id','adv_id','site_id','place_id','creative_id','ip','real_locas','uv_id','referer','page_path','from_site','mobile','ua','search_key','create_time','ad_url');
+	}
+	
+	function _checkShowLogData($data){
+		if (!is_array($data) || !count($data)) return null;
+		$data = $this->_checkAllowField($data,$this->getShowLogStruct());
+		return $data;
+	}
+	
+	function insertClickLog($adv_id,$flag,$fieldsData){
+		$fieldsData = $this->_checkClickLogData($fieldsData);
+		if (!$fieldsData) return null;
+		$sql = "INSERT INTO log_click_".$adv_id."_".$flag." SET " . $this->_getUpdateSqlString($fieldsData);
+		$this->_db_adspace->update($sql);
+		$insertId = $this->_db_adspace->insert_id();
+		return $insertId;
+	}
+	
+	function getClickLogStruct() {
+		return array('aff_id','adv_id','site_id','place_id','creative_id','ip','real_locus','uv_id','referer','page_path','from_site','serarch_key','mobile','ua','create_time','ad_url','show_id');
+	}
+	
+	function _checkClickLogData($data){
+		if (!is_array($data) || !count($data)) return null;
+		$data = $this->_checkAllowField($data,$this->getClickLogStruct());
+		return $data;
+	}
 	
 	function getShowLogPageList($page, $perPage,$stwhere=null,$storderby=null){
 		$page = intval($page);
@@ -118,15 +156,15 @@ class PM_DataLogDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getShowLogTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM log_show";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 	
@@ -140,15 +178,15 @@ class PM_DataLogDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getClickLogTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM log_click";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 
@@ -162,15 +200,15 @@ class PM_DataLogDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getEffectLogTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM log_effectlog";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 	
@@ -184,15 +222,15 @@ class PM_DataLogDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getEffectSubTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM log_effectsub";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}		
 }

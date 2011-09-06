@@ -147,8 +147,9 @@ print <<<EOT
 <form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
 <input type="hidden" name="action" value="save"/>
 <input type="hidden" name="curid" value="$curid"/>
-<input type="hidden" name="is_top" id="is_top" value="$db_sysnews[is_top]"/>
-<input type="hidden" name="is_red" id="is_red" value="$db_sysnews[is_red]"/>
+<input type="hidden" name="itype" id="itype" value="$itype"/>
+<input type="hidden" name="is_top" id="is_top" value="$is_top"/>
+<input type="hidden" name="is_red" id="is_red" value="$is_red"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>
 		<TR >
@@ -173,24 +174,24 @@ print <<<EOT
 <!--
 EOT;
 if(isset($db_sysnews)==false || $db_sysnews[itype]==0) {
-	echo "<input type='radio' id='itype' name='itype' value='0' checked>系统公告</input>";
+	echo "<input type='radio' id='itype' name='citype' value='0' checked>系统公告</input>";
 }else{
-	echo "<input type='radio' id='itype' name='itype' value='0'>系统公告</input>";
+	echo "<input type='radio' id='itype' name='citype' value='0'>系统公告</input>";
 }
 if(isset($db_sysnews) && $db_sysnews[itype]==1) {
-	echo "<input type='radio' id='itype' name='itype' value='1' checked>活动公告</input>";
+	echo "<input type='radio' id='itype' name='citype' value='1' checked>活动公告</input>";
 }else{
-	echo "<input type='radio' id='itype' name='itype' value='1'>活动公告</input>";
+	echo "<input type='radio' id='itype' name='citype' value='1'>活动公告</input>";
 }
 if(isset($db_sysnews) && $db_sysnews[itype]==2) {
-	echo "<input type='radio' id='itype' name='itype' value='2' checked>作弊公示</input>";
+	echo "<input type='radio' id='itype' name='citype' value='2' checked>作弊公示</input>";
 }else{
-	echo "<input type='radio' id='itype' name='itype' value='2'>作弊公示</input>";
+	echo "<input type='radio' id='itype' name='citype' value='2'>作弊公示</input>";
 }
 if(isset($db_sysnews) && $db_sysnews[itype]==3) {
-	echo "<input type='radio' id='itype' name='itype' value='3' checked>汇款招领</input>";
+	echo "<input type='radio' id='itype' name='citype' value='3' checked>汇款招领</input>";
 }else{
-	echo "<input type='radio' id='itype' name='itype' value='3'>汇款招领</input>";
+	echo "<input type='radio' id='itype' name='citype' value='3'>汇款招领</input>";
 }
 print <<<EOT
 -->			
@@ -208,14 +209,14 @@ print <<<EOT
 <!--
 EOT;
 if(isset($db_sysnews) && $db_sysnews[is_top]==1) {
-	echo "<input type='checkbox' nane='cktop' id='cktop' checked/>置顶";
+	echo "<input type='checkbox' name='cktop' id='cktop' checked value='1'/>置顶";
 }else{
-	echo "<input type='checkbox' nane='cktop' id='cktop'/>置顶";
+	echo "<input type='checkbox' name='cktop' id='cktop' value='1'/>置顶";
 }
 if(isset($db_sysnews) && $db_sysnews[is_red]==1) {
-	echo "<input type='checkbox' nane='ckred' id='ckred' checked/>加红";
+	echo "<input type='checkbox' name='ckred' id='ckred' checked value='1'/>加红";
 }else{
-	echo "<input type='checkbox' nane='ckred' id='ckred'/>加红";
+	echo "<input type='checkbox' name='ckred' id='ckred' value='1'/>加红";
 }
 print <<<EOT
 -->	
@@ -231,6 +232,11 @@ print <<<EOT
     </tbody>
 
  </TABLE>
+  </div>
+  </td>
+  </tr>
+  </tbody>
+  </table>
   
  </form>
 
@@ -248,12 +254,6 @@ function checkfrm()
 		$('content').focus();
 		return false;
 	}
-
-	if($('cktop').checked) $('is_top').value="1";
-	else $('is_top').value = "0";
-	
-	if($('ckred').checked) $('is_red').value="1";
-	else $('is_red').value = "0";
 
     return true;
 }

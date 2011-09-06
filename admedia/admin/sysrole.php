@@ -1,14 +1,16 @@
 <?php 
+include_once('rolecontrol.php');	
+
 InitGetPost(array('txtlimit'));
 
 if($action=='save'){
 	$objSysUser = LOAD::loadDB("AdminUser");	
 	if(empty($curid)){
 		$objSysUser->insertSysRole($_POST);
-		writeSysLog(0, "用户添加系统角色", "增加角色内容：".$curid." Name:".$_POST[name]." Memo:" .$_POST[memo]);	
+		writeSysLog(1, "用户添加系统角色", "增加角色内容：".$curid." Name:".$_POST[name]." Memo:" .$_POST[memo]);	
 	}else{
 		$objSysUser->updateSysRole($curid,$_POST);
-		writeSysLog(1, "用户修改系统角色", "修改角色编号：".$curid." Name:".$_POST[name]." Memo:" .$_POST[memo]);	
+		writeSysLog(2, "用户修改系统角色", "修改角色编号：".$curid." Name:".$_POST[name]." Memo:" .$_POST[memo]);	
 	}	
 	ObHeader($admin_file);
 }else if($action=="edit"){
@@ -19,8 +21,8 @@ if($action=='save'){
 		$ids = substr($ids,0,strlen($ids)-1);
 		$objSysUser = LOAD::loadDB("AdminUser");
 		$objSysUser->deleteSysRoleBatch($ids);
-		writeSysLog(2, "用户删除系统角色", "删除角色编号：".$ids);	
-		ObHeader("admincp.php?job=sysrole");		
+		writeSysLog(3, "用户删除系统角色", $AdminUser[login_name]."删除角色编号：".$ids);	
+		ObHeader($admin_file.$transtr);
 	}
 }else if($action=="dis"){
 	$objSysUser = LOAD::loadDB("AdminUser");	
@@ -32,8 +34,8 @@ if($action=='save'){
 }else if($action=="savedispatch"){
 	$objSysUser = LOAD::loadDB("AdminUser");
 	$objSysUser->updateSysRoleOperateIds($curid,$txtlimit);
-	writeSysLog(1, "用户设定角色权限", "角色：".$curid." 设定权限单元：".$txtlimit);
-	ObHeader($admin_file."&curpage=".$curpage);			
+	writeSysLog(5, "用户设定角色权限", $AdminUser[login_name]."角色：".$curid." 设定权限单元：".$txtlimit);
+	ObHeader($admin_file.$transtr);
 }else if(empty($action)){
 	$objSysUser = LOAD::loadDB("AdminUser");
 	$totalnum = $objSysUser->getSysRoleTotalCount();

@@ -139,9 +139,10 @@ print <<<EOT
 					</td>
 				</tr>
 				<tr>
-					<td align=right>销售代表：</td>
+					<td align=right>销售代表(<font color="red">*</font>)：</td>
 					<td>
 						<select ID="seller_id" name="seller_id">
+						<option value="">请选择...</option>
 						$op_sellerlist
 						</select>
 					</td>
@@ -165,16 +166,21 @@ print <<<EOT
 <script language=javascript>
 function checkfrm()
 {
-	if(isEmpty($('name').value)==false){
+	if(isEmpty($('name').value)){
 		alert('机会主题不能为空！');
 		$('name').focus();
 		return false;
 	}
-	if(isEmpty($('nickname').value)==false){
+	if(isEmpty($('nickname').value)){
 		alert('客户昵称不能为空！');
 		$('nickname').focus();
 		return false;
 	}
+	if(isEmpty($('seller_id').value)){
+		alert('请选择销售代表！');
+		$('seller_id').focus();
+		return false;
+	}	
 	var re = /^\d{0,16}$/;
 	if(isEmpty($("est_money").value)==true || $("est_money").value.match(re) == false){
 		alert('预计金额必须为数字！');

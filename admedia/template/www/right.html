@@ -21,12 +21,11 @@
 <div class="right_manage">
 <dl>
 <dt></dt>
-<dd>05月25日收入：30元</dd>
-<dd>未结算收入：160元</dd>
-<dd>等待支付：100元</dd>
-<dd>昨日收入：50元</dd>
-<dd>上次结算日期：2010-05-29</dd>
-<dd>上次结算金额：3210元</dd>
+<dd>总收入：$AffUser[total_money]元</dd>
+<dd>未结算收入：$AffUser[balance]元</dd>
+<dd>上次结算日期：$last_paytime</dd>
+<dd>上次结算金额：$AffUser[last_payment]元</dd>
+<dd>当前信誉度：$AffUser[credit]</dd>
 <dd class="dd01"></dd>
 </dl>
 </div>
@@ -46,8 +45,15 @@
 <!--
 EOT;
 foreach($db_advtimelist as $db_adv){
+	$showhtml = '<a target="right" href="'.$basename.'?job=advertise&action=apply&curid='.$db_adv[id].'&curpage='.$curpage.'">未申请，申请此广告</a>';
 	$cdate = date('Y/m/d',$db_adv[create_time]);
 	$feetype = $cfg_advfeetype[$db_adv[fee_type]];
+	foreach($db_applylist as $db_apply){
+		if($db_adv[id]==$db_apply[adv_id]){
+			if($db_apply[status]==4) $showhtml = '<a target="right" href="'.$basename.'?job=advertise&action=reapply&curid='.$db_adv[id].'&curpage='.$curpage.'">重新申请</a> ';
+			if($db_apply[status]==1) $showhtml = '<a target="right" href="'.$basename.'?job=advertise&action=advcode&curid='.$db_adv[id].'&curpage='.$curpage.'">获取代码</a> ';
+		}
+	}
 print <<<EOT
 -->
 <dd class="dd01">$db_adv[name]</dd>
@@ -55,7 +61,7 @@ print <<<EOT
 <dd class="dd03">$affpaycycle</dd>
 <dd class="dd02">$db_adv[aff_price] $db_adv[aff_unit]</dd>
 <dd class="dd04">$cdate</dd>
-<dd class="dd05"><a href="$basename?job=adcode&curid=$db_adv[id]">获取代码</a></dd>
+<dd class="dd05">$showhtml</dd>
 <!--
 EOT;
 }
@@ -65,16 +71,23 @@ print <<<EOT
 <!--
 EOT;
 foreach($db_advlevellist as $db_adv){
+	$showhtml = '<a target="right" href="'.$basename.'?job=advertise&action=apply&curid='.$db_adv[id].'&curpage='.$curpage.'">未申请，申请此广告</a>';
 	$cdate = date('Y/m/d',$db_adv[create_time]);
 	$feetype = $cfg_advfeetype[$db_adv[fee_type]];
+	foreach($db_applylist as $db_apply){
+		if($db_adv[id]==$db_apply[adv_id]){
+			if($db_apply[status]==4) $showhtml = '<a target="right" href="'.$basename.'?job=advertise&action=reapply&curid='.$db_adv[id].'&curpage='.$curpage.'">重新申请</a> ';
+			if($db_apply[status]==1) $showhtml = '<a target="right" href="'.$basename.'?job=advertise&action=advcode&curid='.$db_adv[id].'&curpage='.$curpage.'">获取代码</a> ';
+		}
+	}	
 print <<<EOT
 -->
 <dd class="dd01">$db_adv[name]</dd>
 <dd class="dd02">$feetype</dd>
-<dd class="dd03">affpaycycle</dd>
+<dd class="dd03">$affpaycycle</dd>
 <dd class="dd02">$db_adv[aff_price] $db_adv[aff_unit]</dd>
 <dd class="dd04">$cdate</dd>
-<dd class="dd05"><a href="$basename?job=adcode&curid=$db_adv[id]">获取代码</a></dd>
+<dd class="dd05">$showhtml</dd>
 <!--
 EOT;
 }
@@ -83,19 +96,12 @@ print <<<EOT
  
 <dd class="dd06"><strong>当日统计数</strong></dd>
 <dd class="dd03"></dd>
+<dd class="dd02"><strong>站点</strong></dd>
+<dd class="dd03"><strong>广告位</strong></dd>
 <dd class="dd02"><strong>浏览量</strong></dd>
-<dd class="dd03"><strong>结算数(次)</strong></dd>
-<dd class="dd02"><strong>CPL(%)</strong></dd>
+<dd class="dd03"><strong>点击量</strong></dd>
+<dd class="dd02"><strong>结算数(次)</strong></dd>
 <dd class="dd03"><strong>收入</strong></dd>
-<dd class="dd07"><strong>详细情况</strong></dd>
-
-<dd class="dd03">广告类型 1</dd>
-<dd class="dd02"></dd>
-<dd class="dd03"></dd>
-<dd class="dd02"></dd>
-<dd class="dd03"></dd>
-<dd class="dd07"></dd>
- 
  
  
 </dl>

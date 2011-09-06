@@ -72,7 +72,8 @@ print <<<EOT
                 <td align="middle" class="title" height="20" valign="center">
                     <input id="Checkbox1" name="as" onclick="allchecked()" type="checkbox" />全选
                 </td>
-                <td align="middle" class="title" height="20" valign="center">站长-站点</td>
+                <td align="middle" class="title" height="20" valign="center">站长</td>
+                <td align="middle" class="title" height="20" valign="center">允许站点</td>
                 <td align="middle" class="title" height="20" valign="center">申请广告</td>        
                 <td align="middle" class="title" height="20" valign="center">创建时间</td>
                 <td align="middle" class="title" height="20" valign="center">状态</td>
@@ -87,16 +88,31 @@ $showcount = count($db_affadvapplylist);
 foreach($db_affadvapplylist as $db_advapply ){
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
-	$cdate = date('Y/m/d H:i:s',$db_advapply[create_time]);
-	$applystatus = $cfg_userstatus[$db_advapply[status]];		
+	if($db_advapply[create_time]>0) $cdate = date('Y/m/d H:i:s',$db_advapply[create_time]);
+	$applystatus = $cfg_affapplystatus[$db_advapply[status]];
+	$showsite = "";
+	if(strpos($db_advapply[site_ids],',')>0){
+		$arrsiteids = explode(",",$db_advapply[site_ids]);
+		$objAffiliate = LOAD::loadDB("Affiliate");
+		foreach($arrsiteids as $siteid){
+			if(strlen($siteid)>0){
+				$db_site = $objAffiliate->getAffWebSite($siteid);
+				if($db_site){
+					$showsite .='<a href="'.$basename.'?job=detail&action=affsite&curid='.$db_site[id].$transtr.'&backurl='.$backurl.'" class="noline">'.$db_site[name].'</a>,';
+				}
+			}
+		}
+		$showsite = substr($showsite,0,strlen($showsite)-1);
+	}
 print <<<EOT
 -->    
             <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center">$curidx</td>
                 <td align="middle" class="hei" valign="center"><input id="ids" name="ids" type="checkbox" value="$db_advapply[id]" /></td>
                 <td valign="middle" align="center">&nbsp;
-                <a href='$basename?job=detail&action=affiliate&curid=$db_advapply[aff_id]$transtr&backurl=$backurl' class="noline">$db_advapply[aff_name]($db_advapply[aff_id])</a>-
-                <a href="$basename?job=detail&action=affsite&curid=$db_advapply[site_id]$transtr&backurl=$backurl" class="noline">$db_advapply[site_name]($db_advapply[site_id])</a></td>
+                <a href='$basename?job=detail&action=affiliate&curid=$db_advapply[aff_id]$transtr&backurl=$backurl' class="noline">$db_advapply[aff_name]($db_advapply[aff_id])</a>
+                </td>
+                <td valign="middle" align="center">&nbsp;$showsite</td>
                 <td valign="middle" align="center">&nbsp;<a href="$basename?job=detail&action=advertise&curid=$db_advapply[adv_id]$transtr&backurl=$backurl" class="NoLine">$db_advapply[adv_name]($db_advapply[adv_id])</td>
                 <td valign="middle" align="center">&nbsp;$cdate</td>
                 <td valign="middle" align="center">&nbsp;$applystatus</td>
@@ -135,15 +151,17 @@ print <<<EOT
 <!--
 EOT;
 }else if($action=="new" || $action=="edit"){
+$disabled = "";
+if($action=="edit") $disabled = "disabled";
 print <<<EOT
 --> 
-<form action="$admin_file" method="post" name="form" action="return checkfrm();">
+<form action="$admin_file" method="post" name="form" onsubmit="return checkfrm();">
 <input type="hidden" name="action" value="save"/>
-<input type="hidden" name="curid" value="$curid"/>
-<input type="hidden" name="status" value="$status"/>
-<input type="hidden" name="curpage" value="$curpage"/>
-<input type="hidden" name="searchtype" value="$searchtype"/>
-<input type="hidden" name="searchkey" value="$searchkey"/>
+<input type="hidden" name="curid" id="curid" value="$curid"/>
+<input type="hidden" name="status" id="status" value="$status"/>
+<input type="hidden" name="searchtype" id="searchtype" value="$searchtype"/>
+<input type="hidden" name="searchkey" id="searchkey" value="$searchkey"/>
+<input type="hidden" name="site_ids" id="site_ids" value="$db_advapply[site_ids]"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>
 		<TR >
@@ -160,15 +178,21 @@ print <<<EOT
         <tbody>
                 <tr>
 					<td align=right>申请站长(<font color="red">*</font>)：</td>
-					<td><input type="text" id="aff_name" name="aff_name" style="WIDTH: 261px" value="$db_advapply[aff_name]" class="text" />
-					<a href="#" onclick="javascript:showAfflist()"><IMG style="CURSOR: hand" height="21" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle" border="0"/>请选择站长</a>
+					<td><input type="text" id="aff_name" name="aff_name" style="WIDTH: 261px" value="$db_advapply[aff_name]" class="text" $disabled/>
+<!--
+EOT;
+if(strlen($disabled)==0){
+print <<<EOT
+-->					
+					<a href="#" onclick="javascript:showAffHasSitelist()"><IMG style="CURSOR: hand" $disabled height="21" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle" border="0"/>请选择站长</a>
+<!--
+EOT;
+}
+print <<<EOT
+-->	
 					    <input type=hidden name="aff_id" id="aff_id" value="$db_advapply[aff_id]"/>
 					</td>
-				</tr>
-				<tr>
-					<td align=right>申请站点(<font color="red">*</font>)：</td>
-					<td><div id="divSite"><select id="site_id" name="site_id" style="WIDTH: 261px"><option value=''>请选择...</option>$op_sitelist</select></div></td>
-				</tr>				
+				</tr>			
 				<tr>
 					<td align=right>申请广告(<font color="red">*</font>)：</td>
 					<td>
@@ -176,9 +200,29 @@ print <<<EOT
 					$op_advlist
 					</select></td>
 				</tr>
+				<tr>
+					<td align=right>允许站点(<font color="red">*</font>)：</td>
+					<td><div id=divSite>
+<!--
+EOT;
+if(isset($db_sitelist)){
+	foreach($db_sitelist as $db_site){
+		$pos = strpos(",,".$db_advapply[site_ids],",".$db_site[id].',');
+		if($pos)
+			echo "<input type='checkbox' name='site_id' id='site_id' value='".$db_site[id]."' checked/>".$db_site[name]." ";
+		else
+			echo "<input type='checkbox' name='site_id' id='site_id' value='".$db_site[id]."'/>".$db_site[name]." ";		
+	}
+}else{
+	echo "&nbsp;";
+}
+print <<<EOT
+--></div>
+					</td>
+				</tr>				
 				<tr>				
-					<td align=right>描述：</td>
-					<td><textarea name="memo" id="memo" style="WIDTH: 261px;height:60px" value="$db_advapply[memo]"></textarea></td>
+					<td align=right>申请说明：</td>
+					<td><textarea name="memo" id="memo" style="WIDTH: 261px;height:60px">$db_advapply[memo]</textarea></td>
 				</tr>				
 				<tr>
 					<td align=right>&nbsp;</td>
@@ -204,13 +248,73 @@ print <<<EOT
 			$('aff_name').focus();
 			return false;
 		}
-		if(isEmpty($('site_id').value)){
-			alert('站点不能为空');
-			$('site_id').focus();
-			return false;
-		}
+		$("site_ids").value = "";
+		$$('input[type="checkbox"][name="site_id"]').each(function(node){
+			if(node.checked)  $("site_ids").value+=node.value+",";
+		});	
+		if(isEmpty($("site_ids").value)){ alert("请选择站点");return false;}	
+		return true;
 	}
 </script>
+
+<!--
+EOT;
+}
+if($action=="audit"){print <<<EOT
+-->
+<form action="$admin_file" method="post" name="form" onsubmit="javascript:return checkfrm();">
+<input type="hidden" name="action" value="auditsave"/>
+<input type="hidden" name="ids" value="$ids"/>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>	    
+		<TR >
+			<TD class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif">
+			<strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 审批站长</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+<table cellspacing=0 cellpadding=0 width="98%" border=0 id="Table23">  
+    <tbody>
+      <tr>
+        <td valign=top>
+		<div class="addpro">
+		<table cellspacing=0 cellpadding=4 width="98%" border=0 align=center id="Table24">
+            <tbody>
+                <tr>
+					<td align="right" width="15%">审批结果<font color=red>*</font>：</td>
+					<td>
+				 		<input type="radio" name="auditstatus" id='auditstatus1' value="1" checked onclick='javascript:$("content").value="该站长可投放此广告！";'/><label for="auditstatus1">通过审核</label> 
+				 		<input type="radio" name="auditstatus" id='auditstatus2' value="2" onclick='javascript:$("content").value="该站长不可投放此广告！";'/><label for="auditstatus2">审核不通过</label>
+				 		<input type="radio" name="auditstatus" id='auditstatus3' value="4" onclick='javascript:$("content").value="网站或站点信息有误，请修正后重新申请！";'/><label for="auditstatus3">驳回申请</label>
+					</td>
+				</tr>
+				<tr>
+					<td align=right>审核内容：</td>
+					<td><textarea name="content" id="content" style="width: 90%; height:55px">内容信息完整，站长情况属实，允许通过！</textarea></td>
+				</tr>
+				<tr>
+					<td colspan="2" align="center">
+					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+					<input type="button" onclick="window.close();" value=" 取消"/>
+					</td>
+				</tr>
+         
+    </tbody>
+ </table>
+ </div></TD>
+  </TR>
+ </TBODY>
+
+ </TABLE>
+ </form>
+<script>
+function checkfrm(){
+	if(isEmpty($('content').value)){
+		alert("请输入审批内容!");
+	}
+}
+</script>
+
 <!--
 EOT;
 }?>-->

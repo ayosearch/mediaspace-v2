@@ -1,5 +1,6 @@
 <?php
-InitGetPost(array('all','status',',start_date','end_date','fee_type','adv_ids','type','hascpc','hascpa','hascpm','hascpd'));
+include_once('rolecontrol.php');	
+InitGetPost(array('all','status',',start_date','end_date','fee_type','adv_ids','type','hascpc','hascpa','hascpm','hascpd','is_cpc','is_cpa','is_cpm','is_cpd'));
 
 strlen($hascpc)>0 && $transtr .= "&hascpc=$hascpc";
 strlen($hascpa)>0 && $transtr .= "&hascpa=$hascpa";
@@ -51,7 +52,7 @@ if($action=="new"){
 			$adv_ids = substr($adv_ids,0,strlen($adv_ids)-1);
 		}		
 		$objAdvertise = LOAD::loadDB("Advertise");	
-		$db_advcreativelist = $objAdvertise->getAdvCreativeAll(1,$adv_ids);
+		$db_advcreativelist = $objAdvertise->getAdvCreativeAll(1,$adv_ids,1);
 		if($curid)	$db_detailist = $objAdvertise->getAdvRollDetailByPlanId($curid);		
 	}
 }else if($action=="save"){
@@ -62,24 +63,34 @@ if($action=="new"){
 		$_POST["create_time"] = $timestamp;
 		$_POST["update_time"] = $timestamp;
 		if($_POST[is_all]=="1"){
-			if(empty($curid)){
-				if($objAdvertise->checkAdvRollPlanIsAll()){
-					$basename = $GLOBALS['pmServer']['HTTP_REFERER'];			
-					adminMsg("advrollplanisall_exists");
-				}else{
-					$_POST[type]=0;
-					$objAdvertise->insertAdvRollPlan($_POST);
-				}
-			}else{
-				$_POST[type]=0;				
-				$objAdvertise->updateAdvRollPlan($curid,$_POST);
+			if($objAdvertise->checkAdvRollPlanIsAll()){
+				$basename = $GLOBALS['pmServer']['HTTP_REFERER'];			
+				adminMsg("advrollplanisall_exists");	
+				exit;
 			}
+			if(empty($curid)){
+				$objAdvertise->insertAdvRollPlan($_POST);
+				writeSysLog(1, "新增轮播计划", $AffUser[login_name]."新增计划内容:".implode(',',$_POST));
+			}else{
+				if(!$is_cpc) $_POST[is_cpc] = 0;
+				if(!$is_cpm) $_POST[is_cpm] = 0;
+				if(!$is_cpa) $_POST[is_cpa] = 0;
+				if(!$is_cpd) $_POST[is_cpd] = 0;
+				$objAdvertise->updateAdvRollPlan($curid,$_POST);
+				writeSysLog(2, "修改轮播计划", $AdminUser[login_name]."修改计划id:".$curid.",内容:".implode(',',$_POST));
+			}			
 		}else{
 			if(empty($curid)){
 				$roll_id = $objAdvertise->insertAdvRollPlan($_POST);
+				writeSysLog(1, "新增轮播计划", $AdminUser[login_name]."新增计划内容:".implode(',',$_POST));
 			}else{
 				$roll_id = $curid;
+				if(!$is_cpc) $_POST[is_cpc] = 0;
+				if(!$is_cpm) $_POST[is_cpm] = 0;
+				if(!$is_cpa) $_POST[is_cpa] = 0;
+				if(!$is_cpd) $_POST[is_cpd] = 0;				
 				$objAdvertise->updateAdvRollPlan($curid,$_POST);
+				writeSysLog(2, "修改轮播计划", $AdminUser[login_name]."修改计划id:".$curid.",内容:".implode(',',$_POST));
 			}
 			if($_POST[type]=="1"){
 				$ctids = $_POST["creative_ids"];
@@ -87,7 +98,8 @@ if($action=="new"){
 					$arrids = explode(",",$ctids);
 					foreach($arrids as $selctid){
 						if($selctid && strlen($selctid)>0){
-							$arrdetail = array("mer_id"=>$_POST["mer_id_".$selctid],"adv_id"=>$_POST["adv_id_".$selctid],"creative_id"=>$selctid,"roll_id"=>$roll_id,"create_time"=>$timestamp,"update_time"=>$timestamp);
+							$arrdetail = array("mer_id"=>$_POST["mer_id_".$selctid],"adv_id"=>$_POST["adv_id_".$selctid],"creative_id"=>$selctid,
+														 "roll_id"=>$roll_id,"create_time"=>$timestamp,"update_time"=>$timestamp);
 							$objAdvertise->insertAdvRollDetail($arrdetail);
 						}
 					}
@@ -100,7 +112,8 @@ if($action=="new"){
 						if($selctid && strlen($selctid)>0){
 							$shour = $_POST["start_hour_".$selctid].":".$_POST["start_minute_".$selctid];
 							$ehour = $_POST["end_hour_".$selctid].":".$_POST["end_minute_".$selctid];
-							$arrdetail = array("mer_id"=>$_POST["mer_id_".$selctid],"adv_id"=>$_POST["adv_id_".$selctid],"creative_id"=>$selctid,"roll_id"=>$roll_id,"start_time"=>$shour,"end_time"=>$ehour,"create_time"=>$timestamp,"update_time"=>$timestamp);
+							$arrdetail = array("mer_id"=>$_POST["mer_id_".$selctid],"adv_id"=>$_POST["adv_id_".$selctid],"creative_id"=>$selctid,"roll_id"=>$roll_id,
+															"start_time"=>$shour,"end_time"=>$ehour,"create_time"=>$timestamp,"update_time"=>$timestamp);
 							$objAdvertise->insertAdvRollDetail($arrdetail);
 						}
 					}
@@ -119,7 +132,8 @@ if($action=="new"){
 		$objAdvertise->deleteAdvRollDetailByPlanId($selid);
 	}
 	$objAdvertise->deleteBatchAdvRollPlan($ids);
-	ObHeader($basename."?job=advrole".$transtr);	
+	writeSysLog(3, "删除轮播计划", $AdminUser[login_name]."删除计划id:".$ids);
+	ObHeader($admin_file.$transtr);
 }else if(empty($action)){
 	$stwhere = "";
 	strlen($status)>0 && $stwhere .= " status=".$status." and ";	

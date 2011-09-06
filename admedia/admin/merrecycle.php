@@ -1,4 +1,6 @@
 <?php
+include_once('rolecontrol.php');	
+
 $stwhere = " a.is_del=1 and ";
 (!empty($status) || $status=="0") && $stwhere .= " a.status=$status and ";
 (!empty($itype) || $itype=="0") && $stwhere .= " a.client_type=$itype and ";	

@@ -19,6 +19,8 @@ html{overflow-x:hidden;}
 .member_body dl .dd01{width:133px; height:39px; float:left; margin-left:20px; +margin-left:10px; margin-top:4px; margin-right:10px;}
 .member_body dl .dd01 .input01{width:133px; height:39px; background:url(/www/img/member_btn01.png) center no-repeat; cursor:pointer;}
 .member_body dl .dd01 .input02{width:133px; height:39px; background:url(/www/img/member_btn02.png) center no-repeat; cursor:pointer;}
+.member_body dl .dd01 .input03{width:133px; height:39px; background:url(/www/img/member_btn03.png) center no-repeat; cursor:pointer;}
+.member_body dl .dd01 .input04{width:133px; height:39px; background:url(/www/img/member_btn04.png) center no-repeat; cursor:pointer;}
 .member_body dl .dd02{width:120px; height:27px; background:url(/www/img/member_01.gif) center no-repeat; text-align:center; line-height:27px; color:#36C; margin-left:32px;}
 .member_body dl .dd02 strong{color:#f00; font-size:14px;}
 .member_body dl .dd03{width:252px; height:25px; margin-top:1px; margin-left:6px;}
@@ -28,6 +30,8 @@ html{overflow-x:hidden;}
 .member_body dl .dd05{width:60px; height:27px; margin-left:6px; margin-left:6px\9; +margin-left:12px; _margin-left:6px; margin-right:4px;}
 .member_body dl .dd05 select{width:60px; height:27px; border:1px #CCC solid;}
 .member_body dl .ddbtn{width:91px; height:27px; margin-left:160px; margin-top:10px;}
+.member_body dl .dd05 textarea{width:320px; height:109px; background:url(/www/img/code_input02.gif) top left no-repeat; overflow-y:hidden;}
+.member_body dl .dd05 input{width:103px; height:23px; float:right; background:url(/www/img/next_run.gif) center no-repeat; text-align:center; line-height:23px; margin:4px 0; color:#fff; cursor:pointer;}
 .member_body dl .ddbtn input{width:91px; height:27px; background:url(/www/img/botton_098.gif) center no-repeat; text-align:center; line-height:27px; color:#fff; font-weight:bold;}
 
 

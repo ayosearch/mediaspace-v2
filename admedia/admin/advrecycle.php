@@ -1,4 +1,6 @@
 <?php
+include_once('rolecontrol.php');	
+
 $stwhere = " a.is_del=1 and ";
 (!empty($audit)) && $stwhere .= " a.audit=".sqlEscape($audit)." and ";		
 (!empty($start_date)) && $stwhere .= " a.create_time>=".__strtotime($start_date)." and ";	

@@ -52,27 +52,27 @@ print <<<EOT
 <dd class="dd04">$db_affsite[day_pv]</dd>
 <dd class="dd02"><a href="$db_affsite[url]" target="_blank">$db_affsite[url]</a></dd>
 <dd class="dd08">$cdate</dd>
-<dd class="dd11"><a target="right" href="$index_file&action=edit&curid=$db_affsite[id]&curpage=$curpage">修改</a><a target="right" href="$index_file&action=view&curid=$db_affsite[id]">查看详情</a></dd>
+<dd class="dd11"><a target="right" href="$index_file&action=edit&curid=$db_affsite[id]&curpage=$curpage">修改</a></dd>
 <dd class="dd03">$status</dd>
 <!--
 EOT;
 }
 print <<<EOT
 -->
-    <table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+</dl>
+
+<table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
         <tr>
-            <td>
-                &nbsp;</td>
-            <td align="right" height="35">
+            <td align="right" height="35" valign="middle">
 <!--
 EOT;
 	showPageBreakInfo($showcount);
 print <<<EOT
 -->
-             &nbsp;</td>
+             </td>
         </tr>
     </table>
-</dl>
+
 </div>
 <input id="Hidden1" name="allSelect" type="hidden" value="all" />
 <input type="hidden" id="count" name="count" value="$showcount" />
@@ -137,48 +137,58 @@ function checkfrm(){
 <dd class="dd00"></dd>
 
 <dd class="dd01">站点名称<font color=red>*</font></dd>
-<dd class="dd07"><span><input type="text" id="name" name="name" value="$db_affsite[name]"/></span></dd>
-<dd class="dd00"><span id="att_name" style="display:none;color:red">请输入站点名称</span></dd>
+<dd class="dd07"><span><input type="text" id="name" name="name" value="$db_affsite[name]" onkeydown="$('att_name').hide();"/></span></dd>
+<dd class="dd08"><span id="att_name" style="display:none;color:red">请输入站点名称</span></dd>
+<dd class="dd00"></dd>
 
 <dd class="dd01">站点地址<font color=red>*</font></dd>
-<dd class="dd07"><span><input type="text"  id="url" name="url"  value="$siteurl"/></span></dd>
-<dd class="dd00"><span id="att_url" style="display:none;color:red">请输入站点名称</span></dd>
+<dd class="dd07"><span><input type="text"  id="url" name="url"  value="$siteurl" onkeydown="$('att_url').hide();"/></span></dd>
+<dd class="dd08"><span id="att_url" style="display:none;color:red">请输入站点名称</span></dd>
+<dd class="dd00"></dd>
 
 <dd class="dd01">网站类型<font color=red>*</font></dd>
 <dd class="dd07"><span>
-						<select ID="sitetype" name="sitetype" style="width:100%">
+						<select ID="sitetype" name="sitetype" style="width:100%"  onchange="$('att_sitetype').hide();">
 							<option value="">请选择...</option>
 							$op_sortlist
 						</select>
 			</span></dd>
-<dd class="dd00"><span id="att_sitetype" style="display:none;color:red">请选择站点类型</span></dd>
+<dd class="dd08"><span id="att_sitetype" style="display:none;color:red">请选择站点类型</span></dd>
+<dd class="dd00"></dd>
 
 <dd class="dd01">IP地址<font color=red>*</font></dd>
-<dd class="dd07"><span><input type="text"  id="ip" name="ip" value="$db_affsite[ip]"/></span></dd>
-<dd class="dd00"><span id="att_ip" style="display:none;color:red">请输入站点名称</span></dd>
+<dd class="dd07"><span><input type="text"  id="ip" name="ip" value="$db_affsite[ip]" onkeydown="$('att_ip').hide();"/></span></dd>
+<dd class="dd08"><span id="att_ip" style="display:none;color:red">请输入站点名称</span></dd>
+<dd class="dd00"></dd>
 
 <dd class="dd01">关键字<font color=red>*</font></dd>
-<dd class="dd07"><span><input type="text"  id="keyword" name="keyword"  value="$db_affsite[keyword]"/></span></dd>
-<dd class="dd00"><span id="att_keyword" style="display:none;color:red">请输入站点名称</span></dd>
+<dd class="dd07"><span><input type="text"  id="keyword" name="keyword"  value="$db_affsite[keyword]" onkeydown="$('att_keyword').hide();"/></span></dd>
+<dd class="dd08"><span id="att_keyword" style="display:none;color:red">请输入站点名称</span></dd>
+<dd class="dd00"></dd>
 
 <dd class="dd01">标签</dd>
 <dd class="dd07"><span><input type="text"  id="tags" name="tags"  value="$db_affsite[tags]"/></span></dd>
+<dd class="dd08"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd01">icp证号</dd>
 <dd class="dd07"><span><input type="text"  id="icp_code" name="icp_code" value="$db_affsite[icp_code]"/></span></dd>
+<dd class="dd08"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd01">日访问量</dd>
 <dd class="dd07"><span><input type="text"  id="day_pv" name="day_pv" value="0"  value="$db_affsite[day_pv]"/></span></dd>
+<dd class="dd08"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd01">日独立IP</dd>
 <dd class="dd07"><span><input type="text"  id="day_ip" name="day_ip" value="0" value="$db_affsite[day_ip]" /></span></dd>
+<dd class="dd08"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd01">网站描述</dd>
-<dd class="dd07"><p><textarea ID="memo" name="memo" cols="80" rows="10">$db_affsite[memo]</textarea></p></dd>
+<dd class="dd06"><textarea ID="memo" name="memo" cols="80" rows="10">$db_affsite[memo]</textarea></dd>
+<dd class="dd08"></dd>
 <dd class="dd00"></dd>
 
 </dl>

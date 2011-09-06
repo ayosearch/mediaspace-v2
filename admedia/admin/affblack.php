@@ -1,9 +1,9 @@
 <?php 
-InitGetPost(array('source','all','auditstatus','start_date','end_date'));
+include_once('rolecontrol.php');	
 
-!empty($source) && $transtr .= "&source=$source";
-!empty($start_date) && $transtr .= "&start_date=$start_time";
-!empty($end_date) && $transtr .= "&end_date=$end_date";
+InitGetPost(array('status','all','auditstatus','start_date','end_date'));
+
+!empty($status) && $transtr .= "&status=$status";
 (!empty($searchtype) && !empty($searchkey)) && $transtr .= "&searchtype=".$searchtype."&searchkey=$searchkey";
 
 if($action=="new" || $action=="edit"){
@@ -21,12 +21,13 @@ if($action=="new" || $action=="edit"){
 		$objAffiliate->updateAffBlack($curid,_POST);
 	}
 	unset($objAffiliate);
-	ObHeader("$basename?job=affblack");	
+	ObHeader($admin_file.$transtr);
 }else if($action=="del"){
 	$objAffiliate = LOAD::loadDB("Affiliate");
 	$objAffiliate->deleteAffBlack($curid);
+	writeSysLog(3,"删除站长黑名单", $AdminUser[login_name]."站长ID:".$curid);	
 	unset($objAffiliate);	
-	ObHeader("$basename?job=affblack");	
+	ObHeader($admin_file.$transtr);
 }else if($action=="releasesave"){
 	$objAffiliate = LOAD::loadDB("Affiliate");
 	if(isset($ids) && !empty($ids)){
@@ -42,23 +43,22 @@ if($action=="new" || $action=="edit"){
 		$strAffIds = substr($strAffIds,0,strlen($strAffIds)-1);	
 		$arrfield = array("update_time"=>$timestamp,"status"=>1);
 		$objAffiliate->updateBatchAffiliates($strAffIds,$arrfield);
+		writeSysLog(4, "释放站长黑名单", $AdminUser[login_name]."站长ID:".$strAffIds);
 		echo "<script>window.returnValue='1';window.close();</script>";
 	}
 }else{
  	$stwhere = "";
-	(!empty($source)) && $stwhere .= " source=".sqlEscape($source)." and ";		
-	(!empty($start_date)) && $stwhere .= " create_time>=".__strtotime($start_date)." and ";	
-	(!empty($end_date)) && $stwhere .= " create_time<=".__strtotime($end_date)." and ";		
-	if(!empty($searchtype) && !empty($searchkey)) {
+	(strlen($status)>0) && $stwhere .= " status=".sqlEscape($status)." and ";		
+	if(strlen($searchtype)>0 && strlen($searchkey)>0) {
 		$querykey = "%".$searchkey."%";
-		$stwhere .= " $searchtype like ".sqlEscape($searchkey)." and ";			
+		$stwhere .= " $searchtype like ".sqlEscape($querykey)." and ";			
 	}
 	(strlen($stwhere)>0) && $stwhere = substr($stwhere,0,strlen($stwhere)-4);	 		
 	
 	$objAffiliate = LOAD::loadDB("Affiliate");
-	$totalnum = $objAffiliate->getAffBlackTotalCount($searchkey);
+	$totalnum = $objAffiliate->getAffBlackTotalCount($stwhere);
 	$totalpage = ceil($totalnum/$perpage);
-	$db_affblacklist = $objAffiliate->getAffBlackPageList($curpage,$perpage,$searchkey,"lock_time");
+	$db_affblacklist = $objAffiliate->getAffBlackPageList($curpage,$perpage,$stwhere,"lock_time");
 	unset($objAffiliate);
 }
 include PrintEot($job);

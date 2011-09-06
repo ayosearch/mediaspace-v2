@@ -3,8 +3,8 @@ include_once PrintEot('header');
 if(empty($action)){
 print <<<EOT
 -->
-<form action="$admin_file" method="post" name="form">
-
+<form action="$admin_file" method="get" name="form">
+<input type="hidden" name="job" id="job" value="$job"/>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
@@ -24,13 +24,20 @@ print <<<EOT
 -->
             </td></tr>
          <tr>
-            <td><b>快速查询：</b><select id="searchtype">
-                                <option value="user_name" selected>站长名称</option>
-								<option value="lock_user">锁定人</option>	
-								<option value="release_user">释放人</option>						
+            <td><b>快速查询：</b><select id="searchtype" name="searchtype">
+<!--
+EOT;
+	if(empty($searchtype) || $searchtype=="user_name")  echo '<option value="user_name" selected>站长名称</option>';
+    else echo '<option value="user_name">站长名称</option>';
+	if(!empty($searchtype) && $searchtype=="lock_user")  echo '<option value="lock_user" selected>锁定人</option>	';
+    else echo '<option value="lock_user">锁定人</option>	';
+	if(!empty($searchtype) && $searchtype=="release_user")  echo '<option value="release_user" selected>释放人</option>';
+    else echo '<option value="release_user">释放人</option>';    
+print <<<EOT
+-->
 							</select>
 							<input type="text" name="searchkey" class="text" value="$searchkey"/>
-							<input type="button" ID="btnQuery" class="text" value="查询"/>
+							<input type="submit" value="查询" class="text"/>
 						</td>
             <td align="right" valign="center">
                 <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">
@@ -83,6 +90,10 @@ foreach($db_affblacklist as $affblack ){
 	$ldate = date('Y/m/d H:i:s',$affblack[lock_time]);
 	$rdate = "";
 	($affblack[release_time]>0) && $rdate = date('Y/m/d H:i:s',$affblack[release_time]);	
+	$lock_memo = "";
+	$release_memo = "";
+	if($affblack[lock_user] && $affblack[memo])  $lock_memo = "$ldate-【$affblack[lock_user]】：$affblack[memo]";
+	if($affblack[release_user] && $affblack[release_desc])  $release_memo = "$rdate-【$affblack[release_user]】：$affblack[release_desc]";
 print <<<EOT
 -->      
             <tr height="20"onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
@@ -90,15 +101,10 @@ print <<<EOT
                 <td align="middle" valign="center" width="50px">
                 <input id="ids" name="ids" type="checkbox" value="$affblack[id]" />
                 </td>
-                <td align="middle" valign="center">&nbsp;
-<!--
-EOT;
-	showLink($basename."job=affmanage&action=detail",$affblack[user_id],$affblack[user_name]);
-print <<<EOT
--->
+                <td align="middle" valign="center">&nbsp;<a href='$basename?job=detail&action=affiliate&curid=$affblack[user_id]&backurl=$backurl' class=NoLine>$affblack[user_name]</a>
                 </td>
-                <td align="left" valign="middle">&nbsp;$ldate-【$affblack[lock_user]】：$affblack[memo]</td>      
-                <td  align="left" valign="middle">&nbsp;$rdate-【$affblack[release_user]】：$affblack[release_desc]</td>                           
+                <td align="left" valign="middle">&nbsp;$lock_memo</td>      
+                <td  align="left" valign="middle">&nbsp;$release_memo</td>                           
                 <td align="middle" valign="center" width="55px">$db_status</td>            
             </tr>
 <!--
@@ -133,7 +139,6 @@ print <<<EOT
 <input type="hidden" name="action" value="releasesave"/>
 <input type="hidden" name="ids" value="$ids"/>
 <input type="hidden" name="status" value="$status"/>
-<input type="hidden" name="curpage" value="$curpage"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>	    
 		<TR >

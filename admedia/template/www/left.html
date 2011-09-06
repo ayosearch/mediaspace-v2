@@ -16,10 +16,10 @@
 <div class="left_main">
 <dl>
 <dt>$AffUser[login_name]</dt>
-<dd>站内短信：<strong>$AffUser[msg_count]</strong>条</dd>
+<dd>系统消息：<strong>$AffUser[msg_count]</strong>条</dd>
 <dd>收款人姓名：<strong>$AffUser[linkman]</strong></dd>
-<dd>最后登录时间：<br /><strong>$last_date</strong></dd>
-<dd>最后登陆IP：<br /><strong>$AffUser[last_ip]</strong></dd>
+<dd>登录时间：<strong>$last_date</strong></dd>
+<dd>登陆IP：<strong>$onlineip</strong></dd>
 </dl>
 </div>
 <div class="left_bottom"></div>
@@ -29,9 +29,9 @@
 <div class="left_tit left_txt">快速通道</div>
 <div class="left_main">
 <dl>
-<dd class="dd01"><input name=""  type="button" class="left_btn" value="获取代码"  onclick="top.frames.right.location='$basename?job=adcode';"/></dd>
+<dd class="dd01"><input name=""  type="button" class="left_btn" value="获取代码"  onclick="top.frames.right.location='$basename?job=advertise';"/></dd>
 <dd class="dd01"><input name=""  type="button" class="left_btn" value="结算支付"  onclick="top.frames.right.location='$basename?job=payment';"/></dd>
-<dd class="dd01"><input name=""  type="button" class="left_btn" value="查看报表"  onclick="top.frames.right.location='$basename?job=report';"/></dd>
+<dd class="dd01"><input name=""  type="button" class="left_btn" value="查看报表"  onclick="top.frames.right.location='$basename?job=advdata';"/></dd>
 <dd class="dd01"><input name=""  type="button" class="left_btn" value="站点管理"  onclick="top.frames.right.location='$basename?job=website';"/></dd>
 </dl>
 </div>

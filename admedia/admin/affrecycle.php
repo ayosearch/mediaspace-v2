@@ -1,4 +1,16 @@
 <?php
+include_once('rolecontrol.php');	
+
+if($action=="del"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}
+	$objAffUser = LOAD::loadDB("Affiliate");
+	$objAffUser->deleteAffiliate($ids);
+	writeSysLog(6, "清除站长", $AdminUser[login_name]."清除站长:".$ids);
+	unset($objAffUser,$ids);
+	ObHeader($admin_file.$transtr);
+}else{
 	$stwhere = " is_del=1 and ";	
 	(!empty($source)) && $stwhere .= " source=".sqlEscape($source)." and ";		
 	(!empty($start_date)) && $stwhere .= " create_time>=".__strtotime($start_date)." and ";	
@@ -17,7 +29,7 @@
 	include PrintEot($job);
 	footer(true);
 	unset($objAffUser,$totalnum,$db_afflist);
-
-	include PrintEot($job);
-	footer(true);		
+}
+include PrintEot($job);
+footer(true);
 ?>

@@ -1,4 +1,5 @@
 <?php 
+include_once('rolecontrol.php');	
 
 InitGetPost(array('status','all','auditstatus','start_date','end_date'));
 
@@ -16,41 +17,48 @@ if($action=="new"){
 	$objAffiliate = LOAD::loadDB("Affiliate");		
 	$db_advapply = $objAffiliate->getAffAdvApply($curid);
 	$op_advlist = loadAdvertiseList(1,$db_advapply[adv_id]);
-	$op_sitelist = loadAffSiteList(1,$db_advapply[aff_id],$db_advapply[site_id]);
+	$db_sitelist = $objAffiliate->getAffSiteStatusList($db_advapply[aff_id],1);
 	unset($objAffiliate,$objAdvertise);
 }else if($action=="save"){
 	$objAffiliate = LOAD::loadDB("Affiliate");		
 	if(empty($curid)){
 		$_POST[create_time] = $timestamp;
 		$objAffiliate->insertAffAdvApply($_POST);
+		writeSysLog(1, "新增站长投放申请", $AdminUser[login_name]."新增投放申请内容".implode(',',$_POST));
 	}else{
 		$objAffiliate->updateAffAdvApply($curid,$_POST);
+		writeSysLog(2, "修改站长投放申请", $AdminUser[login_name]."修改投放id:".$curid.",内容:".implode(',',$_POST));
 	}
 	unset($objAffiliate);
-	ObHeader("$basename?job=affadvapply");	
+	ObHeader($admin_file.$transtr);
 }else if($action=="audit"){
-	$objAffiliate = LOAD::loadDB("Affiliate");
-	$objAffiliate->updateAffAdvApplyStatus($curid,$status);
+	//$objAffiliate = LOAD::loadDB("Affiliate");
 }else if($action=="auditsave"){
 	if(strpos($ids,',')>0){
 		$ids = substr($ids,0,strlen($ids)-1);
 	}
 	$arrfield = array("audit_id"=>$AdminUser[id],"audit_name"=>$AdminUser[login_name],"create_time"=>$timestamp,"target_ids"=>$ids,
-								"parent_id"=>0,"level"=>0,"auditstatus"=>$aduitstatus,"content"=>$_POST[content],"itype"=>2);
+								"parent_id"=>0,"level"=>0,"auditstatus"=>$auditstatus,"content"=>$_POST[content],"itype"=>2);
 	$objSystem = LOAD::loadDB("System");	
 	$sysaudit_id = $objSystem->insertSysAudit($arrfield);
 	$objAffUser = LOAD::loadDB("Affiliate");	
-	$objAffUser->updateAffWebSiteStatus($ids,$sysaudit_id,$auditstatus);
+	//$objAffUser->updateAffWebSiteStatus($ids,$sysaudit_id,$auditstatus);
+	$objAffUser->updateAffAdvApplyStatus($ids,$sysaudit_id,$auditstatus);
+	writeSysLog(4, "审核站长投放申请", $AdminUser[login_name]."相关广告:,".$ids.",状态:".$auditstatus);
 	echo "<script>window.returnValue='1';window.close();</script>";
 	unset($objSystem,$objAffUser,$arrfield);
 	exit;
 }else if($action=="del"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}		
 	$objAffiliate = LOAD::loadDB("Affiliate");
-	$objAffiliate->deleteAffAdvApply($curid);
+	$objAffiliate->deleteAffAdvApply($ids);
+	writeSysLog(3, "删除站长投放申请", $AdminUser[login_name]."删除投放id:".$ids);
 	unset($objAffiliate);	
-	ObHeader("$basename?job=affadvplace");	
+	ObHeader($admin_file.$transtr);
 }else if(empty($action) || $action=="select"){
-	$stwhere = "status in (0,2) and ";	
+	$stwhere = "";	
 	if(strlen($start_date)>0) $stwhere .= " create_time>=".__strtotime($start_date)." and ";	
 	if(strlen($end_date)>0) $stwhere .= " create_time<=".__strtotime($end_date)." and ";		
 

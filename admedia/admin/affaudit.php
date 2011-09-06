@@ -1,5 +1,6 @@
 <?php 
-InitGetPost(array('source','all','auditstatus','start_date','end_date'));
+include_once('rolecontrol.php');	
+InitGetPost(array('source','all','auditstatus','start_date','end_date','orderby'));
 
 !empty($source) && $transtr .= "&source=$source";
 !empty($start_date) && $transtr .= "&start_date=$start_time";
@@ -9,7 +10,7 @@ InitGetPost(array('source','all','auditstatus','start_date','end_date'));
 if(empty($action) || $action=="select"){
 	$objAffUser = LOAD::loadDB("Affiliate");
 	
-	$stwhere = " status in (0,2) and ";	
+	$stwhere = " is_del=0 and status in (0,2) and ";	
 	(!empty($source)) && $stwhere .= " source=".sqlEscape($source)." and ";		
 	(!empty($start_date)) && $stwhere .= " create_time>=".__strtotime($start_date)." and ";	
 	(!empty($end_date)) && $stwhere .= " create_time<=".__strtotime($end_date)." and ";		
@@ -48,8 +49,9 @@ if(empty($action) || $action=="select"){
 		$ids = substr($ids,0,strlen($ids)-1);
 		$objAffUser = LOAD::loadDB("Affiliate");
 		$objAffUser->deleteAffiliateBatch($ids);
+		writeSysLog(3, "删除站长", $AdminUser[login_name]."删除站长:".$ids);
 		unset($objAffUser,$ids);
-		ObHeader("admincp.php?job=affaudit".$transtr);
+		ObHeader($admin_file.$transtr);
 	}
 }else if($action=="selcity"){
 	$objCommData = LOAD::loadDB("CommonData");
@@ -67,24 +69,27 @@ if(empty($action) || $action=="select"){
 			$_POST[service_id] = $AdminUser[id];
 			$_POST[service_name] = $AdminUser[login_name];
 			$objAffUser->insertAffiliate($_POST);
+			writeSysLog(1, "新增站长", $AdminUser[login_name]."新增站长:".implode(",",$_POST));
 		}else{
 			$basename = $GLOBALS['pmServer']['HTTP_REFERER'];			
 			adminMsg("username_exists");
 		}
 	}else{
 		$objAffUser->updateAffiliate($curid,$_POST);
+		writeSysLog(2, "修改站长", $AdminUser[login_name]."修改站长:".$curid.",内容:".implode(",",$_POST));
 	}
-	ObHeader("admincp.php?job=affaudit".$transtr);	
+	ObHeader($admin_file.$transtr);	
 }else if($action=="auditsave"){
 	if(strpos($ids,',')>0){
 		$ids = substr($ids,0,strlen($ids)-1);
 	}
 	$arrfield = array("audit_id"=>$AdminUser[id],"audit_name"=>$AdminUser[login_name],"create_time"=>$timestamp,"target_ids"=>$ids,
-								"parent_id"=>0,"level"=>0,"auditstatus"=>$aduitstatus,"content"=>$_POST[content],"itype"=>0);
+								"parent_id"=>0,"level"=>0,"auditstatus"=>$auditstatus,"content"=>$_POST[content],"itype"=>0);
 	$objSystem = LOAD::loadDB("System");	
 	$sysaudit_id = $objSystem->insertSysAudit($arrfield);
 	$objAffUser = LOAD::loadDB("Affiliate");	
 	$objAffUser->updateAffiliateStatus($ids,$sysaudit_id,$auditstatus);
+	writeSysLog(4, "审核站长", $AdminUser[login_name]."审核站长:".$ids.",状态:".$auditstatus);
 	echo "<script>window.returnValue='1';window.close();</script>";
 	unset($objSystem,$objAffUser,$arrfield);
 	exit;

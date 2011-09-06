@@ -231,8 +231,8 @@ EOT;
 -->				
 					</td>
 				
-					<td align="right">邮箱：</td>
-					<td><input type="text" name="email" id="email" style="WIDTH: 150px" value="$db_affiliate[email]"/><font color=red>*</font></td>
+					<td align="right">邮箱<font color=red>*</font>：</td>
+					<td><input type="text" name="email" id="email" style="WIDTH: 150px" value="$db_affiliate[email]"/></td>
 				</tr>
 				<tr>
 					<td align="right">固定电话：</td>
@@ -250,7 +250,7 @@ EOT;
 				</tr>
 				
 				<tr>
-					<td align="right">证件类型：</td>
+					<td align="right">证件类型<font color=red>*</font>：</td>
 					<td><div class="select"><div>
 						<select name="cert_type" id="cert_type" style="WIDTH: 150px">
 <!--
@@ -313,7 +313,7 @@ EOT;
 				<tr>
 					<td colspan="4" align="center">
 					<input type="submit"  value=" 确定 " NAME="btnSubmit">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
-					<input type="button" onclick="history.go(-1);" value=" 取消" />
+					<input type="button" onclick="window.location='$admin_file$transtr';" value=" 取消" />
 					</td>
 				</tr>
          
@@ -329,44 +329,51 @@ EOT;
 
 <script>
 function checkfrm(){
-	if($("login_name").value == ""){
+	if(isEmpty($("login_name").value)==true){
 		alert('登录名称不能为空！');
 		$("login_name").focus();
 		return false;
 	}
-	if($("login_pass").value == ""){
-		alert('登录名称不能为空！');
-		$("login_pass").focus();
+	if(isEmpty($("login_srcpwd").value)){
+		alert('登录密码不能为空！');
+		$("login_srcpwd").focus();
 		return false;
 	}	
-	if($("linkman").value == ""){
-		alert('联系人名称不能为空！');
+	if(isEmpty($("linkman").value)){
+		alert('联系人姓名不能为空！');
 		$("linkman").focus();
 		return false;
+	}	
+	if(isEmpty($("email").value)){
+		alert('EMAIL不能为空！');
+		$("email").focus();
+		return false;
 	}
+	if(isEmpty($("cert_code").value)){
+		alert('证件号码不能为空！');
+		$("cert_code").focus();
+		return false;
+	}	
 	var re = /^\d{0,16}$/;
-	
 	if($("deduct").value != "" && isNaN($("deduct").value)){
 	    alert('修正比例为数字！');
 	    $("deduct").focus();
 		return false;
 	}
-	
-	if($("pay_limit").value == ""){
+	if(isEmpty($("pay_limit").value)){
 	    alert('请输入起付金额！');
 	    $("pay_limit").focus();
 		return false;
-	}else if(isNaN($("pay_limit").value)){
+	}else if(!isFloat($("pay_limit").value)){
 	    alert('起付金额必须为数字！');
 	    $("pay_limit").focus();
 		return false;
 	}
-	if($("tax_rate").value == ""){
+	if(isEmpty($("tax_rate").value)){
 	    alert('请输入税率！');
 	    $("tax_rate").focus();
 		return false;
-	}
-	else if(isNaN($("tax_rate").value)){
+	}else if(!isFloat($("tax_rate").value)){
 	    alert('税率必须为数字！');
 	    $("tax_rate").focus();
 		return false;
@@ -465,7 +472,6 @@ if($action=="audit"){print <<<EOT
 <input type="hidden" name="ids" value="$ids"/>
 <input type="hidden" name="source" value="$source"/>
 <input type="hidden" name="status" value="$status"/>
-<input type="hidden" name="curpage" value="$curpage"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>	    
 		<TR >

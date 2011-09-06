@@ -1,4 +1,5 @@
 <?php 
+include_once('rolecontrol.php');	
 
 	$objSysUser = LOAD::loadDB("AdminUser");	
 	if(empty($action)){
@@ -18,8 +19,10 @@
 		if(empty($curid)){
 			$_POST[create_time] = $timestamp;
 			$curid = $objSysUser->insertSysModule($_POST);
+			writeSysLog(1, "新增系统模块", $AdminUser[login_name]."新增系统模块ID:".$curid.",系统模块内容:".implode(",",$_POST));		
 		}else{
 			$objSysUser->updateSysModule($curid,$_POST);
+			writeSysLog(2, "修改系统模块", $AdminUser[login_name]."修改系统模块ID:".$curid.",系统模块内容:".implode(",",$_POST));		
 		}
 		$db_sysoperatelist = $objSysUser->getSysOperateAll();
 		foreach($db_sysoperatelist as $db_sysoperate){
@@ -29,13 +32,15 @@
 				$objSysUser->insertSysCellOperate($arrfield);
 			}
 		}
-		ObHeader($admin_file."&curpage=$curpage".$transtr);
+		ObHeader($admin_file.$transtr);
 		exit;
 	}else if($action=="del"){
 		if(strpos($ids,',')>0){
 			$ids = substr($ids,0,strlen($ids)-1);		
 			$objSysUser->deleteSysModule($ids);
 			$objSysUser->deleteSysCellOperateByColId($ids);
+			writeSysLog(3, "删除系统模块", $AdminUser[login_name]."删除系统模块ID:".$ids);		
+			ObHeader($admin_file.$transtr);
 		}
 	}
 	unset($objSysUser);

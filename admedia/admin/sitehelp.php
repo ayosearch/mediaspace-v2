@@ -1,11 +1,5 @@
 <?php 
-
-if(empty($action)){
-	$objSystem = LOAD::loadDB("System");
-	$totalnum = $objSystem->getSysHelpTotalCount();
-	$totalpage = ceil($totalnum/$perpage);
-	$db_syshelplist = $objSystem->getSysHelpPageList($curpage,$perpage,null,"id");
-}
+include_once('rolecontrol.php');	
 
 if($action=="new"){
 	$objCommData = LOAD::loadDB("CommonData");
@@ -14,9 +8,7 @@ if($action=="new"){
 	foreach($db_helpmodulelist as $db_helpmodule){
 		$op_helpmodule .= "<option value='$db_helpmodule[val]'>".$db_helpmodule[val]."</option>";
 	}
-}
-
-if($action=="edit"){
+}else if($action=="edit"){
 	$objSystem = LOAD::loadDB("System");
 	$db_syshelp = $objSystem->getSysHelp($curid);
 	
@@ -31,31 +23,35 @@ if($action=="edit"){
 			$op_helpmodule .= "<option value='$db_helpmodule[val]'>$db_helpmodule[val]</option>";
 		}
 	}
-}
-
-if($action=="save"){
+}else if($action=="save"){
 	$objSystem = LOAD::loadDB("System");
 	if(empty($curid)){//add save
 		$_POST["create_time"] = $timestamp;
-		$objSystem->insertSysHelp($_POST);
+		$insertid = $objSystem->insertSysHelp($_POST);
+		writeSysLog(1, "新增网站帮助", $AdminUser[login_name]."网站帮助ID:".$insertid.",帮助内容:".implode(",",$_POST));
 	}else{
 		$objSystem->updateSysHelp($curid,$_POST);
+		writeSysLog(2, "修改网站帮助", $AdminUser[login_name]."网站帮助ID:".$curid.",帮助内容:".implode(",",$_POST));		
 	}
-	ObHeader($admin_file);	
-}
-
-if($action=="del"){
+	ObHeader($admin_file.$transtr);
+}else if($action=="del"){
 	if(strpos($ids,',')>0){
 		$ids = substr($ids,0,strlen($ids)-1);
 		$objSystem = LOAD::loadDB("System");
 		$objSystem->deleteSysHelpBatch($ids);		
+		writeSysLog(3, "删除网站帮助", $AdminUser[login_name]."删除网站帮助ID:".$ids);			
 	}else{
 		$objSystem = LOAD::loadDB("System");
 		$objSystem->deleteSysHelp($curid);
+		writeSysLog(3, "删除网站帮助", $AdminUser[login_name]."删除网站帮助ID:".$curid);	
 	}
-	ObHeader("admincp.php?job=sitehelp&curpage=$curpage");	
+	ObHeader($admin_file.$transtr);
+}else if(empty($action)){
+	$objSystem = LOAD::loadDB("System");
+	$totalnum = $objSystem->getSysHelpTotalCount();
+	$totalpage = ceil($totalnum/$perpage);
+	$db_syshelplist = $objSystem->getSysHelpPageList($curpage,$perpage,null,"id");
 }
-
 include PrintEot($job);
 footer(true);
 ?>

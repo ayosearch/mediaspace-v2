@@ -23,6 +23,11 @@ $lang['msg'] = array (
 "aff_login_vcerror" => "登录失败，验证吗错误！",
 "aff_login_error" => "登录失败，用户名或密码不存在！",
 "aff_login_exception" => "登录失败，系统出现异常！",
-"aff_login_expire" => '登录超时，请重新登录！'
+"aff_login_expire" => '登录超时，请重新登录！',
+"password_old_notequal" => '老密码不正确！',
+"password_new_notequal" => '新密码和重复密码不一致！',
+"advertise_notexists" => '该广告已不存在！',
+"adv_sdate_up_contract_sdate" => '广告计划开始时间不应小于所选合同开始时间！',
+"adv_edate_low_contract_edate" => '广告计划结束时间不应超出所选合同结束时间！'
 );
 ?>

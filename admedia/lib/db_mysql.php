@@ -8,7 +8,6 @@ Class DB {
 	var $dbuser;
 	var $dbpw;
 	var $dbname;
-	var $dbpre;
 	var $charset;
 	var $pconnect = 0;
 	var $query_num = 0;
@@ -17,12 +16,11 @@ Class DB {
 
 	
 
-	function DB($dbhost, $dbuser, $dbpw, $dbname, $dbpre, $charset, $pconnect=0) {
+	function DB($dbhost, $dbuser, $dbpw, $dbname, $charset, $pconnect=0) {
 		$this->dbhost = $dbhost;
 		$this->dbuser = $dbuser;
 		$this->dbpw   = $dbpw;
 		$this->dbname = $dbname;
-		$this->dbpre = $dbpre;
 		$this->charset = $charset;
 		$this->pconnect = $pconnect;
 		$this->lp =& $GLOBALS['db_lp'];

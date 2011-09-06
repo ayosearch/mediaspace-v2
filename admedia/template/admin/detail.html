@@ -588,7 +588,7 @@ print <<<EOT
 										<td>
 <!--
 EOT;
-	if(isset($db_merchant)){
+	if(isset($db_merchant) && $db_merchant[logo]){
 		echo "<a href='".$db_merchant[logo]."' target='_blank'><img src='".$db_merchant[logo]."' border='0' height='60px' align='absmiddle' title='点击看原图'/></a>";
 	}
 print <<<EOT
@@ -710,7 +710,7 @@ print <<<EOT
 							<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
 								 <tr><td bgcolor="#f6f6f6" height="25" colspan="5">
 								 <table width="100%" border="0" cellpadding="0" cellspacing="0">
-								 <tr><td><b>支付信息</b></td>
+								 <tr><td><b>广告计划</b></td>
 								 </tr>
 								 </table>
 								 </td>
@@ -895,7 +895,7 @@ print <<<EOT
 					<td width="34%" bgColor="#ffffff"><strong>活动Logo：</strong>
 <!--
 EOT;
-	if(isset($db_adv)){
+	if(isset($db_adv) && $db_adv[logo]){
 		echo "<a href='".$db_adv[logo]."' target='_blank'><img src='".$db_adv[logo]."' border='0' height='60px' align='absmiddle' title='点击看原图'/></a>";
 	}
 print <<<EOT
@@ -1102,9 +1102,23 @@ print <<<EOT
 			<tr>
 					<td bgColor="#ffffff"><strong>日志表使用：</strong>$db_adv[log_flag]
 					</td>
-					<td bgColor="#ffffff"><strong>显示日志表状态：</strong>$db_adv[log_v_created]
+					<td bgColor="#ffffff"><strong>显示日志表状态：</strong>
+<!--
+EOT;
+	if($db_adv[is_view]==1 && $db_adv[log_v_created]==0) echo "无,需要生成 ";
+	if($db_adv[is_view]==1 && $db_adv[log_v_created]==1) echo "<font color='green'>有,无需生成</font>";
+	if($db_adv[is_view]==0) echo "<font color='blue'>无需生成</font>";	
+print <<<EOT
+--> 
 					</td>
-					<td bgColor="#ffffff"><strong>点击日志表状态：</strong>$db_adv[log_c_created]
+					<td bgColor="#ffffff"><strong>点击日志表状态：</strong>
+<!--
+EOT;
+	if($db_adv[is_view]==1 && $db_adv[log_c_created]==0) echo "无,需要生成 ";
+	if($db_adv[is_view]==1 && $db_adv[log_c_created]==1) echo "<font color='green'>有,无需生成</font>";
+	if($db_adv[is_view]==0) echo "<font color='blue'>无需生成</font>";	
+print <<<EOT
+-->
 					</td>
 					<td bgColor="#ffffff"><strong>日志表最后切换时间：</strong>$ltime
 					</td>					
@@ -1357,7 +1371,121 @@ print <<<EOT
 		}
 	}	
 </script>
+<!--
+EOT;
+}else if($action=="advapply"){
+	if($db_advapply[create_time]>0) $cdate = date('Y/m/d H:i:s',$db_advapply[create_time]);
+	if(isset($db_adv)){
+		$start_time = date('Y-m-d',$db_adv[start_time]);
+		$end_time = date('Y-m-d',$db_adv[end_time]);
+	}	
+print <<<EOT
+-->
 
+<form action="$admin_file" method="get" name="form">
+<center>
+<TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
+	<TBODY>
+		<TR>
+			<TD align=left class="tittab" BACKGROUND="$imgpath/admin/menu_bg.gif"><strong><img src="$imgpath/admin/view.gif" width="15" height="13" align="absmiddle"> 站点详细资料</strong></TD>
+		</TR>
+	</TBODY>
+</TABLE>
+						<table width="98%" border="0" align="center" cellpadding="2" cellspacing="0">
+						<tr><td height=4></td></tr>
+							<tr>
+							 	<td align=right bgcolor="#f6f6f6" height="30px">
+							 		<a href="$backurl">返回上一页</a>&nbsp;
+						 		</td>   
+							</tr>
+						</table>
+
+
+			<table width="70%" border="0" align="center" cellpadding="5" cellspacing="0">
+				<tr>
+					<td valign="top">
+						<table width="100%" border="0" cellpadding="0" cellspacing="1" bgcolor="#d0d0d0">
+							<tr>
+								<td align="center" bgcolor="#ffffff">
+								    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+										<tr><td height="10"></td></tr>
+									</table>
+									<table width="100%" border="0" cellspacing="0" cellpadding="4">										
+										<tr>
+											<td height="25" align="right" width="15%"><nobr>申请站长：</nobr></td>
+											<td align="left">&nbsp;$db_aff[login_name]($db_aff[linkman])</td>
+											<td height="25" align="right" class="hei12b">申请时间：</td>
+											<td width="45%">&nbsp;$cdate</td>										
+										</tr>
+										<tr>
+											<td height="25" align="right" class="hei12b">申请广告：</td>
+											<td align="left">&nbsp;$db_adv[name]</td>																			
+											<td height="25" align="right" >广告运营时间：</td>
+											<td align="left">&nbsp;$start_time 至 $end_time</td>
+										</tr>
+									    <tr>
+											<td  height="30" align="right" width="15%"><nobr>允许投放站点：</nobr></td>
+											<td align="left" colspan="3">&nbsp;$showsite</td>
+										</tr>
+									</table>
+								</td>
+							</tr>
+							<tr>
+							<td align="center" valign="middle">
+								<table width="99%">
+								<tr>
+									<td>					
+											<table width="100%" border="0" cellpadding="3" cellspacing="1" bgcolor="#d0d0d0">
+											 <tr><td bgcolor="#f6f6f6" height="25" colspan="5">
+											 <table width="100%" border="0" cellpadding="0" cellspacing="0">
+											 <tr><td><b>审批记录</b></td>
+											 <td align=right>&nbsp;</td>
+											 </tr>
+											 </table>
+									</td>
+								</tr>
+								<tr>
+									<td align="center" bgcolor="#ffffff" class="hei12b" height="25px"><nobr>序号</nobr></td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核人</td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>审核时间</td>
+									<td align="center" bgcolor="#ffffff" class="hei12b"><nobr>说明</td>		
+									<td width="60px" align="center" bgcolor="#ffffff" class="hei12b"><nobr>结果</td>								
+								</tr>	
+<!--
+EOT;
+$curidx = ($curpage-1)*$perpage;
+$curpageidx = 0;
+$showcount = count($db_auditlist); 
+foreach($db_auditlist as $db_audit ){
+		$curidx = $curidx+1;
+		$curpageidx = $curpageidx+1;
+		$cdate = date('m/d H:i',$db_audit[create_time]);
+		$status = $cfg_userstatus[$db_audit[auditstatus]];
+print <<<EOT
+-->      
+										<tr>
+											<td height="25" align="center" bgcolor="#ffffff">$curidx</td>										
+											<td height="25" align="center" bgcolor="#ffffff"><nobr>$db_audit[audit_name]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$cdate</nobr></td>
+											<td bgcolor="#ffffff" align="center" class="lanh12"><nobr>$db_audit[content]</nobr></td>
+											<td bgcolor="#ffffff" align="center"><nobr>$status</nobr></td>
+										</tr>
+<!--
+EOT;
+}print <<<EOT
+-->																				
+								</table>
+								</td>
+							</tr>
+						</table>
+						</td>
+			</table>
+
+</td>
+</tr>
+</table>
+</center>
+</form>
 
 <!--
 EOT;

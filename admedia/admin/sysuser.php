@@ -1,4 +1,7 @@
 <?php
+
+include_once('rolecontrol.php');	
+
 InitGetPost(array('ownIds','userName','delflag'));
 
 if($action=="new"){
@@ -26,6 +29,7 @@ if($action=="new"){
 			$_POST["create_time"] = $timestamp;
 			$_POST["login_pwd"] = pwdCode($_POST["login_srcpwd"]);
 			$objSysUser->insertSysUser($_POST);
+			writeSysLog(1, "增加用户", $AdminUser[login_name]."新增用户:".$_POST);	
 		}else{
 			$basename = $GLOBALS['pmServer']['HTTP_REFERER'];
 			adminMsg('username_exists');
@@ -33,8 +37,9 @@ if($action=="new"){
 	}else{
 		$_POST["login_pwd"] = pwdCode($_POST["login_srcpwd"]);
 		$objSysUser->updateSysUser($curid,$_POST);
+		writeSysLog(2, "修改用户", $AdminUser[login_name]."修改用户信息:".$_POST);			
 	}
-	ObHeader($admin_file);	
+	ObHeader($admin_file.$transtr);
 }else if($action=="dis"){
 	$objSysUser = LOAD::loadDB("AdminUser");
 	$db_sysuser = $objSysUser->getSysUser($curid);
@@ -63,18 +68,20 @@ if($action=="new"){
 }else if($action=="disave"){
 	$objSysUser = LOAD::loadDB("AdminUser");
 	$objSysUser->distributeSysUser($curid,$ownIds);
-	writeSysLog(2, "分配用户下属", " 分配用户".userName."的下属用户:".$ownIds);
-	ObHeader($admin_file."&curpage=".$curpage);			
+	writeSysLog(5,"分配用户下属", $AdminUser[login_name]." 分配用户".userName."的下属用户:".$ownIds);
+	ObHeader($admin_file.$transtr);
 }else if($action=="del"){
 	if(strpos($ids,',')>0){
 		$ids = substr($ids,0,strlen($ids)-1);
 		$objSysUser = LOAD::loadDB("AdminUser");
 		$objSysUser->deleteSysUserBatch($ids);		
+		writeSysLog(3, "删除用户", $AdminUser[login_name]."删除用户:".$ids);
 	}else{
 		$objSysUser = LOAD::loadDB("AdminUser");
-		$objSysUser->deleteSysUser($curid);
+		$objSysUser->deleteSysUser($ids);
+		writeSysLog(3, "删除用户", $AdminUser[login_name]."删除用户:".$ids);		
 	}
-	ObHeader($admin_file."&curpage=".$curpage);	
+	ObHeader($admin_file.$transtr);
 }else if(empty($action)){
 	$objSysUser = LOAD::loadDB("AdminUser");
 	$totalnum = $objSysUser->getSysUserTotalCount();

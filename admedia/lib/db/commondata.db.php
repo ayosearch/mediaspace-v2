@@ -5,37 +5,37 @@ class PM_CommonDataDB extends BaseDB{
 	function insertBaseArea($fieldsData){
 		$fieldsData = $this->_checkBaseAreaData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_basearea SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_basearea SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateBaseArea($id,$updateData){
 		$updateData = $this->_checkBaseAreaData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_basearea SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_basearea SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBaseArea($id){
-		$this->_db->update("UPDATE pm_basearea set is_del=1 WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_basearea set is_del=1 WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function checkBaseArea($name){
 		$sql = "select * from pm_basearea where name='$name'";
-		$data = $this->_db->get_one($sql);
+		$data = $this->_db_adspace->get_one($sql);
 		if (!$data) return false;
 		return true;
 	}
 	
 	function getBaseAreaAll(){
-		$query = $this->_db->query("SELECT * FROM pm_basearea where is_del=0");
-		return $this->_getAllResultFromQuery($query);
+		$query = $this->_db_adspace->query("SELECT * FROM pm_basearea where is_del=0");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}	
 	
 	function getBaseArea($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_basearea WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_basearea WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
@@ -50,15 +50,15 @@ class PM_CommonDataDB extends BaseDB{
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getBaseAreaTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_basearea where is_del=0";
 		if($stwhere!=null)
 			$sql = "$sql and $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 	
@@ -76,37 +76,37 @@ class PM_CommonDataDB extends BaseDB{
 	function insertBaseProvince($fieldsData){
 		$fieldsData = $this->_checkBaseProvinceData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_baseprovince SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_baseprovince SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateBaseProvince($id,$updateData){
 		$updateData = $this->_checkBaseProvinceData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_baseprovince SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_baseprovince SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBaseProvince($id){
-		$this->_db->update("UPDATE pm_baseprovince set is_del=1 WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_baseprovince set is_del=1 WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getBaseProvince($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_baseprovince WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_baseprovince WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getBaseProvinceAll(){
-		$query = $this->_db->query("SELECT * FROM pm_baseprovince where is_del=0");
-		return $this->_getAllResultFromQuery($query);
+		$query = $this->_db_adspace->query("SELECT * FROM pm_baseprovince where is_del=0");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 	
 	function getBaseProvinceAllByArea($areaid){
-		$query = $this->_db->query("SELECT * FROM pm_baseprovince where area_id=".intval($areaid)." and is_del=0");
-		return $this->_getAllResultFromQuery($query);
+		$query = $this->_db_adspace->query("SELECT * FROM pm_baseprovince where area_id=".intval($areaid)." and is_del=0");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}	
 	
 	function getBaseProvincePageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -119,15 +119,15 @@ class PM_CommonDataDB extends BaseDB{
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getBaseProvinceTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_baseprovince where is_del=0";
 		if($stwhere!=null)
 			$sql = "$sql and $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}	
 	
@@ -145,35 +145,35 @@ class PM_CommonDataDB extends BaseDB{
 	function insertBaseCity($fieldsData){
 		$fieldsData = $this->_checkBaseCityData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_basecity SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_basecity SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateBaseCity($id,$updateData){
 		$updateData = $this->_checkBaseCityData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_basecity SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_basecity SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBaseCity($id){
-		$this->_db->update("DELETE FROM pm_basecity WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_basecity WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getBaseCityAll(){
-		$query = $this->_db->query("SELECT * FROM pm_basecity");
-		return $this->_getAllResultFromQuery($query);
+		$query = $this->_db_adspace->query("SELECT * FROM pm_basecity");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}	
 	
 	function getBaseCityAllByProvince($province_id){
-		$query = $this->_db->query("SELECT * FROM pm_basecity where province_id=".intval($province_id));
-		return $this->_getAllResultFromQuery($query);
+		$query = $this->_db_adspace->query("SELECT * FROM pm_basecity where province_id=".intval($province_id));
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}		
 	
 	function getBaseCity($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_basecity WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_basecity WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}	
@@ -188,15 +188,15 @@ class PM_CommonDataDB extends BaseDB{
 			$sql = $sql." and ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getBaseCityTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_basecity";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}	
 	
@@ -214,25 +214,25 @@ class PM_CommonDataDB extends BaseDB{
 	function insertBaseAgentIp($fieldsData){
 		$fieldsData = $this->_checkBaseAgentIpData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_baseagentip SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_baseagentip SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateBaseAgentIp($id,$updateData){
 		$updateData = $this->_checkBaseAgentIpData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_baseagentip SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_baseagentip SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBaseAgentIp($id){
-		$this->_db->update("DELETE FROM pm_baseagentip WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_baseagentip WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getBaseAgentIp($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_baseagentip WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_baseagentip WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}	
@@ -242,8 +242,8 @@ class PM_CommonDataDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$query = $this->_db->query("SELECT * FROM pm_baseagentip ORDER BY id LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM pm_baseagentip ORDER BY id LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}		
 	
 	function getBaseAgentIpStruct(){
@@ -260,33 +260,33 @@ class PM_CommonDataDB extends BaseDB{
 	function insertBaseAdvSize($fieldsData){
 		$fieldsData = $this->_checkBaseAdvSizeData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_baseadvsize SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_baseadvsize SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateBaseAdvSize($id,$updateData){
 		$updateData = $this->_checkBaseAdvSizeData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_baseadvsize SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_baseadvsize SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBaseAdvSize($id){
-		$this->_db->update("DELETE FROM pm_baseadvsize WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_baseadvsize WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getBaseAdvSize($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_baseadvsize WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_baseadvsize WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getBaseAdvSizeAll(){
 		$sql = "SELECT * FROM pm_baseadvsize";
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}	
 	
 	function getBaseAdvSizePageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -299,15 +299,15 @@ class PM_CommonDataDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getBaseAdvSizeTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_baseadvsize";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}		
 	
@@ -325,31 +325,31 @@ class PM_CommonDataDB extends BaseDB{
 	function insertBaseAdvFormat($fieldsData){
 		$fieldsData = $this->_checkBaseAdvFormatData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_baseadvformat SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_baseadvformat SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateBaseAdvFormat($id,$updateData){
 		$updateData = $this->_checkBaseAdvFormatData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_baseadvformat SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_baseadvformat SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBaseAdvFormat($id){
-		$this->_db->update("DELETE FROM pm_baseadvformat WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_baseadvformat WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getBaseAdvFormatAll(){
 		$sql = "select * from pm_baseadvformat";
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 	
 	function getBaseAdvFormat($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_baseadvformat WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_baseadvformat WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}	
@@ -364,15 +364,15 @@ class PM_CommonDataDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getBaseAdvFormatTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_baseadvformat";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}		
 	
@@ -390,25 +390,25 @@ class PM_CommonDataDB extends BaseDB{
 	function insertBaseIp($fieldsData){
 		$fieldsData = $this->_checkBaseIpData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_baseip SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_baseip SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateBaseIp($id,$updateData){
 		$updateData = $this->_checkBaseIpData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_baseip SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_baseip SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBaseIp($id){
-		$this->_db->update("DELETE FROM pm_baseip WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_baseip WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getBaseIp($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_baseip WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_baseip WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}	
@@ -418,8 +418,8 @@ class PM_CommonDataDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$query = $this->_db->query("SELECT * FROM pm_baseip ORDER BY id desc LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM pm_baseip ORDER BY id desc LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}		
 	
 	function getBaseIpStruct(){
@@ -436,33 +436,33 @@ class PM_CommonDataDB extends BaseDB{
 	function insertBaseSort($fieldsData){
 		$fieldsData = $this->_checkBaseSortData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_basesort SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_basesort SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateBaseSort($id,$updateData){
 		$updateData = $this->_checkBaseSortData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_basesort SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_basesort SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteBaseSort($id,$itype){
-		$this->_db->update("DELETE FROM pm_basesort WHERE id=". intval($id) ." and ikey='$itype' LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_basesort WHERE id=". intval($id) ." and ikey='$itype' LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getBaseSort($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_basesort WHERE id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_basesort WHERE id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getBaseSortKeyList($ikey){
 		$sql = "SELECT * FROM pm_basesort WHERE ikey='$ikey'";
-		$query = $this->_db->query($sql);
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql);
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}	
 	
 	function getBaseSortPageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -475,15 +475,15 @@ class PM_CommonDataDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);
 	}
 
 	function getBaseSortTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_basesort";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}	
 	

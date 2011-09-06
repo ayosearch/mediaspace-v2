@@ -1,5 +1,5 @@
 <?php
-if($action=="selsite"){
+if($action=="selsite" || $action=="selhassite"){
 	$op_sitelist = "";
 	foreach($db_sitelist as $db_site){
 		$op_sitelist .= "<option value='".$db_site[id]."'>".$db_site[name]."</option>";
@@ -9,7 +9,18 @@ print <<<EOT
 <select name="site_id" id="site_id" style="width:261px"><option value=''>请选择...</option>$op_sitelist</select>
 
 EOT;
+}else if($action=="cksite"){
+	$op_sitelist = "";
+	foreach($db_sitelist as $db_site){
+		$op_sitelist .= "<input type='checkbox' id='site_id' name='site_id' value='".$db_site[id]."'/>".$db_site[name];
+	}
+print <<<EOT
+
+$op_sitelist
+
+EOT;
 }else{
+
 include_once PrintEot('header');
 if(empty($action)){
 print <<<EOT
@@ -105,6 +116,7 @@ print <<<EOT
                 <td align="middle" class="title" height="20" valign="center">日独立IP</td>
                 <td align="middle" class="title" height="20" valign="center">允许CPC</td>
                 <td align="middle" class="title" height="20" valign="center">允许轮播</td>
+                <td align="middle" class="title" height="20" valign="center">创建时间</td>
                 <td align="middle" class="title" height="20" valign="center">站点状态</td>
                 <td align="middle" class="title" height="20" valign="center">编辑</td>
             </tr>
@@ -116,8 +128,9 @@ $showcount = count($db_affwebsitelist);
 foreach($db_affwebsitelist as $affwebsite ){
 		$curidx = $curidx+1;
 		$curpageidx = $curpageidx+1;
-		$cdate = date('Y/m/d H:i:s',$affwebsite[create_time]);
-		$status= $cfg_userstatus[$affwebsite[status]];
+		if($affwebsite[create_time]>0)
+			$cdate = date('Y/m/d H:i:s',$affwebsite[create_time]);
+		$status= $cfg_sitestatus[$affwebsite[status]];
 print <<<EOT
   
             <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
@@ -152,6 +165,7 @@ EOT;
 print <<<EOT
 
 				</td>				
+                <td valign="middle" align="center">&nbsp;$cdate</td>  
                 <td valign="middle" align="center">&nbsp;$status</td>                   
                 <td valign="middle" align="center">&nbsp;
 
@@ -366,7 +380,6 @@ print <<<EOT
 <input type="hidden" name="ids" value="$ids"/>
 <input type="hidden" name="enablecpc" value="$enablecpc"/>
 <input type="hidden" name="status" value="$status"/>
-<input type="hidden" name="curpage" value="$curpage"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>	    
 		<TR >

@@ -21,16 +21,16 @@ print <<<EOT
 		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
         <tbody>
         <tr>
-					<td align=right width="15%">合同主题：</td>
+					<td align=right width="15%">合同主题(<font color="red">*</font>)：</td>
 					<td style="width: 20%">
 						<input type="text" id="title" style="WIDTH: 202px" name="title" value="$db_mercontract[title]">					    
 					</td>
 				
-					<td align=right>所属客户：</td>
+					<td align=right>所属客户(<font color="red">*</font>)：</td>
 					<td><select ID="mer_id" name="mer_id" style="WIDTH:202px"><option value="">请选择...</option>$op_merchantlist</select></td>
 				</tr>
 				<tr>
-					<td align=right>合同类型：</td>
+					<td align=right>合同类型(<font color="red">*</font>)：</td>
 					<td style="width: 20%">
 <!-- 
 EOT;
@@ -95,11 +95,11 @@ EOT;
 print <<<EOT
 -->
 					</td>
-					<td align=right>合同编号：</td>
+					<td align=right>合同编号(<font color="red">*</font>)：</td>
 					<td><input type="text" id="contract_no" name="contract_no" style="WIDTH: 101px" value="$db_mercontract[contract_no]"></td>					
 				</tr>
 				<tr>				
-					<td align=right>合同金额：</td>
+					<td align=right>合同金额(<font color="red">*</font>)：</td>
 					<td style="width: 322px">
 						<input type="text" id="fee" name="fee" style="WIDTH: 101px" value="$db_mercontract[fee]"> 千元
 					</td>
@@ -109,10 +109,10 @@ print <<<EOT
 					</td>
 				</tr>
 				<tr>
-					<td align=right>开始时间：</td>
+					<td align=right>开始时间(<font color="red">*</font>)：</td>
 					<td style="width: 322px">
 						<input name="start_date" type="text" readonly id="start_date" style="WIDTH:102px" value="$db_mercontract[start_date]"><A href="javascript:OpenCalendar('start_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A></td>
-				    <td align=right>结束时间：</td>
+				    <td align=right>结束时间(<font color="red">*</font>)：</td>
 					<td>
 						<input name="end_date" type="text" readonly id="end_date" style="WIDTH:102px" value="$db_mercontract[end_date]"><A href="javascript:OpenCalendar('end_date', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"/></A></td>
 				</tr>
@@ -120,10 +120,16 @@ print <<<EOT
 					<td align=right>合同文件：</td>
 					<td style="width: 322px">
 						<INPUT id="contract_file" contentEditable="false" type="file" name="contract_file" tyle="width: 235px; height: 21px" />
+<!--
+EOT;
+	if(empty($db_mercontract[file_path])==false)
+		echo "[<a href='".$db_mercontract[file_path]."' target='_blank' class='noline'>查看附件</a>]";
+print <<<EOT
+-->						
 					</td>
-					<td align=right>销售代表：</td>
+					<td align=right>销售代表(<font color="red">*</font>)：</td>
 					<td>
-						<select ID="seller_id" name="sell_id" style="WIDTH:102px">$op_sellerlist</select>
+						<select ID="seller_id" name="seller_id" style="WIDTH:102px"><option value="">请选择...</option>$op_sellerlist</select>
 					</td>
 				</tr>
 				<tr>
@@ -176,17 +182,22 @@ print <<<EOT
 
 <script language=javascript>
 function checkfrm(){
-	if($('title').value == ""){
+	if(isEmpty($('title').value)){
 		alert('合同主题不能为空！');
 		$('title').focus();
 		return false;
 	}
-	if($("mer_id").value == "0"){
+	if(isEmpty($("mer_id").value)){
 		alert('请选择合同所属客户！');
 		$("mer_id").focus();
 		return false;
 	}
-	if($("fee").value == ""){
+	if(isEmpty($("contract_no").value)){
+		alert('合同编号不能为空！');
+		$("contract_no").focus();
+		return false;
+	}
+	if(isEmpty($("fee").value)){
 		alert('合同金额不能为空！');
 		$("fee").focus();
 		return false;
@@ -195,7 +206,22 @@ function checkfrm(){
 	    alert('合同金额必须为数字！');
 	    $("fee").focus();
 		return false;
+	}	
+	if(isEmpty($('start_date').value)){
+		alert('开始时间不能为空！');
+		$('start_date').focus();
+		return false;
 	}
+	if(isEmpty($('end_date').value)){
+		alert('结束时间不能为空！');
+		$('end_date').focus();
+		return false;
+	}
+	if(isEmpty($('seller_id').value)){
+		alert('请选择销售代表！');
+		$('seller_id').focus();
+		return false;
+	}		
     return true;
 }
 </script>
@@ -312,7 +338,7 @@ print <<<EOT
                 <td align="middle" valign="center">&nbsp;$mercontract[title]</td>
                 <td align="middle" valign="center">&nbsp;$itype</td>
                 <td align="middle" valign="center">&nbsp;$paytype</td>
-                <td align="middle" valign="center">&nbsp;$mercontract[fee]</td>
+                <td align="middle" valign="center">&nbsp;$mercontract[fee]千元</td>
                 <td align="middle" valign="center">&nbsp;$mercontract[seller_name]</td>
                 <td align="middle" valign="center">&nbsp;$ccstatus</td>
                 <td align="middle" valign="center">&nbsp;$mercontract[sign_date]</td>

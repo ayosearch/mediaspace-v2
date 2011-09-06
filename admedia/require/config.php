@@ -4,13 +4,14 @@ $cfg_name='广告分销平台';
 $cfg_http='N';
 $cfg_url='/admedia';
 $cfg_vdir='/admedia';
+$cfg_domain='http://www.adtest.com';
 $cfg_imgpath="images";
 $cfg_csspath="css";
 $cfg_jspath="js";
 $cfg_pext='.php';
 $cfg_dir='.php?';
 $cfg_ext='.html';
-$cfg_basepath = "/data0/apache/htdocs";
+$cfg_basepath = "D:/APMServ5.2.6/www/htdocs/admedia";
 $cfg_upfilepath='/upload/';
 $cfg_debug='0';
 $cfg_ifopen='0';
@@ -33,11 +34,14 @@ $cfg_ckdomain='';
 $cfg_siteid='52279fa51733debf967fbe553452c7f6';
 $cfg_sitehash='10AFFSBApWWwdSBlsEUwpVCgQPBQUDUFEAAQFQVQMFDQU';
 $cfg_hash='*$%1*I*7o6';
+$cfg_placehash='@#$%&*^';
 $cfg_dateformat='Y-m-d H:i:s';
 $cfg_timezone='-8';
 $cfg_ftpweb='';
-$cfg_userstatus = array("<font color=blue>等待审核</font>","<font color=green>审核通过</font>","<font color=red>审核未通过</font>","<font color=red>进入复审</font>","<font color=black>黑名单</font>");
-$cfg_affapplystatus = array("<font color=blue>申请中 </font>","<font color=green>复审中 </font>","<font color=red>申请通过</font>","<font color=red>申请被驳回</font>");
+$cfg_userstatus = array("<font color=blue>等待审核</font>","<font color=green>审核通过</font>","<font color=red>审核未通过</font>","<font color=red>进入复审</font>","<font color=black><b>黑名单</b></font>");
+$cfg_affapplystatus = array("<font color=blue>申请中 </font>","<font color=green>通过申请</font>","<font color=red>申请未通过</font>","<font color=blue>复审中 </font>","<font color=red>申请被驳回</font>");
+$cfg_sitestatus = array("<font color=blue>申请中 </font>","<font color=green>通过申请</font>","<font color=red>申请未通过</font>","<font color=black><b>冻结</b></font>");
+$cfg_merpayrecstatus = array("<font color=blue>未开发票</font>","<font color=green>已开发票</font>","<font color=red>对方收到发票,打款中</font>","<font color=black><b>发票有误,重开发票</b></font>","<font color=#669900><b>款已到</b></font>");
 $cfg_gender = array('男','女');
 $cfg_affbiztype= array('个人','公司');
 $cfg_affcerttype= array('身份证','军官证','护照');
@@ -56,7 +60,7 @@ $cfg_newstatus = array('<font color=red>未发布</font>','<font color=green>已
 $cfg_basesort = array('sitetype'=>'站点类型','channeltype'=>'频道类型','clientphase'=>'客户合作阶段','clientsource'=>'客户来源',
 'companyscale'=>'企业规模','trade'=>'行业类别','unit'=>'计价单位','bank'=>'支付方式','clientlevel'=>'客户关系级别',
 'advtype'=>'广告类型','helpmodule'=>'帮助模块');
-$cfg_xforwardip='1';
+$cfg_xforwardip='0';
 $cfg_tablelist='';
 $cfg_ifsafecv='0';
 $cfg_icstyle='8';
@@ -78,7 +82,7 @@ $cfg_advpagestatus = array("<font color='red'>停止</font>","<font color='green
 $cfg_merchtype = array("不明确","CPC","CPM","CPA","CPD","多种形式");
 $cfg_merccpay = array("支票","现金","邮政汇款","电汇","网上银行","线上充值 ");
 $cfg_mercctype = array("纸张","传真","电子合同");
-$cfg_merccstatus = array("暂停执行","执行中","已到期"); 
+$cfg_merccstatus = array("<font color='red'>暂停执行</font>","<font color=green>执行中</font>","<font color='blue'>已到期</font>"); 
 $cfg_advfeetype = array("CPC","CPM","CPA","CPD");
 $cfg_advstatus = array("<font color='red'>暂停</font>","<font color='green'>运营中</font>");
 $cfg_advctitype = array("文字 ","图片","原始代码");
@@ -88,4 +92,16 @@ $cfg_advselectorfilter = array("选取","过滤");
 $cfg_advselectorstatus = array("<font color=red>停止</font>","<font color=green>启用</font>");
 $cfg_advbuyaffplace = array("<font color=red>停止</font>","<font color=green>正常投放</font>","<font color=blue>已到期</font>"); 
 $cfg_advroletype = array("所有创意随机","选定创意随机","自定义时段");
+$cfg_optype = array("登录","新增","修改","删除","审核","分配","清除");
+$cfg_platform = array("aff"=>"站长前台","mer"=>"广告主前台","sys"=>"系统后台");
+$cfg_searchEngineName = array( "", "google.com", "sina.com.cn", "baidu.com", "roboo.com", "easou.com", "sohu.com" );
+$cfg_SE_keywords_param = array(
+			array("",""),
+			array("q,as_qn,as_epq,as_oq","e:utf-8"), //google
+			array("q,site,serial,",""),	//sina
+			array("w,from,p,vit",""),//baidu
+			array("q,rank,rnd",""),	//roboo.com
+			array("esid,q",""),	//easou
+			array("pg,clk,keyword","")	//sohu
+			);
 ?>

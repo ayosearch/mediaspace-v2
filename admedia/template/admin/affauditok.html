@@ -193,7 +193,7 @@ print <<<EOT
 					</td>
                 
 					<td align="right">修正比例<font color=red>*</font>：</td>
-					<td><input type="text" name="deduct" id="deduct" style="WIDTH: 60px" value="0" value="$db_affiliate[login_pass]"/></td>
+					<td><input type="text" name="deduct" id="deduct" style="WIDTH: 60px" value="0" value="$db_affiliate[deduct]"/></td>
 				</tr>
 				<tr>				
 					<td align="right">站长类型：</td>
@@ -385,7 +385,10 @@ function checkfrm(){
 <!--
 EOT;
 }
-if($action=="select"){
+if($action=="select" || $action=="hassite"){
+	$title = "";
+	if($action=="select") $title = "选择已审批站长";
+	if($action=="hassite") $title = "选择已有站点站长";
 print <<<EOT
 -->
 <form name="form" action="$admin_file" method="post" onsubmit="return checkfrm();">
@@ -393,7 +396,7 @@ print <<<EOT
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
-                <strong>选择站长</strong>
+                <strong>$title</strong>
             </td>
         </tr>
     </table>
@@ -475,7 +478,6 @@ print <<<EOT
 <input type="hidden" name="action" value="blacksave"/>
 <input type="hidden" name="ids" value="$ids"/>
 <input type="hidden" name="source" value="$source"/>
-<input type="hidden" name="curpage" value="$curpage"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>	    
 		<TR >

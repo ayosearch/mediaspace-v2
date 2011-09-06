@@ -202,7 +202,7 @@ print <<<EOT
 			<td colspan="2" align="center">
 			<input type="submit" id="btnSubmit" value=" 确定 " NAME="btnSubmit">
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-			<input type="button" onclick="history.go(-1);" value=" 取消 "/>
+			<input type="button" onclick="window.location='$admin_file$transtr';" value=" 取消 "/>
 			</td>
 		</tr>
          
@@ -256,7 +256,6 @@ print <<<EOT
 <input type="hidden" id="delflag" name="delflag" value="0"/>
 <input type="hidden" id="curid" name="curid" value="$curid"/>
 <input type="hidden" id="userName" name="userName" value="$userName"/>
-<input type="hidden" id="curpage" name="curpage" value="$curpage"/>
 <input type="hidden" id="ownIds" name="ownIds" value="$ownIds"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>

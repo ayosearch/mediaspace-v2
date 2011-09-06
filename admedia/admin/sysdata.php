@@ -1,4 +1,6 @@
 <?php
+if($action!="inner") include_once('rolecontrol.php');	
+
 InitGetPost(array('itype'));
 
 !empty($itype) && $transtr .= "&itype=$itype";

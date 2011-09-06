@@ -1,4 +1,16 @@
 <?php
+include_once('rolecontrol.php');	
+
+if($action=="del"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}
+	$objAffUser = LOAD::loadDB("Affiliate");
+	$objAffUser->deleteAffAdvPlace($ids);
+	writeSysLog(6, "清除站长广告位", $AdminUser[login_name]."清除站长广告位:".$ids);
+	unset($objAffUser,$ids);
+	ObHeader($admin_file.$transtr);
+}else{
 	$stwhere = " a.is_del=1 and ";
 	($action=="select") && $stwhere .= " a.audit=1 and ";
 	(strlen($status)>0) && $stwhere .= " a.status=$status and ";
@@ -15,7 +27,7 @@
 	$totalnum = $objAffiliate->getAffAdvPlaceTotalCount($stwhere);
 	$totalpage = ceil($totalnum/$perpage);
 	$db_affadplacelist = $objAffiliate->getAffAdvPlacePageList($curpage,$perpage,$stwhere,"a.update_time");
-
+}
 	include PrintEot($job);
 	footer(true);
 ?>

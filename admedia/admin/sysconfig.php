@@ -1,4 +1,5 @@
 <?php
+	include_once('rolecontrol.php');	
 	
 	$memcache = LOAD::loadClass("Memcache",null);
 	$objSystem = LOAD::loadDB("System");
@@ -15,6 +16,7 @@
 				setSysConfigVal($key_name,$_POST[$key_name]);
 			}
 		}
+		writeSysLog(5, "参数设置", $AdminUser[login_name]."设置参数内容:".implode(",",$_POST));	
 		ObHeader($admin_file);	
 	}
 

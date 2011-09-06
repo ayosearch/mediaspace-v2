@@ -1,4 +1,5 @@
 <?php 
+include_once('rolecontrol.php');	
 InitGetPost(array('status','all'));
 
 !empty($status) && $transtr .= "&status=$status";
@@ -19,20 +20,26 @@ if($action=="new"){
 		$_POST[create_time] = $timestamp;
 		$_POST[update_time] = $timestamp;
 		$objAdvertise->insertAdvPages($_POST);
-		ObHeader("$basename?job=advpage$tranastr");
+		writeSysLog(1, "新增广告页面", $AdminUser[login_name]."新增广告页面:".implode(",",$_POST));		
+		ObHeader($admin_file.$transtr);
 	}else{
 		$objAdvertise = LOAD::loadDB("Advertise");
 		$_POST[update_time] = $timestamp;
 		$db_adv = $objAdvertise->getAdvertise($_POST[adv_id]);
 		$_POST[mer_id]=$db_adv[mer_id];	
 		$objAdvertise->updateAdvPages($curid,$_POST);
-		ObHeader("$basename?job=advpage$tranastr");		
+		writeSysLog(2, "修改广告页面", $AdminUser[login_name]."修改广告页面:".$curid.",内容:".implode(",",$_POST));				
+		ObHeader($admin_file.$transtr);
 	}
 	exit;
 }else if($action=="del"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}	
 	$objAdvertise = LOAD::loadDB("Advertise");
 	$objAdvertise->deleteAdvPages($ids);
-	ObHeader("$basename?job=advpage$tranastr");	
+	writeSysLog(3, "删除广告页面", $AdminUser[login_name]."删除广告页面:".$ids);
+	ObHeader($admin_file.$transtr);
 	exit;		
 }else if(empty($action)){
  	$stwhere = "a.is_del=0 and ";
