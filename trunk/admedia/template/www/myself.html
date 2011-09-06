@@ -1,13 +1,16 @@
-<!--<?php print <<<EOT
+<!--<?php 
+print <<<EOT
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script src="js/png_IE6.js" type="text/javascript"></script>
+<script src="js/prototype.js" type="text/javascript"></script>
+<script src="js/public.js" type="text/javascript"></script>
+<script src="js/citycode.js" type="text/javascript"></script>
 <title>站长-右侧</title>
 <link href="css/member.css" rel="stylesheet" type="text/css" />
-
 </head>
 
 <body class="code">
@@ -20,86 +23,281 @@
 </dl>
 </div>
 <div class="member_body">
-<form name="form" id="form" action="$index_file" method="post" onsubmit="return checkfrm();">
-<input type="hidden" name="job" id="job" value="regedit"/>
-<input type="hidden" name="action" id="action" value="save"/>
-<dl>
-<dd class="dd01"><input name="editInfo" type="button" class="input01" /></dd>
-<dd class="dd01"><input name="editBank" type="button" class="input01" /></dd>
-<dd class="dd01"><input name="editPass" type="button" class="input02" /></dd>
-<dd class="cleardd"></dd>
 
+<form name="form" id="form" action="$index_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action" id="action" value="save$action"/>
+<dl>
+
+<dd class="dd01"><input name="editInfo" type="button" class="input01" onclick="window.location='$index_file'"/></dd>
+<dd class="dd01"><input name="editPass" type="button" class="input02" onclick="window.location='$index_file&action=editpass'" /></dd>
+<dd class="dd01"><input name="editBank" type="button" class="input03"  onclick="window.location='$index_file&action=editbank'"/></dd>
+<!--
+EOT;
+if($getpass==1){
+print <<<EOT
+-->
+<dd class="dd01"><input name="editQuestion" type="button" class="input04"  onclick="window.location='$index_file&action=editquestion'"/></dd>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+<dd class="cleardd"></dd>
+<!--
+EOT;
+if(empty($action) || $action=='editinfo'){
+print <<<EOT
+-->
+<script>
+function checkfrm(){
+	if(isEmpty($("login_name").value)){ $("att_login_name").show();return false;}
+	if($("login_name").value.match(/[^0-9a-zA-Z]/)){ $("att_login_name").show();return false; }
+	if(isEmpty($("linkman").value)){ $("att_linkman").show();return false;}	
+	if(isEmpty($("cert_code").value)){ $("att_cert_code").show();return false;}	
+	if(isEmpty($("email").value)){ $("att_email").show();return false;}	
+	return true;
+}
+</script>
 <dd class="dd02">会员ID </dd>
-<dd class="dd03">$AffUser[id]</dd>
+<dd class="dd03">&nbsp;&nbsp;$AffUser[id]</dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">登录名称 </dd>
-<dd class="dd03">$AffUser[login_name]</dd>
-<dd class="dd04"></dd>
+<dd class="dd02">登录名称 <strong>*</strong></dd>
+<dd class="dd03"><input name="login_name" id="login_name" type="text" value="$AffUser[login_name]" onkeydown="$('att_login_name').hide();"/></dd>
+<dd class="dd04" id="att_login_name" style="display:none">请输入6~18个字符，包括字母、数字</dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">真实姓名 <strong>*</strong></dd>
-<dd class="dd03">$AffUser[linkman]</dd>
-<dd class="dd04"></dd>
+<dd class="dd03"><input name="linkman" id="linkman" type="text" value="$AffUser[linkman]" onkeydown="$('att_linkman').hide();"/></dd>
+<dd class="dd04" id="att_linkman" style="display:none">请输入您的真实姓名</dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">证件类型 <strong>*</strong></dd>
-<dd class="dd03">$certtype</dd>
-<dd class="dd04"></dd>
+<dd class="dd13">&nbsp;&nbsp;<input type="radio" name="cert_type" id="cert_type" value="0" checked/>身份证
+								<input type="radio" name="cert_type" id="cert_type" value="1"/>军官证
+								<input type="radio" name="cert_type" id="cert_type" value="2"/>护照</dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">证件号码 </dd>
-<dd class="dd03">$AffUser[cert_code]</dd>
-<dd class="dd04"></dd>
+<dd class="dd02">证件号码 <strong>*</strong></dd>
+<dd class="dd03"><input name="cert_code" id="cert_code" type="text" value="$AffUser[cert_code]" onkeydown="$('att_cert_code').hide();"/></dd>
+<dd class="dd04" id="att_cert_code" style="display:none">输入您的证件号码</dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">EMAIL </dd>
-<dd class="dd03">$AffUser[email]</dd>
-<dd class="dd04"></dd>
+<dd class="dd02">EMAIL <strong>*</strong></dd>
+<dd class="dd03"><input name="email" id="email" type="text" value="$AffUser[email]" onkeydown="$('att_email').hide();"/></dd>
+<dd class="dd04" id="att_email" style="display:none">请输入您的EMAIL</dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">所在省市 </dd>
-<dd class="dd03">$AffUser[province_id]-$AffUser[city_id]</dd>
+<dd class="dd02">所在省市 <strong>*</strong></dd>
+<dd class="dd03">&nbsp;&nbsp;<span name="divprovince" id="divprovince"></span><span name="divcity" id="divcity"></span>
+</dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">性别 </dd>
-<dd class="dd03">$sex</dd>
+<dd class="dd13">&nbsp;&nbsp;
+<!--
+EOT;
+	if($AffUser[gender]==0){
+		echo "<input type='radio' name='gender' id='gender' value='0' checked/>男";		
+	}else{
+		echo "<input type='radio' name='gender' id='gender' value='0/'>男";
+	}
+	if($AffUser[gender]==1){
+		echo "<input type='radio' name='gender' id='gender' value='1' checked/>女";		
+	}else{
+		echo "<input type='radio' name='gender' id='gender' value='1'/>女";
+}print <<<EOT
+-->	
+</dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">商业类型 </dd>
-<dd class="dd03">$biztype</dd>
+<dd class="dd13">&nbsp;&nbsp;
+<!--
+EOT;
+	if($db_affilate[biz_type]==0){
+		echo '<input type="radio" name="biz_type" id="biz_type" value="0" checked/>个人';
+	}else{
+		echo '<input type="radio" name="biz_type" id="biz_type" value="0"/>个人';
+	}
+	if($db_affilate[biz_type]==1){
+		echo '<input type="radio" name="biz_type" id="biz_type" value="0" checked/>企业';
+	}else{
+		echo '<input type="radio" name="biz_type" id="biz_type" value="1"/>企业';
+}print <<<EOT
+-->
+</dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">邮寄地址 </dd>
-<dd class="dd03">$AffUser[address]</dd>
+<dd class="dd03"><input name="address" id="address" type="text" value="$AffUser[address]"/></dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">手机号码 </dd>
-<dd class="dd03">$AffUser[mobile]</dd>
+<dd class="dd03"><input name="mobile" id="mobile" type="text" value="$AffUser[mobile]"></dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">电话号码 </dd>
-<dd class="dd03">$AffUser[telephone]</dd>
+<dd class="dd03"><input name="telephone" id="telephone" type="text" value="$AffUser[telephone]"/></dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">QQ </dd>
-<dd class="dd03">$AffUser[qq]</dd>
+<dd class="dd03"><input name="qq" id="qq" type="text" value="$AffUser[qq]"/></dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
 <dd class="dd02">MSN </dd>
-<dd class="dd03">$AffUser[msn]</dd>
+<dd class="dd03"><input name="msn" id="msn" type="text" value="$AffUser[msn]"/></dd>
 <dd class="dd04"></dd>
 <dd class="dd00"></dd>
 
-</dl>
+<dd class="ddbtn"><input name="btnSave" type="submit" value="确认修改" /></dd>
+<dd class="dd00"></dd>
+  <script>
+  showProvince2('$AffUser[province_id]','$AffUser[city_id]');
+  </script>
+
+<!--
+EOT;
+ echo $action;
+}else if($action=="editpass"){
+print <<<EOT
+-->
+<script>
+function checkfrm(){
+	if(isEmpty($("login_oldpass").value)){ $("att_login_oldpass").show();return false;}
+	if(isEmpty($("login_pass").value)){ $("att_login_pass").show();return false;}
+	if(isEmpty($("login_repass").value)){ $("att_login_repass_empty").show();return false;}
+	if($("login_repass").value!=$("login_pass").value){ $("att_login_repass_notequal").show();return false; }
+	return true;
+}
+</script>
+
+<dd class="dd02">旧　密　码 <strong>*</strong></dd>
+<dd class="dd03"><input name="login_oldpass"  id="login_oldpass"  type="password"  onkeydown="$('att_login_pass').hide();"/></dd>
+<dd class="dd04" id="att_login_oldpass" style="display:none">请输入6～16个字符</dd>
+<dd class="dd00"></dd>
+
+<dd class="dd02">密			码 <strong>*</strong></dd>
+<dd class="dd03"><input name="login_pass"  id="login_pass"  type="password"  onkeydown="$('att_login_pass').hide();"/></dd>
+<dd class="dd04" id="att_login_pass" style="display:none">请输入6～16个字符</dd>
+<dd class="dd00"></dd>
+
+<dd class="dd02">再次输入密码 <strong>*</strong></dd>
+<dd class="dd03"><input name="login_repass" id="login_repass" type="password"  onkeydown="$('att_login_repass_empty').hide();$('att_login_repass_notequal').hide();"/></dd>
+<dd class="dd04" id="att_login_repass_empty" style="display:none">请再次输入</dd>
+<dd class="dd04" id="att_login_repass_notequal" style="display:none">与以上密码一致</dd>
+<dd class="dd00"></dd>
+
+<dd class="ddbtn"><input name="btnSave" type="submit" value="确认修改" /></dd>
+<dd class="dd00"></dd>
+
+<!--
+EOT;
+}else if($action=="editbank"){
+print <<<EOT
+-->
+<script>
+function checkfrm(){
+	if(isEmpty($("pay_method").value)){ $("att_pay_method").show();return false;}
+	if(isEmpty($("account").value)){ $("att_account").show();return false;}
+	if(isEmpty($("acc_contract").value)){ $("att_acc_contract").show();return false;}
+	return true;
+}
+</script>
+  
+<dd class="dd02">支付方式 <strong>*</strong></dd>
+<dd class="dd03">&nbsp;&nbsp;<select name="pay_method" id="pay_method" onchange="$('att_pay_method').hide();"><option value="">请选择...</option>$op_paymethodlist</select></dd>
+<dd class="dd04" id="att_pay_method" style="display:none">请选择支付方式</dd>
+<dd class="dd00"></dd>
+
+<dd class="dd02">开户帐号 <strong>*</strong></dd>
+<dd class="dd03"><input name="account" type="text" id="account" value="$db_payinfo[account]" onkeydown="$('att_account').hide();"/></dd>
+<dd class="dd04" id="att_account" style="display:none">请输入开户帐号</dd>
+<dd class="dd00"></dd>
+
+<dd class="dd02">开户人姓名 <strong>*</strong></dd>
+<dd class="dd03"><input name="acc_contract" type="text" id="acc_contract" value="$db_payinfo[acc_contract]" onkeydown="$('att_acc_contract').hide();"/></dd>
+<dd class="dd04" id="att_acc_contract" style="display:none">请输入开户人姓名</dd>
+<dd class="dd00"></dd>
+
+<dd class="dd02">开户名称 </dd>
+<dd class="dd03"><input name="open_name" type="text" id="open_name" value="$db_payinfo[open_name]"/></dd>
+<dd class="dd04"></dd>
+<dd class="dd00"></dd>
+
+<dd class="dd02">开户地址 </dd>
+<dd class="dd03"><input name="open_address" type="text" id="open_address" value="$db_payinfo[open_address]"/></dd>
+<dd class="dd04"></dd>
+<dd class="dd00"></dd>
+
+<dd class="dd02">帐户性质 </dd>
+<dd class="dd13">
+<!--
+EOT;
+	if(!isset($db_payinfo) || $db_payinfo[acc_type]==0){
+		echo "<input type='radio' name='acc_type' id='acc_type' value='0' id='acc_type0' checked/><label id='acc_type0'>个人</label>";
+	}else{
+		echo "<input type='radio' name='acc_type' id='acc_type' value='0' id='acc_type0'/><label id='acc_type0'>个人</label>";	
+	}
+	if(isset($db_payinfo) && $db_payinfo[acc_type]==1){
+		echo "<input type='radio' name='acc_type' id='acc_type' value='1' id='acc_type1' checked/><label id='acc_type1'>企业</label>";
+	}else{
+		echo "<input type='radio' name='acc_type' id='acc_type' value='1' id='acc_type1'/><label id='acc_type1'>企业</label>";	
+	}	
+print <<<EOT
+-->
+</dd>
+<dd class="dd04"></dd>
+<dd class="dd00"></dd>
+
+<dd class="ddbtn"><input name="btnSave" type="submit" value="确认修改" /></dd>
+<dd class="dd00"></dd>
+  
+<!--
+EOT;
+}else if($action=="editquestion"){
+	echo '<dd class="dd02">密码保护问题 <strong>*</strong></dd>';
+	echo '<dd class="dd03">&nbsp;&nbsp;<select id="question" name="question" onchange="$(\'att_question\').hide();"><option value="">请选择密码提示问题</option>';
+	foreach($arrquestion as $question){
+		if($AffUser[question]==$question)
+			echo "<option value='".$question."' selected>".$question."</option>";
+		else
+			echo "<option value='".$question."'>".$question."</option>";
+	}
+	echo "</select></dd>";
+	echo '<dd class="dd04" id="att_question" style="display:none">请选择密码提示问题</dd>';
+	echo '<dd class="dd00"></dd>';
+print <<<EOT
+-->
+	<dd class="dd02">密码保护问题答案 <strong>*</strong></dd>
+	<dd class="dd03"><input type="text" id="answer" name="answer" onkeydown="$('att_answer').hide();" value="$AffUser[answer]"/></dd>
+	<dd class="dd04" id="att_answer" style="display:none">请输入密码保护问题答案</dd>
+	<dd class="dd00"></dd>
+
+	<dd class="ddbtn"><input name="btnSave" type="submit" value="确认修改" /></dd>
+	<dd class="dd00"></dd>
+	
+<script>
+function checkfrm(){
+	if(isEmpty($("question").value)){ $("att_question").show();return false;}
+	if(isEmpty($("answer").value)){ $("att_answer").show();return false;}
+	return true;
+}
+</script>
+<!--
+EOT;
+ }
+print <<<EOT
+-->
+  </dl>
 </form>
 </div>
 </div>

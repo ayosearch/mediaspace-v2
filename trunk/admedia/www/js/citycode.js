@@ -84,6 +84,19 @@
 		document.getElementById("divprovince").innerHTML = optprovince;
 		showCity(provinceid,'0');
 	}
+	
+	function showProvince2(provinceid,cityid){
+		var optprovince = "<select name='province_id' id='province_id' onchange='showCity(this.value)'>";
+		for(i=0;i<arrprovince.length;i++){
+			if(provinceid==arrprovince[i][0])
+				optprovince += "<option value='"+arrprovince[i][0]+"' selected>"+arrprovince[i][1]+"</option>";
+			else
+				optprovince += "<option value='"+arrprovince[i][0]+"'>"+arrprovince[i][1]+"</option>";
+		}
+		optprovince += "</select>";
+		document.getElementById("divprovince").innerHTML = optprovince;
+		showCity(provinceid,cityid);
+	}
 
 	function showCity(provinceid,city_id){
 		var optcity = "<select name='city_id' id='city_id'>";

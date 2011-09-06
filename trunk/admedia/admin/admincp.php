@@ -11,7 +11,7 @@ $jspath = "$cfg_vdir/$cfg_jspath";
 $csspath = "$cfg_vdir/$cfg_csspath";
 $onlineip = ClientIp();
 
-InitGetPost(array('job','colid','curid','action','curpage','ajax','searchtype','searchkey','ids','transtr'));
+InitGetPost(array('job','colId','curid','action','curpage','ajax','searchtype','searchkey','ids','transtr'));
 
 $admin_file = $pmServer['PHP_SELF'];
 $basename = $admin_file;
@@ -45,7 +45,8 @@ $ckLogin = -2;
 
 if (!empty($CK)) {
 	require_once R_P."lib/db_mysql.php";
-	$db = new DB($db_host,$db_user,$db_pass,$db_name,$PM,$charset,$pconnect);
+	$db_adspace = new DB(DB_A_HOST,DB_A_USER,DB_A_PASS,DB_A_NAME,DB_A_CHARSET,DB_A_PCONNECT);
+	$db_prices = new DB(DB_P_HOST,DB_P_USER,DB_P_PASS,DB_P_NAME,DB_P_CHARSET,DB_P_PCONNECT);	
 	$ckLogin = checkPass($CK);
 } else {
 	$db = null;
@@ -71,27 +72,33 @@ if ($ckLogin!=1) {
 	}
 } else {
 	if($job=="enter"){
+		writeSysLog(0, "用户登录", $AffUser[login_name]."登录系统");	
 		include PrintEot("enter");
 		footer(true);
-	}else if($job=="top" || $job=="main" || $job=="intro" || $job=="treemenu"){
+	}else if($job=="treemenu"){
+		include_once(C_P.$job.$cfg_pext);
+	}else if($job=="top" || $job=="main" || $job=="intro"){
 		include PrintEot($job);
 		footer(true);
 	}else{
-		$curidx = 0;		
-		empty($perpage) && $perpage = 25;
-		empty($curpage) && $curpage = 1;		
-		$canaudit = true;
-		$canadd = true;
-		$canedit = true;
-		$candel = true;
-		$candis = true;
+		$curidx = 0;	
+		$canself = false;
+		$canall = false;
+		$canaudit = false;
+		$canadd = false;
+		$canedit = false;
+		$candel = false;
+		$candis = false;
+		empty($perpage) && $perpage =25;
+		empty($curpage) && $curpage = 1;	
 		$transtr = "";
 		$backurl = urlencode($basename."?".$pmServer[QUERY_STRING]);
-		$admin_file = "$admin_file?job=".$job;
-		require_once(C_P.$job.$cfg_pext);
+		$admin_file = "$admin_file?job=".$job."&curpage=".$curpage."&colId=".$colId;
+		$objSysUser = LOAD::loadDB("AdminUser");
+		$objModule = $objSysUser->getSysModule($colId);
+		require_once(C_P.$objModule['url']);
 	}
 }
-
 
 function checkPass($CK){
 	global $job,$AdminUser;
@@ -101,7 +108,7 @@ function checkPass($CK){
 	$imgcode = GetCookie('imgcode');
 	//echo $imgcode.":".$CK[2];
 	if($imgcode==md5($CK[3])){
-		if($GLOBALS['db']){
+		if($GLOBALS['db_adspace']){
 			$objSysUser = LOAD::loadDB("AdminUser");
 			$AdminUser = $objSysUser->getSysUserByLogin($CK[1],$CK[2]);
 			if($AdminUser){
@@ -330,15 +337,6 @@ function showUrl($url,$text=null){
     
 }
 
-function showDepositUseType($use_type){
-	if(intval($use_type)==0){
-		echo "充值";
-	}
-	if(intval($use_type)==1){
-		echo "当期扣费";
-	}	
-}
-
 function showClientType($state){
 	$str = "潜在客户";
 	switch ($state){
@@ -439,9 +437,9 @@ function loadMerchantList($status,$selid=null){
 	return $op_merchantlist;
 }
 
-function loadMerContractList($status,$selid=null){
+function loadMerContractList($status,$selid=-1,$merId=-1){
 	global $objMerchant;
-	$db_mercontractlist = $objMerchant->getMerContractAll($status);
+	$db_mercontractlist = $objMerchant->getMerContractAll($status,$merId);
 	$op_mercontractlist = "";
 	foreach($db_mercontractlist as $db_mercontract){
 		if($selid==$db_mercontract[id]){
@@ -549,14 +547,38 @@ function loadBaseAdvSize($adsize=null){
 	$db_advsizelist = $objCommData->getBaseAdvSizeAll();
 	$op_advsizelist = "";
 	foreach($db_advsizelist as $db_advsize){
-		if($adsize==$db_advsize[height].'X'.$db_advsize[width]){
-			$op_advsizelist .= "<option value='".$db_advsize[height]."X".$db_advsize[width]."' selected>".$db_advsize[height]."X".$db_advsize[width]."</option>";
+		if($adsize==$db_advsize[width].'X'.$db_advsize[height]){
+			$op_advsizelist .= "<option value='".$db_advsize[width]."X".$db_advsize[height]."' selected>".$db_advsize[width]."X".$db_advsize[height]."</option>";
 		}else{
-			$op_advsizelist .= "<option value='".$db_advsize[height]."X".$db_advsize[width]."'>".$db_advsize[height]."X".$db_advsize[width]."</option>";
+			$op_advsizelist .= "<option value='".$db_advsize[width]."X".$db_advsize[height]."'>".$db_advsize[width]."X".$db_advsize[height]."</option>";
 		}
 	}
 	unset($objCommData,$db_advsizelist,$db_advsize);
 	return $op_advsizelist;
+}
+
+function loadUserList($baseRole,$userId=0){
+	$objSysUser = LOAD::loadDB("AdminUser");
+	$db_roles = $objSysUser->getSysRoleAllByType($baseRole);
+	$roleIds = "";
+	foreach($db_roles as $db_role){
+		$roleIds .= $db_role[id].",";
+	}
+	$op_userlist = "";
+	if(!empty($roleIds)){
+		$roleIds = substr($roleIds,0,strlen($roleIds)-1);
+		$db_sysuserlist = $objSysUser->getSysUserByRoleIds($roleIds);
+		if($db_sysuserlist && count($db_sysuserlist)>0){
+			foreach($db_sysuserlist as $db_sysuser){
+				if($userId==$db_sysuser[id]){
+					$op_userlist .= "<option value='".$db_sysuser[id]."' selected>".$db_sysuser[login_name]."</option>";
+				}else{
+					$op_userlist .= "<option value='".$db_sysuser[id]."'>".$db_sysuser[login_name]."</option>";
+				}
+			}
+		}
+	}
+	return $op_userlist;
 }
 
 function showEditButton($curid){
@@ -694,11 +716,11 @@ function showPageBreakInfo($currpagecount,$js=null){
 }
 
 function writeSysLog($op_type,$op_name,$op_content){
-	global $objSysUser,$AdminUser;
+	global $objSysUser,$AdminUser,$timestamp;
 	if(!isset($objSysUser)){
 		$objSysUser = LOAD::loadDB("AdminUser");
 	}
-	$arrfield = array("user_id"=>$AdminUser[id],"user_name"=>$AdminUser[login_name],"platform"=>"sys","op_type"=>$op_type,"op_name"=>$op_name,"op_content"=>$op_content);
+	$arrfield = array("user_id"=>$AdminUser[id],"user_name"=>$AdminUser[login_name],"platform"=>"sys","op_type"=>$op_type,"op_name"=>$op_name,"op_content"=>$op_content,'create_time'=>$timestamp);
 	$objSysUser->insertSysOpLog($arrfield);
 }
 ?>

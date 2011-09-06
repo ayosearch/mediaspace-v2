@@ -1,4 +1,6 @@
 <?php
+include_once('rolecontrol.php');	
+
 InitGetPost(array('mer_id','start_time','end_time'));
 
 !empty($mer_id) && $transtr .= "&mer_id=$mer_id";
@@ -11,14 +13,14 @@ $op_merlist = loadMerchantList(1,$mer_id);
 $objFinance = LOAD::loadClass("Finance");
 
 $stwhere = "";	
-(!empty($mer_id)) && $stwhere .= " mer_id=$mer_id and ";
-(!empty($start_time)) && $stwhere .= " start_time=".__strtotime($start_time)." and ";
-(!empty($end_time)) && $stwhere .= " end_time=".__strtotime($end_time)." and ";
+(!empty($mer_id)) && $stwhere .= " a.mer_id=$mer_id and ";
+(!empty($start_time)) && $stwhere .= " a.create_time>=".__strtotime($start_time." 00:00:00")." and ";
+(!empty($end_time)) && $stwhere .= " a.create_time<=".__strtotime($end_time." 00:00:00")." and ";
 (strlen($stwhere)>0) && $stwhere = substr($stwhere,0,strlen($stwhere)-4);
 	
 $totalnum = $objFinance->getAdvProfitDayTotalCount($stwhere);
 $totalpage = ceil($totalnum/$perpage);
-$db_advprofitlist = $objFinance->getAdvProfitDayPageList($curpage,$perpage,$stwhere,"create_time");
+$db_advprofitlist = $objFinance->getAdvProfitDayPageList($curpage,$perpage,$stwhere,"a.create_time");
 include PrintEot($job);
 footer(true);
 ?>

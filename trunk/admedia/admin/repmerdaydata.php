@@ -1,4 +1,6 @@
 <?php
+include_once('rolecontrol.php');	
+
 $objDataLog = LOAD::loadClass("DataLog");
 $totalnum = $objDataLog->getRepMerDayDataTotalCount();
 $totalpage = ceil($totalnum/$perpage);

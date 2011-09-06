@@ -1,4 +1,6 @@
 <?php 
+include_once('rolecontrol.php');	
+
 InitGetPost(array('birthday','all','sex'));
 
 $month = date('Y-m',$timestamp);
@@ -18,13 +20,25 @@ if($action=="new"){
 	$objMerchant = LOAD::loadDB("Merchant");
 	if(empty($curid)){
 		$_POST[create_time] = $timestamp;
-		$objMerchant->insertMerLinkMan($_POST);
+		$insertid = $objMerchant->insertMerLinkMan($_POST);
+		writeSysLog(1,"新增广告主联系人", $AdminUser[login_name]."新增广告主联系人ID:".$insertid.",联系人内容:".implode(",",$_POST));			
 	}else{
 		$objMerchant->updateMerLinkman($curid,$_POST);
+		writeSysLog(2,"修改广告主联系人", $AdminUser[login_name]."修改广告主联系人ID:".$curid.",联系人内容:".implode(",",$_POST));					
 	}
-	ObHeader("$admin_file$transtr");
+	ObHeader($admin_file.$transtr);
+}else if($action=="del"){
+	if(strpos($ids,',')>0){
+		$ids = substr($ids,0,strlen($ids)-1);
+	}
+	if(strlen($ids)>0){
+		$objAdvertise = LOAD::loadDB("Merchant");
+		$objAdvertise->deleteBatchMerLinkMan($ids);
+		writeSysLog(3, "删除广告主联系人", $AdminUser[login_name]."删除广告主联系人ID:".$ids);		
+	}
+	ObHeader($admin_file.$transtr);	
+	exit;
 }else if(empty($action)){
-
 	(!empty($birthday)) && $stwhere .= " a.birthday like '".$month."%' and ";		
 	(!empty($sex)) && $stwhere .= " a.sex=".intval($sex)." and ";	
 	if(!empty($searchtype) && !empty($searchkey)) {

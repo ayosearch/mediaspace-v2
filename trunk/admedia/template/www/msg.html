@@ -3,44 +3,79 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <script src="js/png_IE6.js" type="text/javascript"></script>
-<title>站长-右侧</title>
-<link href="style/my.css" rel="stylesheet" type="text/css" />
+<title>绔欓暱-鍙充晶</title>
+<link href="css/zhanzhang_right.css" rel="stylesheet" type="text/css" />
+<link href="css/my.css" rel="stylesheet" type="text/css" />
 
 </head>
 
 <body class="code">
+
 <div class="right_box">
-<!--right title-->
 <div class="right_tit">
 <dl>
 <dt></dt>
-<dd>站长个人页面--我的消息</dd>
+<dd>绔欓暱涓汉椤甸潰--鎴戠殑娑堟伅</dd>
 </dl>
 </div>
+<form action="$index_file" method="get" name="form" onsubmit="checkfrm();">
+<!--
+EOT;
+if(empty($action)){
+print <<<EOT
+-->
+
+<div class="edit_manage">
+<dl>
+<dd class="dd11"><strong>娑堟伅鏍囬</strong></dd>
+<dd class="dd13"><strong>鏄惁闃呰</strong></dd>
+<dd class="dd11"><strong>鏃堕棿</strong></dd>
+<dd class="dd13"><strong>鎿嶄綔</strong></dd>
+
+</dl>
+</div>
+
+<!--
+EOT;
+}else if($action=="send"){
+print <<<EOT
+-->
+
+<!--
+EOT;
+}else if($action=="add"){
+print <<<EOT
+-->
+
 <div class="my_body">
 <dl>
-<dd class="dd01"><input name="" type="button" class="input01" value="已收信息" /></dd>
-<dd class="dd01"><input name="" type="button" class="input01" value="已发信息" /></dd>
-<dd class="dd01"><input name="" type="button" class="input01" value="发信息" /></dd>
-<dd class="cleardd"></dd>
 
-<dd class="dd02">信息标题</dd>
+<dd class="dd02">淇℃伅鏍囬</dd>
 <dd class="dd03"><input name="" type="text" /></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd02">信息内容</dd>
+<dd class="dd02">淇℃伅鍐呭</dd>
 <dd class="dd06"><textarea name="" cols="" rows=""></textarea></dd>
 <dd class="dd00"></dd>
 
 
-<dd class="ddbtn"><input name="" type="button" value="立即发送" /></dd>
+<dd class="ddbtn"><input name="btnSubmit" type="submit" value="绔嬪嵆鍙戦��" /> <input name="btnback" type="button" value="杩斿洖" onclick="history.back(-1);"/></dd>
 <dd class="dd00"></dd>
-
 
 </dl>
 </div>
+
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</form>
 </div>
 </body>
 </html>
+<!--
+EOT;
+?>-->

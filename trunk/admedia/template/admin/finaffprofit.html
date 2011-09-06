@@ -44,14 +44,13 @@ print <<<EOT
                 <td align="middle" class="title" height="20" valign="center">序号</td>   
                 <td align="middle" class="title" height="20" valign="center">日期</td>     
                 <td align="middle" class="title" height="20" valign="center">站长</td>                                              
-                <td align="middle" class="title" height="20" valign="center">站点</td>
-                <td align="middle" class="title" height="20" valign="center">计费数量</td>       
-                <td align="middle" class="title" height="20" valign="center">计费金额</td>               
+                <td align="middle" class="title" height="20" valign="center">应收数量</td>       
+                <td align="middle" class="title" height="20" valign="center">应收金额</td>               
                 <td align="middle" class="title" height="20" valign="center">支付数量</td> 
                 <td align="middle" class="title" height="20" valign="center">支付金额</td>             
                 <td align="middle" class="title" height="20" valign="center">利润</td>                                  
                 <td align="middle" class="title" height="20" valign="center">创建时间</td>
-                <td align="middle" class="title" height="20" valign="center">更新时间</td>                                                                                                                                                                                                                                                                                                                                                                      
+                <td align="middle" class="title" height="20" valign="center">更新时间</td>
             </tr>
 <!--
 EOT;
@@ -59,8 +58,6 @@ $curidx = ($curpage-1)*$perpage;
 $curpageidx = 0;
 $showcount = count($db_affprofitlist); 
 foreach($db_affprofitlist as $db_affprofit ){
-	$db_affiliate = getAffliate($db_affprofit[aff_id]);
-	$db_site = getAffWebSite($db_affprofit[site_id]);	
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
 	$cdate = date('Y/m/d H:i:s',$db_affprofit[create_time]);
@@ -70,13 +67,12 @@ print <<<EOT
             <tr height="30" onclick="SwitchTd(this,'click',$curpageidx);" onmouseout="SwitchTd(this,'out',$curpageidx);" onmouseover="SwitchTd(this,'over',$curpageidx);" style="cursor: hand">
                 <td align="middle" valign="center">$curidx </td>   
                 <td align="middle" valign="center">&nbsp;$db_affprofit[iday]</td> 
-                <td align="middle" valign="center">&nbsp;$db_affiliate[name]($db_affiliate[id])</td>      
-                <td align="middle" valign="center">&nbsp;$db_site[name]($db_site[id])</td>                                          
+                <td align="middle" valign="center">&nbsp;$db_affprofit[aff_name]($db_affprofit[id])</td>                                    
                 <td align="middle" valign="center">&nbsp;$db_affprofit[income_count]</td>   
                 <td align="middle" valign="center">&nbsp;$db_affprofit[income_fee]</td> 
                 <td align="middle" valign="center">&nbsp;$db_affprofit[out_count]</td>   
                 <td align="middle" valign="center">&nbsp;$db_affprofit[out_fee]</td>  
-                <td align="middle" valign="center">&nbsp;$db_affprofit[profit_rate]</td>                                                           
+                <td align="middle" valign="center">&nbsp;$db_affprofit[profit_rate]</td>
                 <td align="middle" valign="center">&nbsp;$cdate</td>
                 <td align="middle" valign="center">&nbsp;$udate</td>
                 <td align="middle" valign="center">明细</td> 

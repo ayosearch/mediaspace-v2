@@ -1,4 +1,6 @@
-<!--<?php print <<<EOT
+<!--<?php 
+if(empty($action)){
+print <<<EOT
 -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -51,14 +53,7 @@ showPageLink("fee_type", "3", "CPD");print <<<EOT
 --></p></dd>
 <dd class="dd00"></dd>
 
-<dd class="dd01">投放日期</dd>
-<dd>开始时间：</dd>
-<dd><input name="start_date" type="text"  class="text" readonly value="" size="2"/><A href="javascript:OpenCalendar('start_date', false)"><IMG src="/www/img/icon-calendar.gif" align="absMiddle" border="0"></A></dd>
-<dd>结束时间：</dd>
-<dd><input name="end_date" type="text" class="text" readonly value=""  size="2"/><A href="javascript:OpenCalendar('end_date', false)"><IMG src="/www/img/icon-calendar.gif" align="absMiddle" border="0"></A></dd>
-<dd class="dd00"></dd>
-
-<dd class="dd01">按照分类</dd>
+<dd class="dd01">申请状态分类</dd>
 <dd><p><!--
 EOT;
 showPageLink("status", "-1", "未申请");print <<<EOT
@@ -69,21 +64,20 @@ showPageLink("status", "0", "申请中");print <<<EOT
 --></p></dd>
 <dd><p><!--
 EOT;
-showPageLink("status", "2", "复审中");print <<<EOT
+showPageLink("status", "1", "通过申请");print <<<EOT
 --></p></dd>
 <dd><p><!--
 EOT;
-showPageLink("status", "1", "申请通过");print <<<EOT
+showPageLink("status", "2", "申请未通过");print <<<EOT
 --></p></dd>
 <dd><p><!--
 EOT;
-showPageLink("status", "3", "申请被驳回");print <<<EOT
+showPageLink("status", "3", "复审中");print <<<EOT
 --></p></dd>
-<dd class="dd00"></dd>
-
-
-<dd class="dd02"><input name="searchkey" type="text"  value="$searchkey"/></dd>
-<dd class="dd03"><input name="btnQuery" type="submit" class="search_btn" value=""/></dd>
+<dd><p><!--
+EOT;
+showPageLink("status", "4", "申请被驳回");print <<<EOT
+--></p></dd>
 <dd class="dd00"></dd>
 
 
@@ -101,6 +95,7 @@ showPageLink("status", "3", "申请被驳回");print <<<EOT
 <dd class="dd01"><strong>价格/单位</strong></dd>
 <dd class="dd02"><strong>开始时间</strong></dd>
 <dd class="dd01"><strong>结束时间</strong></dd>
+<dd class="dd02"><strong>申请状态</strong></dd>
 <dd class="dd03"><strong>操作</strong></dd>
 
 <!--
@@ -109,9 +104,19 @@ $curidx = ($curpage-1)*$perpage;
 $curpageidx = 0;
 $showcount = count($db_advlist); 
 foreach($db_advlist as $db_adv){
-$sdate = date('Y/m/d H:i',$db_adv[start_time]);
-$edate = date('Y/m/d H:i',$db_adv[end_time]);
+$sdate = date('Y/m/d H',$db_adv[start_time]);
+$edate = date('Y/m/d H',$db_adv[end_time]);
 $feetype = $cfg_advfeetype[$db_adv[fee_type]];
+$appystatus = getAffAdvApplyStatus($AffUser[id],$db_adv[id]);
+$status = "未申请";
+$showhtml = "";
+if($appystatus!=-1){
+	$status = $cfg_affapplystatus[$appystatus];
+	if($appystatus==4) $showhtml = '<a target="right" href="'.$index_file.'&action=reapply&curid='.$db_adv[id].'&curpage='.$curpage.'">重新申请</a> ';
+	if($appystatus==1) $showhtml = '<a target="right" href="'.$index_file.'&action=advcode&curid='.$db_adv[id].'&curpage='.$curpage.'">获取代码</a> ';
+}else{
+	$showhtml = '<a target="right" href="'.$index_file.'&action=apply&curid='.$db_adv[id].'&curpage='.$curpage.'">申请广告</a> ';
+}
 print <<<EOT
 -->
 <dd class="dd01">$db_adv[id]</dd>
@@ -121,17 +126,27 @@ print <<<EOT
 <dd class="dd01">$db_adv[aff_price]$db_adv[aff_unit]</dd>
 <dd class="dd02">$sdate</dd>
 <dd class="dd01">$edate</dd>
-<dd class="dd03">
-	<a target="right" href="$basename?job=advapply&curid=$db_adv[id]">申请广告</a> 
-	<a target="right" href="$basename?job=advcode&curid=$db_adv[id]">获取代码</a>
-</dd>
+<dd class="dd02">$status</dd>
+<dd class="dd03">$showhtml</dd>
 <!--
 EOT;
 }
 print <<<EOT
 -->
-
 </dl>
+
+<table id="Table1" border="0" cellpadding="0" cellspacing="0" width="98%">
+        <tr>
+            <td align="right" height="35" valign="middle">
+<!--
+EOT;
+	showPageBreakInfo($showcount);
+print <<<EOT
+-->
+             </td>
+        </tr>
+    </table>
+
 </div>
 <input id="Hidden1" name="allSelect" type="hidden" value="all" />
 <input type="hidden" id="count" name="count" value="$showcount" />
@@ -141,4 +156,352 @@ print <<<EOT
 </html>
 <!--
 EOT;
-?>-->
+}else if($action=="apply" || $action=="reapply"){
+print <<<EOT
+-->
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="js/png_IE6.js" type="text/javascript"></script>
+<script src="js/prototype.js" type="text/javascript"></script>
+<script src="js/public.js" type="text/javascript"></script>
+<title>编辑-右侧</title>
+<link href="css/code.css" rel="stylesheet" type="text/css" />
+<script>
+function checkfrm(){
+	$("site_ids").value = "";
+	$$('input[type="checkbox"][name="site_id"]').each(function(node){
+		if(node.checked)  $("site_ids").value+=node.value+",";
+	});	
+	if(isEmpty($("site_ids").value)){ $("att_site_ids").show();return false;}	
+	if(isEmpty($("memo").value)){ $("att_memo").show();return false;}
+	return true;
+}
+</script>
+</head>
+
+<body class="code">
+
+<form name="form" action="$index_file" method="post" onsubmit="return checkfrm();">
+<input type="hidden" name="action"  id="action" value="applysave"/>
+<input type="hidden" name="curid"  id="curid" value="$curid"/>
+<input type="hidden" name="site_ids" id="site_ids" value=""/>
+
+<div class="right_box">
+
+<div class="right_tit">
+<dl>
+<dt></dt>
+<dd>站长个人页面--申请广告</dd>
+</dl>
+</div>
+<div class="newID">
+<dl>
+<dt>申请广告</dt>
+<dd class="dd00"></dd>
+
+<dd class="dd01">申请广告名称<font color=red>*</font></dd>
+<dd class="dd07"><span>$adv_name</span></dd>
+<dd class="dd00"></dd>
+
+<dd class="dd01">申请站点<font color=red>*</font></dd>
+<dd class="dd17"><span>
+<!--
+EOT;
+if(isset($db_sitelist)){
+	foreach($db_sitelist as $db_site){
+		$pos = strpos(",,".$db_advapply[site_ids],",".$db_site[id].',');
+		if($pos)
+			echo "<input type='checkbox' name='site_id' id='site_id' value='".$db_site[id]."' checked/>".$db_site[name]." ";
+		else
+			echo "<input type='checkbox' name='site_id' id='site_id' value='".$db_site[id]."'/>".$db_site[name]." ";		
+	}
+}else{
+	echo "&nbsp;";
+}
+print <<<EOT
+-->
+</span></dd>
+<dd class="dd08"><span style="display:none;color:red" id="att_site_ids">请选择要提交申请的站点</span>
+<dd class="dd00"></dd>
+
+<dd class="dd01">申请说明<font color=red>*</font></dd>
+<dd class="dd05"><p><textarea ID="memo" name="memo" cols="80" rows="10" onkeydown="$('att_memo').hide();"></textarea></p><span id="att_memo" style="display:none;color:red">请输入申请说明</span></dd>
+<dd class="dd00"></dd>
+</dl>
+</div>
+
+<div class="editzhan">
+<dl>
+<dd><input name="submit" type="submit" value="提交申请" class="input1" /><input name="back" type="button" value="返回" class="input1" onclick="history.go(-1);"/></dd>
+</dl>
+</div>
+</div>
+
+ </form>
+</body>
+</html>
+<!--
+EOT;
+}else if($action=="advcode"){
+$sdate = date('Y/m/d H',$db_adv[start_time]);
+$edate = date('Y/m/d H',$db_adv[end_time]);
+print <<<EOT
+-->
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<script src="js/png_IE6.js" type="text/javascript"></script>
+<script src="js/prototype.js" type="text/javascript"></script>
+<script src="js/public.js" type="text/javascript"></script>
+<script src="js/common.js" type="text/javascript"></script>
+<title>站长-右侧</title>
+<link href="css/admin.css" rel="stylesheet" type="text/css" />
+<link href="css/code.css" rel="stylesheet" type="text/css" />
+<link href="css/zhanzhang_right.css" rel="stylesheet" type="text/css" />
+<link href="css/member.css" rel="stylesheet" type="text/css" />
+<script>
+function SelectSite(obj){
+	window.location = "$index_file&site_id="+obj.value;
+}
+function changeAdplace(obj){
+	var d = new Date();
+	var pars = "job=$job&action=affplace&curid="+obj.value+"&d="+d.getMilliseconds();
+	new Ajax.Updater("divplace",'$basename', {method: 'get', parameters: pars});
+}
+</script>
+</head>
+
+<body class="code">
+
+<div class="right_box">
+<form action="$index_file" method="get" name="form" id="form">
+<input type="hidden" name="curid" id="curid" value="$curid"/>
+<div class="right_tit">
+<dl>
+<dt></dt>
+<dd>站长个人页面--获取广告代码</dd>
+</dl>
+<table>
+	<tr><td width="10px"></td>
+	<td height="35" width="10%">所选广告信息：</td><td width="15%">$db_adv[name]</td>
+	<td align="right">价格/单位：</td><td align="left">$db_adv[aff_price]$db_adv[aff_unit]</td>
+	<td width="5%">周期：</td><td width="20%" nowrap>$sdate 至 $edate</td></tr>
+</table>
+</div>
+
+<div class="admin_add">
+<!--
+EOT;
+if(count($db_advlinklist)>0){
+print <<<EOT
+-->
+	<table cellSpacing="1" cellPadding="5" width="100%" align="center" bgColor="#eeeeee" border="0"><tr><td width="10px"></td><td height="35">文字链</td></tr></table>
+	<table cellSpacing="1" cellPadding="5" >
+<!--
+EOT;
+$t=0;
+foreach($db_advlinklist as $db_advcode){
+	if($t%8==0) echo '<tr><td width="10px"></td>';
+	echo '<td height="35"><input type="radio" name="creative_id" id="creative_id" value="'.$db_advcode[id].'" onclick="javascript:createCode();"/></td>';
+	echo '<td height="35">'.$db_advcode[name].'：</td>';
+	echo '<td height="35"><a href="'.$admin_file.'">'.$db_advcode[res_content].'</a></td>';
+	if($t%4==7) echo '</tr>';	
+	$t++;	
+}
+print <<<EOT
+-->
+	</table>
+<!--
+EOT;
+}
+if(count($db_advimglist)>0){
+print <<<EOT
+-->
+	<table cellSpacing="1" cellPadding="5" width="100%" align="center" bgColor="#eeeeee" border="0"><tr><td width="10px"></td><td height="35">图片链</td></tr></table>
+	<table cellSpacing="1" cellPadding="5" >
+<!--
+EOT;
+$t=0;
+foreach($db_advimglist as $db_advcode){
+	$arradsize = split('X',$db_advcode[adsize]);
+	if($t%4==0) echo '<tr><td width="10px"></td>';
+	echo '<td></td><td height="35"><input type="radio" name="creative_id" id="creative_id" value="'.$db_advcode[id].'" onclick="javascript:createCode();"/>'.$db_advcode[name].'</td>';
+	echo '<td></td><td><img src="'.$cfg_vdir.$db_advcode[res_content].'" width="'.$arradsize[0].'" height="'.$arradsize[1].'"/></td>';
+	if($t%4==3) echo '</tr>';	
+	$t++;	
+}
+print <<<EOT
+-->
+	</table>
+<!--
+EOT;
+}
+if(count($db_advcodelist)>0){
+print <<<EOT
+-->
+	<table cellSpacing="1" cellPadding="5" width="100%" align="center" bgColor="#eeeeee" border="0"><tr><td width="10px"></td><td height="35">原始代码</td></tr></table>
+	<table cellSpacing="1" cellPadding="5" >
+		<tr><td width="10px"></td>
+<!--
+EOT;
+foreach($db_advcodelist as $db_advcode){
+	echo '<td height="35"><input type="radio" name="creative_id" id="creative_id" value="'.$db_advcode[id].'" onclick="javascript:createCode();"/>'.$db_advcode[name].'</td>';
+}
+print <<<EOT
+-->
+		</tr>
+	</table>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+</div>
+
+<div class="member_body">
+<dl>
+<dd class="dd02">选择网站 <strong>*</strong></dd>
+<dd class="dd13">
+<!--
+EOT;
+if(isset($db_sitelist)){
+    $i=0;
+    $sel_siteid=0;
+	foreach($db_sitelist as $db_site){
+		if($i==0){ 
+		    $sel_siteid = $db_site[id];
+			echo "<input type='radio' name='site_id' id='site_id' value='".$db_site[id]."' checked onclick='javascript:RefershAdCode(this);'/>".$db_site[name]." ";
+		}else echo "<input type='radio' name='site_id' id='site_id' value='".$db_site[id]."' onclick='javascript:RefershAdCode(this);'/>".$db_site[name]." ";
+		$i++;
+	}
+}else{
+	echo "&nbsp;";
+}
+print <<<EOT
+-->
+</dd>
+<dd class="dd04"></dd>
+<dd class="dd00"></dd>
+
+
+<dd class="dd02">选择广告位</dd>
+<dd class="dd03" id="divplace">&nbsp;&nbsp;
+<select name="affplace_id" id="affplace_id" style="width:100%" onchange="javascript:createCode();">
+<optin value="">请选择广告位...</optin>
+<!--
+EOT;
+foreach($db_affplacelist as $db_affplace){
+	echo "<option value='".$db_affplace[id]."'>".$db_affplace[name]."</option>";
+}
+print <<<EOT
+-->
+</select>
+</dd>
+<dd class="dd04"></dd>
+<dd class="dd00"></dd>
+
+
+<dd class="dd02">广告代码</dd>
+<dd class="dd05"><span id="divcode"><textarea name="adcode" id="adcode" readonly></textarea></span><input name="" type="button" value="复制代码" onclick="copy();"/></dd>
+<dd class="dd04"></dd>
+<dd class="dd00"></dd>
+
+</dl>
+</div>
+
+</form>
+</div>
+<script>
+  function createCode(){
+	var nodeval = "";var site_id="";
+	$$('input[type="radio"][name="creative_id"]').each(function(node){
+		if(node.checked){
+			nodeval = node.value;
+		}
+	});	
+	$$('input[type="radio"][name="site_id"]').each(function(node){
+		if(node.checked){
+			site_id = node.value;
+		}
+	});
+	if(nodeval!="" && site_id!=""){
+		var aff_id="$AffUser[id]";
+		var place_id=$("affplace_id").value;
+		var d = new Date();
+		var pars = "job=$job&action=innercode&curid="+nodeval+"&aff_id="+aff_id+"&site_id="+site_id+"&place_id="+place_id+"&d="+d.getMilliseconds();
+		new Ajax.Updater("divcode",'$basename', {method: 'get', parameters: pars});
+	}else{
+		alert("请选择一个广告创意！");
+	}
+}
+ function RefershAdCode(obj){
+	var d = new Date();
+	var myAjax = new Ajax.Request("$basename?job=$job&action=affplace&curid="+obj.value+"&d="+d.getMilliseconds(), {  method: 'get',  parapmeters: "", onComplete: showCode });
+ }
+ function showCode(rs){
+	 if(rs!=null){
+		 $("divplace").innerHTML = rs.responseText;
+		 createCode();
+	 }
+ }
+ function copy(){
+	var nodeval = "";
+	$$('input[type="radio"][name="creative_id"]').each(function(node){
+		if(node.checked){
+			nodeval = node.value;
+		}
+	});	
+	if(nodeval!=""){
+	 	window.clipboardData.setData("Text",$("adcode").value); 
+	 	$("adcode").select();
+	 	alert("成功复制到剪贴中，请粘贴到您的WAP页面代码中！");
+	}else{
+		alert("请选择一个广告创意！");
+	}
+ }
+</script>
+</body>
+</html>
+
+<!--
+EOT;
+}else if($action=="affplace"){
+print <<<EOT
+-->
+&nbsp;&nbsp;
+<select name="affplace_id" id="affplace_id" style="width:98%" onchange="javascript:createCode();">
+<!--
+EOT;
+foreach($db_affplacelist as $db_affplace){
+	echo "<option value='".$db_affplace[id]."'>".$db_affplace[name]."</option>";
+}
+print <<<EOT
+-->
+</select>
+<!--
+EOT;
+}else if($action=="innercode"){
+	if($db_advplace[content_type]==0){
+print <<<EOT
+-->
+<textarea name="adcode" id="adcode" readonly><a href="'$cfg_domain$cfg_vdir/i/?act=1&id=5-$aff_id-$site_id-$place_id&c=$valicode">$db_advplace[res_content]</a></textarea>
+<!--
+EOT;
+	}
+	if($db_advplace[content_type]==1){
+print <<<EOT
+-->
+ <textarea name="adcode" id="adcode" readonly><a href="$cfg_domain$cfg_vdir/i/?act=1&id=$curid-$aff_id-$site_id-$place_id&c=$valicode"><img src="$cfg_domain$cfg_vdir/i/?act=0&id=$curid-$aff_id-$site_id-$place_id&c=$valicode" width="$arradsize[0]" height="$arradsize[1]"/></a></textarea>
+<!--
+EOT;
+	}
+	if($db_advplace[content_type]==2){
+print <<<EOT
+-->
+<textarea name="adcode" id="adcode" readonly>$content</textarea>
+<!--
+EOT;
+	}
+}?>-->

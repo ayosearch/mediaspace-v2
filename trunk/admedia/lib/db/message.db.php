@@ -4,37 +4,37 @@ class PM_MessageDB extends BaseDB{
 	function insertSysMessage($fieldsData){
 		$fieldsData = $this->_checkSysMessageData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_sysmsglog SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_sysmsglog SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateSysMessage($id,$updateData){
 		$updateData = $this->_checkSysMessageData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_sysmsglog SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_sysmsglog SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteSysMessage($id){
-		$this->_db->update("DELETE pm_sysmsglog WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE pm_sysmsglog WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteSysMessageBatch($ids){
-		$this->_db->update("DELETE pm_sysmsglog WHERE id in (". $ids .")");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE pm_sysmsglog WHERE id in (". $ids .")");
+		return $this->_db_adspace->affected_rows();
 	}	
 	
 	function getSysMessage($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_sysmsglog WHERE $id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_sysmsglog WHERE $id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getSysMessageAll(){
-		$query = $this->_db->query("SELECT * FROM pm_sysmsglog ORDER BY id DESC");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM pm_sysmsglog ORDER BY id DESC");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 
 	function getSysMessagePageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -47,15 +47,15 @@ class PM_MessageDB extends BaseDB{
 			$sql = $sql." WHERE ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 
 	function getSysMessageTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_sysmsglog";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 	
@@ -73,37 +73,37 @@ class PM_MessageDB extends BaseDB{
 	function insertSysMsgtpl($fieldsData){
 		$fieldsData = $this->_checkSysMsgtplData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_sysmsgtpl SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_sysmsgtpl SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateSysMsgtpl($id,$updateData){
 		$updateData = $this->_checkSysMsgtplData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_sysmsgtpl SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_sysmsgtpl SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteSysMsgtpl($id){
-		$this->_db->update("DELETE FROM pm_sysmsgtpl WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_sysmsgtpl WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteSysMsgtplBatch($ids){
-		$this->_db->update("DELETE FROM pm_sysmsgtpl WHERE id in (". $ids .")");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_sysmsgtpl WHERE id in (". $ids .")");
+		return $this->_db_adspace->affected_rows();
 	}	
 	
 	function getSysMsgtpl($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_sysmsgtpl WHERE $id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_sysmsgtpl WHERE $id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getSysMsgtplAll(){
-		$query = $this->_db->query("SELECT * FROM pm_sysmsgtpl ORDER BY id DESC");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM pm_sysmsgtpl ORDER BY id DESC");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 
 	function getSysMsgtplPageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -116,15 +116,15 @@ class PM_MessageDB extends BaseDB{
 			$sql = $sql." WHERE ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 
 	function getSysMsgtplTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_sysmsgtpl ";
 		if($stwhere!=null)
 			$sql = "$sql WHERE $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 	
@@ -142,37 +142,37 @@ class PM_MessageDB extends BaseDB{
 	function insertSysMsgset($fieldsData){
 		$fieldsData = $this->_checkSysMsgsetData($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO pm_sysmsgset SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO pm_sysmsgset SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateSysMsgset($id,$updateData){
 		$updateData = $this->_checkSysMsgsetData($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE pm_sysmsgset SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE pm_sysmsgset SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteSysMsgset($id){
-		$this->_db->update("DELETE FROM pm_sysmsgset WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_sysmsgset WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteSysMsgsetBatch($ids){
-		$this->_db->update("DELETE FROM pm_sysmsgset WHERE id in (". $ids .")");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM pm_sysmsgset WHERE id in (". $ids .")");
+		return $this->_db_adspace->affected_rows();
 	}	
 	
 	function getSysMsgset($id){
-		$data = $this->_db->get_one("SELECT * FROM pm_sysmsgset WHERE $id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM pm_sysmsgset WHERE $id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getSysMsgsetAll(){
-		$query = $this->_db->query("SELECT * FROM pm_sysmsgset ORDER BY id DESC");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM pm_sysmsgset ORDER BY id DESC");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 
 	function getSysMsgsetPageList($page, $perPage,$stwhere=null,$storderby=null){
@@ -185,15 +185,15 @@ class PM_MessageDB extends BaseDB{
 			$sql = $sql." where ".$stwhere;
 		if($storderby!=null)
 			$sql = $sql." order by ".$storderby." DESC";
-		$query = $this->_db->query($sql." LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query($sql." LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 
 	function getSysMsgsetTotalCount($stwhere=null){
 		$sql = "SELECT COUNT(id) as count FROM pm_sysmsgset";
 		if($stwhere!=null)
 			$sql = "$sql where $stwhere";
-		$count = $this->_db->get_value($sql);
+		$count = $this->_db_adspace->get_value($sql);
 		return $count;
 	}
 	

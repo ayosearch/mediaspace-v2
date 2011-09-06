@@ -1,4 +1,6 @@
 <?php
+include_once('rolecontrol.php');	
+
 InitGetPost(array('mer_id','start_time','end_time'));
 
 !empty($mer_id) && $transtr .= "&mer_id=$mer_id";

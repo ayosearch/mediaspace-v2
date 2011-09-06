@@ -2,7 +2,7 @@
 include_once PrintEot('header');
 print <<<EOT
 -->
-<form id="form" name="form" action="$admin_file" method="post">
+<form id="form" name="form" action="$admin_file" method="get">
 <center>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
@@ -14,8 +14,9 @@ print <<<EOT
     <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="98%" align=center>              
         <tr>
             <td height="30px" colspan=2>
-            			<b>设定：</b><select ID="adv_id" name="adv_id" id="adv_id" style="Width:120px">
+            			<b>设定：</b><select ID="adv_id" name="adv_id" id="adv_id" style="Width:220px">
             			<option value="0">请选择广告计划</option>
+            			$op_advlist
             			</select>	
 						站长编号：<input type="text" name="aff_id" id="aff_id" size="2" class="text"/>
 						开始时间：<input name="start_time" type="text" class="text" readonly id="start_time" style="WIDTH:80px"><A href="javascript:OpenCalendar('start_time', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
@@ -33,7 +34,7 @@ print <<<EOT
 								<option value="content">留言内容</option>																			
 							</select>
 							<input type="text" ID="searchkey" name="searchkey" size="10" class="text"/>							
-							<input type="button" ID="btnQuery" value="查询" class="text"/>
+							<input type="submit" value="查询" class="text"/>
             </td>
             <td align="right" valign="center">
                 <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">

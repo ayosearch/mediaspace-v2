@@ -14,6 +14,14 @@ function showAffWebsite(curid){
     }
 }
 
+function showMerContract(obj){
+	var d = new Date();
+    if(isEmpty(obj.value)==false){
+    	var pars = "job=merpayrec&action=showmercontract&curid="+obj.value+"&d="+d.getMilliseconds();
+    	new Ajax.Updater("divContract",'admincp.php', {method: 'get', parameters: pars});
+    }
+}
+
 function showAfflist(){
 	var url = "admincp.php?job=affauditok&action=select&d="+d.getMilliseconds();
     var strClient = OpenWindow(url,530,505,'');
@@ -21,8 +29,36 @@ function showAfflist(){
 	    var ClientArray = strClient.replace('***',',').split(',');
 	    $("aff_name").value = ClientArray[1];
 	    $("aff_id").value = ClientArray[0];
-	    if($("site_id")!=null){
+	    if($("aff_id")!=null){
 	    	var pars = "job=affsiteaudit&action=selsite&curid="+$("aff_id").value+"&d="+d.getMilliseconds();
+	    	new Ajax.Updater("divSite",'admincp.php', {method: 'get', parameters: pars});
+	    }
+    }
+}
+
+function showAffSelHasSitelist(){
+	var url = "admincp.php?job=affauditok&action=hassite&d="+d.getMilliseconds();
+    var strClient = OpenWindow(url,530,505,'');
+    if(strClient != null){
+	    var ClientArray = strClient.replace('***',',').split(',');
+	    $("aff_name").value = ClientArray[1];
+	    $("aff_id").value = ClientArray[0];
+	    if($("aff_id")!=null){
+	    	var pars = "job=affsiteaudit&action=selhassite&curid="+$("aff_id").value+"&d="+d.getMilliseconds();
+	    	new Ajax.Updater("divSite",'admincp.php', {method: 'get', parameters: pars});
+	    }
+    }
+}
+
+function showAffHasSitelist(){
+	var url = "admincp.php?job=affauditok&action=hassite&d="+d.getMilliseconds();
+    var strClient = OpenWindow(url,530,505,'');
+    if(strClient != null){
+	    var ClientArray = strClient.replace('***',',').split(',');
+	    $("aff_name").value = ClientArray[1];
+	    $("aff_id").value = ClientArray[0];
+	    if($("aff_id")!=null){
+	    	var pars = "job=affsiteaudit&action=cksite&curid="+$("aff_id").value+"&d="+d.getMilliseconds();
 	    	new Ajax.Updater("divSite",'admincp.php', {method: 'get', parameters: pars});
 	    }
     }

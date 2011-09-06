@@ -1,4 +1,6 @@
 <?php
+include_once('rolecontrol.php');	
+	
 InitGetPost(array('status','all','auditstatus','start_date','end_date'));
 
 if(empty($action) || $action=="select"){

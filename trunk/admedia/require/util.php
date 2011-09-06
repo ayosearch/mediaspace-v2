@@ -1,23 +1,23 @@
 <?php
 function trimSameTags($str){
-	$arrStr = explode(',',str_replace($str, '，', ','));
+	$arrStr = explode(',',$str);
 	$tags = "";
-
 	$flag = true;
 	for ($i = 0; $i < count($arrStr); $i++){
 		$flag = true;
-		$tempArr = explode(',',tags);
+		$tempArr = explode(',',$tags);
 		if (count($tempArr) > 0){
 			for($j = 0; $j < count($tempArr); $j++){
-               if ($arrStr[i] == $tempArr[j]){
+               if (empty($tempArr[$j])>0 && $arrStr[$i] == $tempArr[$j]){
                   $flag = false;
                }
             }
         }else{
 			$flag = true;
         }
-        if ($flag == true && $arrStr[i] != "" && $arrStr[i] != null){
-			$tags .= ",".$arrStr[i];
+        if ($flag==true && !empty($arrStr[$i]) && strlen($arrStr[$i])>0){
+        	$pos = strpos(",,".$tags.",",",".$arrStr[$i].",");
+        	if(!$pos) $tags .= $arrStr[$i].",";
         }
     }
     $tags = ltrim(rtrim($tags,','),',');

@@ -1,4 +1,5 @@
 <?php 
+include_once('rolecontrol.php');	
 InitGetPost(array('status','all','start_date','end_date','adv_id','aff_id','site_id'));
 
 if(empty($action)){
@@ -35,6 +36,7 @@ if(empty($action)){
 			$_POST[start_time] = strtotime($_POST[start_date]." ".$_POST[start_hour].":".$_POST[start_minute]);
 			$_POST[end_time] = strtotime($_POST[end_date]." ".$_POST[end_hour].":".$_POST[end_minute]);			
 			$objAdvertise->insertAdvBuyAffPlaces($_POST);
+			writeSysLog(5, "新增广告定投", $AdminUser[login_name]."新增定投信息:".implode(",",$_POST));		
 		}
 	}else if(isset($curid)){
 		$db_adv = $objAdvertise->getAdvertise($adv_id);		
@@ -43,9 +45,10 @@ if(empty($action)){
 			$_POST[start_time] = strtotime($_POST[start_date]." ".$_POST[start_hour].":".$_POST[start_minute]);
 			$_POST[end_time] = strtotime($_POST[end_date]." ".$_POST[end_hour].":".$_POST[end_minute]);	
 			$objAdvertise->updateAdvBuyAffPlaces($curid,$_POST);
+			writeSysLog(6, "修改广告定投", $AdminUser[login_name]."修改定投信息:".implode(",",$_POST));		
 		}
 	}
-	ObHeader("$basename?job=advbuyplace$transtr");
+	ObHeader($admin_file.$transtr);
 }else if($action=="del"){
 	if(strpos($ids,',')>0){
 		$ids = substr($ids,0,strlen($ids)-1);
@@ -53,6 +56,7 @@ if(empty($action)){
 	if(strlen($ids)>0){
 		$objAdvertise = LOAD::loadDB("Advertise");	
 		$objAdvertise->deleteAdvBatchBuyAffPlaces($ids);
+		writeSysLog(7, "删除广告定投", $AdminUser[login_name]."删除定投信息:".$ids);
 	}
 }
 

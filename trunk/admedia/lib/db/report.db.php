@@ -4,32 +4,32 @@ class PM_ReportDB extends BaseDB{
 	function insertRepAffBillDay($fieldsData){
 		$fieldsData = $this->_checkMerchant($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO rep_affbill_cycle SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO rep_affbill_cycle SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateRepAffBillDay($id,$updateData){
 		$updateData = $this->_checkMerchant($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE rep_affbill_cycle SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE rep_affbill_cycle SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteRepAffBillDay($id){
-		$this->_db->update("DELETE FROM rep_affbill_cycle WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM rep_affbill_cycle WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getRepAffBillDay($id){
-		$data = $this->_db->get_one("SELECT * FROM rep_affbill_cycle WHERE $id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM rep_affbill_cycle WHERE $id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getRepAffBillDayAll(){
-		$query = $this->_db->query("SELECT * FROM rep_affbill_cycle ORDER BY id DESC");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM rep_affbill_cycle ORDER BY id DESC");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 	
 	function getRepAffBillDayPageList($page, $perPage){
@@ -37,8 +37,8 @@ class PM_ReportDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$query = $this->_db->query("SELECT * FROM rep_affbill_cycle ORDER BY id DESC LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM rep_affbill_cycle ORDER BY id DESC LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 	
 	function getRepAffBillDayStruct() {
@@ -55,32 +55,32 @@ class PM_ReportDB extends BaseDB{
 	function insertRepAffBillCycle($fieldsData){
 		$fieldsData = $this->_checkMerchant($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO rep_affbill_cycle SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO rep_affbill_cycle SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateRepAffBillCycle($id,$updateData){
 		$updateData = $this->_checkMerchant($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE rep_affbill_cycle SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE rep_affbill_cycle SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteRepAffBillCycle($id){
-		$this->_db->update("DELETE FROM rep_affbill_cycle WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM rep_affbill_cycle WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getRepAffBillCycle($id){
-		$data = $this->_db->get_one("SELECT * FROM rep_affbill_cycle WHERE $id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM rep_affbill_cycle WHERE $id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getRepAffBillCycleAll(){
-		$query = $this->_db->query("SELECT * FROM rep_affbill_cycle ORDER BY id DESC");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM rep_affbill_cycle ORDER BY id DESC");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 	
 	function getRepAffBillCyclePageList($page, $perPage){
@@ -88,8 +88,8 @@ class PM_ReportDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$query = $this->_db->query("SELECT * FROM rep_affbill_cycle ORDER BY id DESC LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM rep_affbill_cycle ORDER BY id DESC LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 	
 	function getRepAffBillCycleStruct() {
@@ -106,32 +106,32 @@ class PM_ReportDB extends BaseDB{
 	function insertRepAffPlaceCountDay($fieldsData){
 		$fieldsData = $this->_checkMerchant($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO rep_affplacecount_day SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO rep_affplacecount_day SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateRepAffPlaceCountDay($id,$updateData){
 		$updateData = $this->_checkMerchant($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE rep_affplacecount_day SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE rep_affplacecount_day SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteRepAffPlaceCountDay($id){
-		$this->_db->update("DELETE FROM rep_affplacecount_day WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM rep_affplacecount_day WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getRepAffPlaceCountDay($id){
-		$data = $this->_db->get_one("SELECT * FROM rep_affplacecount_day WHERE $id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM rep_affplacecount_day WHERE $id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getRepAffPlaceCountDayAll(){
-		$query = $this->_db->query("SELECT * FROM rep_affplacecount_day ORDER BY id DESC");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM rep_affplacecount_day ORDER BY id DESC");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 	
 	function getRepAffPlaceCountDayPageList($page, $perPage){
@@ -139,8 +139,8 @@ class PM_ReportDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$query = $this->_db->query("SELECT * FROM rep_affplacecount_day ORDER BY id DESC LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM rep_affplacecount_day ORDER BY id DESC LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 	
 	function getRepAffPlaceCountDayStruct() {
@@ -158,32 +158,32 @@ class PM_ReportDB extends BaseDB{
 	function insertRepMerBillDay($fieldsData){
 		$fieldsData = $this->_checkMerchant($fieldsData);
 		if (!$fieldsData) return null;
-		$this->_db->update("INSERT INTO rep_merbill_day SET " . $this->_getUpdateSqlString($fieldsData));
-		$insertId = $this->_db->insert_id();
+		$this->_db_adspace->update("INSERT INTO rep_merbill_day SET " . $this->_getUpdateSqlString($fieldsData));
+		$insertId = $this->_db_adspace->insert_id();
 		return $insertId;
 	}
 	
 	function updateRepMerBillDay($id,$updateData){
 		$updateData = $this->_checkMerchant($updateData);
 		if (!$updateData) return null;
-		$this->_db->update("UPDATE rep_merbill_day SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("UPDATE rep_merbill_day SET " . $this->_getUpdateSqlString($updateData) . " WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function deleteRepMerBillDayDay($id){
-		$this->_db->update("DELETE FROM rep_merbill_day WHERE id=". intval($id) ." LIMIT 1");
-		return $this->_db->affected_rows();
+		$this->_db_adspace->update("DELETE FROM rep_merbill_day WHERE id=". intval($id) ." LIMIT 1");
+		return $this->_db_adspace->affected_rows();
 	}
 	
 	function getRepMerBillDayDay($id){
-		$data = $this->_db->get_one("SELECT * FROM rep_merbill_day WHERE $id=".intval($id));
+		$data = $this->_db_adspace->get_one("SELECT * FROM rep_merbill_day WHERE $id=".intval($id));
 		if (!$data) return null;
 		return $data;
 	}
 	
 	function getRepMerBillDayAll(){
-		$query = $this->_db->query("SELECT * FROM rep_merbill_day ORDER BY id DESC");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM rep_merbill_day ORDER BY id DESC");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 	
 	function getRepMerBillDayPageList($page, $perPage){
@@ -191,8 +191,8 @@ class PM_ReportDB extends BaseDB{
 		$perPage = intval($perPage);
 		if ($page <= 0 || $perPage <= 0) return array();
 		$offset = ($page - 1) * $perPage;
-		$query = $this->_db->query("SELECT * FROM rep_merbill_day ORDER BY id DESC LIMIT $offset,$perPage");
-		return $this->_getAllResultFromQuery($query);	
+		$query = $this->_db_adspace->query("SELECT * FROM rep_merbill_day ORDER BY id DESC LIMIT $offset,$perPage");
+		return $this->_getAllResultFromQuery($query,$this->_db_adspace);	
 	}
 	
 	function getRepMerBillDayStruct() {

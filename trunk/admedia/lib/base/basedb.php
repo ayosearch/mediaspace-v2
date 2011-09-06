@@ -1,15 +1,21 @@
 <?php
 
 class BaseDB {
-	var $_db = null;
+	var $_db_adspace = null;
+	var $_db_prices = null;
 
 	function BaseDB() {
-		$this->_db = $GLOBALS['db'];
+		$this->_db_adspace = $GLOBALS['db_adspace'];
+		$this->_db_prices = $GLOBALS['db_prices'];
 	}
 
-	function _getConnection() {
+	function _getAdSpaceConnection() {
 		//global
-		return $GLOBALS['db'];
+		return $GLOBALS['_db_adspace'];
+	}
+	
+	function _getPricesConneciton(){
+		return $GLOBALS['db_prices'];
 	}
 
 	function _getUpdateSqlString($arr) {
@@ -17,9 +23,9 @@ class BaseDB {
 		return sqlSingle($arr);
 	}
 
-	function _getAllResultFromQuery($query) {
+	function _getAllResultFromQuery($query,$db) {
 		$result = array ();
-		while ( $rt = $this->_db->fetch_array ( $query ) ) {
+		while ( $rt = $db->fetch_array ( $query ) ) {
 			$result [] = $rt;
 		}
 		return $result;

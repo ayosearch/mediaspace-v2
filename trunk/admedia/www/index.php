@@ -27,7 +27,7 @@ if ($job == 'exit') {
 
 if ($job == 'regedit') {
 	Cookie('AffUser','',0);
-	include PrintEot($job,"www");
+	require_once (C_P.$job.$cfg_pext);
 	footer(false);
 }
 
@@ -92,7 +92,7 @@ if ($ckLogin!=1) {
 		footer(false);
 	}else{
 		$curidx = 0;		
-		empty($perpage) && $perpage = 15;
+		empty($perpage) && $perpage = 10;
 		empty($curpage) && $curpage = 1;		
 		$backurl = urlencode($basename."?".$pmServer[QUERY_STRING]);
 		$index_file = "$index_file?job=".$job;
@@ -137,6 +137,43 @@ function loadBaseSortList($key,$selval=null){
 	return $op_basesortlist;
 }
 
+function loadAffSiteList($status,$affid,$selid=0){
+	global $objAffiliate;
+	$db_sitelist = $objAffiliate->getAffSiteStatusList($affid,$status);
+	$op_sitelist = "";
+	foreach($db_sitelist as $db_site){
+		if($selid==$db_site[id]){
+			$op_sitelist .= "<option value='$db_site[id]' selected>$db_site[name]</option>";
+		}else{
+			$op_sitelist .= "<option value='$db_site[id]'>$db_site[name]</option>";
+		}
+	}
+	unset($db_sitelist,$db_site);
+	return $op_sitelist;
+}
+
+function loadBaseAdvSize($adsize=null){
+	$db_advsizelist = getBaseAdvSizeAll();
+	$op_advsizelist = "";
+	foreach($db_advsizelist as $db_advsize){
+		if($adsize==$db_advsize[height].'X'.$db_advsize[width]){
+			$op_advsizelist .= "<option value='".$db_advsize[height]."X".$db_advsize[width]."' selected>".$db_advsize[height]."X".$db_advsize[width]."</option>";
+		}else{
+			$op_advsizelist .= "<option value='".$db_advsize[height]."X".$db_advsize[width]."'>".$db_advsize[height]."X".$db_advsize[width]."</option>";
+		}
+	}
+	unset($objCommData,$db_advsizelist,$db_advsize);
+	return $op_advsizelist;
+}
+
+function getAffAdvApplyStatus($affid,$advid){
+	global $objAffiliate;
+	if(!$objAffiliate) $objAffiliate=LOAD::loadDB("Affiliate");
+	$db_affadvapply = $objAffiliate->getAffAdvApplyByAffId($affid,$advid);
+	if($db_affadvapply) return $db_affadvapply[status];
+	else return -1;
+}
+
 function showPageLink($strparam,$strval,$strtext){
 	global $index_file;
 	if($_GET[$strparam] == $strval){
@@ -168,36 +205,36 @@ function showPageBreakInfo($currpagecount,$js=null){
 
 	if ($curpage > 1) {
 		if($js==null){
-			$pagebreak .= "&nbsp;<img src='/www/img/backhome.gif' width='15' height='16' border='0' align='absmiddle'>&nbsp;<a href='$admin_file&action=$action&curpage=1$transtr'>首页</a>";
+			$pagebreak .= "&nbsp;<img src='/www/img/backhome.gif' width='15' height='16' border='0' align='absmiddle'>&nbsp;<a href='$index_file&action=$action&curpage=1$transtr'>首页</a>";
 		}else{
-			$pagebreak .= "&nbsp;<img src='/www/img/backhome.gif' width='15' height='16' border='0' align='absmiddle'>&nbsp;<a href=javascript:$js('$admin_file&action=$action&curpage=1$transtr');>首页</a>";
+			$pagebreak .= "&nbsp;<img src='/www/img/backhome.gif' width='15' height='16' border='0' align='absmiddle'>&nbsp;<a href=javascript:$js('$index_file&action=$action&curpage=1$transtr');>首页</a>";
 		}
 	}
 	if ($curpage > 1){
 		$beforepage = $curpage-1;
 		if($js==null){
-			$pagebreak .= "&nbsp;<img src='/www/img/pre.gif' width='13' height='14' border='0' align='absmiddle'>&nbsp;<a href='$admin_file&action=$action&curpage=$beforepage$transtr'>上一页</a>";
+			$pagebreak .= "&nbsp;<img src='/www/img/pre.gif' width='13' height='14' border='0' align='absmiddle'>&nbsp;<a href='$index_file&action=$action&curpage=$beforepage$transtr'>上一页</a>";
 		}else{
-			$pagebreak .= "&nbsp;<img src='/www/img/pre.gif' width='13' height='14' border='0' align='absmiddle'>&nbsp;<a href=javascript:$js('$admin_file&action=$action&curpage=$beforepage$transtr');>上一页</a>";
+			$pagebreak .= "&nbsp;<img src='/www/img/pre.gif' width='13' height='14' border='0' align='absmiddle'>&nbsp;<a href=javascript:$js('$index_file&action=$action&curpage=$beforepage$transtr');>上一页</a>";
 		}
 	}
 
 	if ($curpage < $totalpage){
 		$nextpage = $curpage + 1;
 		if($js==null){
-			$pagebreak .= "&nbsp;<img src='/www/img/next.gif' width='13' height='14' border='0' align='absmiddle'>&nbsp;<a href='$admin_file&action=$action&curpage=$nextpage$transtr'>下一页</a>";
+			$pagebreak .= "&nbsp;<img src='/www/img/next.gif' width='13' height='14' border='0' align='absmiddle'>&nbsp;<a href='$index_file&action=$action&curpage=$nextpage$transtr'>下一页</a>";
 		}else{
-			$pagebreak .= "&nbsp;<img src='/www/img/next.gif' width='13' height='14' border='0' align='absmiddle'>&nbsp;<a href=javascript:$js('$admin_file&action=$action&curpage=$nextpage$transtr');>下一页</a>";
+			$pagebreak .= "&nbsp;<img src='/www/img/next.gif' width='13' height='14' border='0' align='absmiddle'>&nbsp;<a href=javascript:$js('$index_file&action=$action&curpage=$nextpage$transtr');>下一页</a>";
 		}
 	}
 	if ($curpage < $totalpage){
 		if($js==null){
-			$pagebreak .= "&nbsp;<img src='/www/img/end.gif' width='15' height='16' border='0' align='absmiddle'>&nbsp;<a href='$admin_file&action=$action&curpage=$totalpage$transtr'>尾页</a>";
+			$pagebreak .= "&nbsp;<img src='/www/img/end.gif' width='15' height='16' border='0' align='absmiddle'>&nbsp;<a href='$index_file&action=$action&curpage=$totalpage$transtr'>尾页</a>";
 		}else{
-			$pagebreak .= "&nbsp;<img src='/www/img/end.gif' width='15' height='16' border='0' align='absmiddle'>&nbsp;<a href=javascript:$js('$admin_file&action=$action&curpage=$totalpage$transtr');>尾页</a>";
+			$pagebreak .= "&nbsp;<img src='/www/img/end.gif' width='15' height='16' border='0' align='absmiddle'>&nbsp;<a href=javascript:$js('$index_file&action=$action&curpage=$totalpage$transtr');>尾页</a>";
 		}
 	}
 
-	echo iconv("gbk","utf-8",$pagebreak);
+	echo $pagebreak;
 }
 ?>

@@ -1,8 +1,10 @@
 <!--<?php
 include_once PrintEot('header');
+$op_start_hourlist = showOptionHour();
+$op_start_minulist = showOptionSecond();
 print <<<EOT
 -->
-<form id="form" name="form" action="$admin_file" method="post">
+<form id="form" name="form" action="$admin_file" method="get">
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
@@ -13,11 +15,13 @@ print <<<EOT
     <table id="Table50" border="0" cellpadding="0" cellspacing="1" width="96%" align=center>              
         <tr>
             <td height="35px" colspan=2>
-            			<b>设定：</b><select ID="adv_id" name="adv_id" id="adv_id" style="Width:120px">
+            			<b>设定：</b><select ID="adv_id" name="adv_id" id="adv_id" style="Width:220px">
             			<option value="0">请选择广告计划</option>
+            			$op_advlist
             			</select>	
 						站长编号：<input type="text" name="aff_oid" id="aff_id" size="8" class="text"/>
-						选择日期：<input type="text" id="iday" name="iday" type="text" class="text" readonly id="iday" style="WIDTH:80px"><A href="javascript:OpenCalendar('StartDate', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						选择日期：<input type="text" id="iday" name="iday" type="text" class="text" readonly style="WIDTH:80px"><A href="javascript:OpenCalendar('iday', false)"><IMG src="$imgpath/admin/icon-calendar.gif" align="absMiddle" border="0"></A>
+						<select name="hour" id="hour">$op_start_hourlist</select>时<select name="minute" id="minute">$op_start_minulist</select>分
 						<b>查询：</b><select id="searchtype" name="searchtype" style="Width:110px">
 								<option value="">选择查询条件</option>
 								<option value="ip">IP地址</option>
@@ -26,7 +30,7 @@ print <<<EOT
 								<option value="from_url">来路</option>																			
 							</select>
 							<input type="text" ID="searchkey" name="searchkey" class="text"/>							
-							<input type="button" ID="btnQuery" value="查询" class="text"/>
+							<input type="submit" value="查询" class="text"/>
             </td>
             <td align="right" valign="center">
                 <table id="Table51" border="0" cellpadding="0" cellspacing="5" height="30">

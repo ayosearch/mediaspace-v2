@@ -3,7 +3,8 @@ include_once PrintEot('header');
 if(empty($action)){
 print <<<EOT
 -->
-<form action="$admin_file" method="post" name="form">
+<form action="$admin_file" method="get" name="form">
+<input type="hidden" name="job" value="$job"/>
     <table border="0" cellpadding="0" cellspacing="0" width="100%">
         <tr>
             <td align="left" class="tittab">
@@ -30,18 +31,18 @@ print <<<EOT
             <td><b>快速查询：</b><select id="searchtype" name="searchtype">
 <!--
 EOT;
-	if(empty($searchtype) || $searchtype=="name")  echo '<option value="name" selected>广告位名称</option>';
-    else echo '<option value="name">广告位名称</option>';
-	if(empty($searchtype) || $searchtype=="keyword")  echo '<option value="keyword">关键字</option>';
-    else echo '<option value="keyword">关键字</option>';
-	if(empty($searchtype) || $searchtype=="place_url")  echo '<option value="place_url">示例网址</option>';
-    else echo '<option value="place_url">示例网址</option>'; 
-	if(empty($searchtype) || $searchtype=="sitename")  echo '<option value="sitename">站点名称</option>';
-    else echo '<option value="sitename">站点名称</option>';    
-	if(empty($searchtype) || $searchtype=="siteurl")  echo '<option value="siteurl">网址地址</option>';
-    else echo '<option value="siteurl">网址地址</option>';
-	if(empty($searchtype) || $searchtype=="adsize")  echo '<option value="adsize">广告位尺寸</option>';
-    else echo '<option value="siteurl">广告位尺寸</option>';     
+	if(empty($searchtype) || $searchtype=="a.name")  echo '<option value="a.name" selected>广告位名称</option>';
+    else echo '<option value="a.name">广告位名称</option>';
+	if(empty($searchtype) || $searchtype=="a.keyword")  echo '<option value="a.keyword">关键字</option>';
+    else echo '<option value="a.keyword">关键字</option>';
+	if(empty($searchtype) || $searchtype=="a.demo_url")  echo '<option value="a.demo_url">示例网址</option>';
+    else echo '<option value="a.demo_url">示例网址</option>'; 
+	if(empty($searchtype) || $searchtype=="b.name")  echo '<option value="b.name">站点名称</option>';
+    else echo '<option value="b.name">站点名称</option>';    
+	if(empty($searchtype) || $searchtype=="b.url")  echo '<option value="b.url">网站地址</option>';
+    else echo '<option value="b.url">网站地址</option>';
+	if(empty($searchtype) || $searchtype=="a.adsize")  echo '<option value="a.adsize">广告位尺寸</option>';
+    else echo '<option value="a.adsize">广告位尺寸</option>';     
 print <<<EOT
 -->				
 							</select>
@@ -93,7 +94,8 @@ print <<<EOT
                 <td align="middle" class="title" height="30" valign="center">广告位尺寸</td>              
                 <td align="middle" class="title" height="30" valign="center">CPC计价</td>    
                 <td align="middle" class="title" height="30" valign="center">每周计价</td>    
-               <td align="middle" class="title" height="30" valign="center">审核</td>                       
+               <td align="middle" class="title" height="30" valign="center">审核</td>            
+               <td align="middle" class="title" height="30" valign="center">创建时间</td>                                              
                 <td align="middle" class="title" height="30" valign="center">状态</td>                
                  <td align="middle" class="title" height="30" valign="center">编辑</td>
             </tr>
@@ -105,7 +107,7 @@ $showcount = count($db_affadplacelist);
 foreach($db_affadplacelist as $affadplace ){
 	$curidx = $curidx+1;
 	$curpageidx = $curpageidx+1;
-	$cdate = date('Y/m/d H:i:s',$affadplace[create_time]);
+	if($affadplace[create_time]>0) $cdate = date('Y/m/d H:i:s',$affadplace[create_time]);
 	$db_placeaudit = $cfg_userstatus[$affadplace[audit]];
 	$db_placestatus = $cfg_advplacestatus[$affadplace[status]];
 print <<<EOT
@@ -121,7 +123,8 @@ print <<<EOT
                <td valign="middle" align="center">&nbsp;$affadplace[adsize]</td>             
                <td valign="middle" align="center">&nbsp;$affadplace[week_price]</td>
                <td valign="middle" align="center">&nbsp;$affadplace[click_price]</td>
-               <td valign="middle" align="center">&nbsp;$db_placeaudit</td>           
+               <td valign="middle" align="center">&nbsp;$db_placeaudit</td> 
+               <td valign="middle" align="center">&nbsp;$cdate</td>  
                <td valign="middle" align="center">&nbsp;$db_placestatus</td>                           
                <td valign="middle" align="center">&nbsp;
 <!--
@@ -170,7 +173,6 @@ print <<<EOT
 <input type="hidden" name="curid" value="$curid"/>
 <input type="hidden" name="status" value="$status"/>
 <input type="hidden" name="audit" value="$audit"/>
-<input type="hidden" name="curpage" value="$curpage"/>
 <input type="hidden" name="searchtype" value="$searchtype"/>
 <input type="hidden" name="searchkey" value="$searchkey"/>
 <input type="hidden" name="start_date" value="$start_date"/>
@@ -191,10 +193,11 @@ print <<<EOT
 		<div class="addpro">
 		<table cellspacing=0 cellpadding=4 width="100%" border=0 align=center id="Table24">
         <tbody>
+              <tr><td></td><td colspan=3>请先点击“选择站长”，在弹出的窗口列表中，鼠标移动到列表行上背景颜色变化后，可点击选取一个站长，"所属站点"的下拉列表将自动列出该站长的所有已审核站点</td></tr>
                 <tr>
 					<td align=right width="25%">所属站长(<font color=red>*</font>)：</td>
 					<td><input type="text" id="aff_name" name="aff_name" style="WIDTH: 261px"  value="$db_advplace[aff_name]" readonly/>
-					<a href="javascript:void(0)" onclick="javascript:showAfflist();">
+					<a href="javascript:void(0)" onclick="javascript:showAffSelHasSitelist();">
 					    <IMG border="0" align="absmiddle" style="CURSOR: hand" height="21" src="$imgpath/admin/image_fdj.gif" width="24" align="absMiddle">选择站长
 					</a><input type=hidden id="aff_id" name="aff_id" value="$db_advplace[aff_id]"/>
 					</td>
@@ -253,8 +256,6 @@ print <<<EOT
 
  </TABLE>
  </form>
-</body>
-</HTML>
 <script type="text/javascript">
 function checkfrm(){
 	if(isEmpty($("aff_name").value)){
@@ -310,7 +311,6 @@ print <<<EOT
 <input type="hidden" name="ids" value="$ids"/>
 <input type="hidden" name="status" value="$status"/>
 <input type="hidden" name="audit" value="$audit"/>
-<input type="hidden" name="curpage" value="$curpage"/>
 <input type="hidden" name="searchtype" value="$searchtype"/>
 <input type="hidden" name="searchkey" value="$searchkey"/>
 <input type="hidden" name="start_date" value="$start_date"/>
@@ -385,18 +385,18 @@ print <<<EOT
 			<b>快速查询：</b><select id="searchtype" name="searchtype">
 			<!--
 			EOT;
-				if(empty($searchtype) || $searchtype=="name")  echo '<option value="name" selected>广告位名称</option>';
-			    else echo '<option value="name">广告位名称</option>';
-				if(empty($searchtype) || $searchtype=="keyword")  echo '<option value="keyword">关键字</option>';
-			    else echo '<option value="keyword">关键字</option>';
-				if(empty($searchtype) || $searchtype=="place_url")  echo '<option value="place_url">示例网址</option>';
-			    else echo '<option value="place_url">示例网址</option>'; 
-				if(empty($searchtype) || $searchtype=="sitename")  echo '<option value="sitename">站点名称</option>';
-			    else echo '<option value="sitename">站点名称</option>';    
-				if(empty($searchtype) || $searchtype=="siteurl")  echo '<option value="siteurl">网址地址</option>';
-			    else echo '<option value="siteurl">网址地址</option>';
-				if(empty($searchtype) || $searchtype=="adsize")  echo '<option value="adsize">广告位尺寸</option>';
-			    else echo '<option value="siteurl">广告位尺寸</option>';     
+				if(empty($searchtype) || $searchtype=="a.name")  echo '<option value="a.name" selected>广告位名称</option>';
+			    else echo '<option value="a.name">广告位名称</option>';
+				if(empty($searchtype) || $searchtype=="a.keyword")  echo '<option value="a.keyword">关键字</option>';
+			    else echo '<option value="a.keyword">关键字</option>';
+				if(empty($searchtype) || $searchtype=="a.place_url")  echo '<option value="a.demo_url">示例网址</option>';
+			    else echo '<option value="a.demo_url">示例网址</option>'; 
+				if(empty($searchtype) || $searchtype=="b.name")  echo '<option value="b.name">站点名称</option>';
+			    else echo '<option value="b.name">站点名称</option>';    
+				if(empty($searchtype) || $searchtype=="b.url")  echo '<option value="b.url">网址地址</option>';
+			    else echo '<option value="b.url">网址地址</option>';
+				if(empty($searchtype) || $searchtype=="a.adsize")  echo '<option value="a.adsize">广告位尺寸</option>';
+			    else echo '<option value="a.adsize">广告位尺寸</option>';     
 			print <<<EOT
 			-->				
 				</select>
@@ -472,7 +472,6 @@ print <<<EOT
     </table>
     <input type="hidden" id="count" name="count" value="$showcount" />
 </form>
-</body>
 
 <!--
 EOT;

@@ -12,16 +12,19 @@ if(!isset($action) || empty($action)){
 			$arrquestion = explode(",",$questions);
 		}
 	}
+	include PrintEot($job,'www');
+	footer(false);
 }else if($action=="save"){
 	$objAffUser = LOAD::loadDB("Affiliate");
-	$_POST[login_pwd]=pwdCode($_POST[login_srcpwd]);
+	$_POST[login_srcpwd] = $_POST[login_pass];
+	$_POST[login_pwd]=pwdCode($_POST[login_pass]);
 	$_POST[source] = "0";
 	if($objAffUser->checkAffiliate($_POST[login_name])){
 		$_POST[create_time]=$timestamp;
 		$affvcreg = getSysConfigByKey("aff_vcreg");
 		$_POST[is_active]=1;//默认手工审核
 		$_POST[status]=0;					
-		if($affvcreg){
+		if(strlen($affvcreg)>0){
 			if($affvcreg=="1"){//发送邮件
 				$_POST[is_active]=0;
 				$_POST[status]=0;	
@@ -32,7 +35,7 @@ if(!isset($action) || empty($action)){
 			}			
 		}
 		$uid = $objAffUser->insertAffiliate($_POST);
-		if($affvcreg){
+		if(strlen($affvcreg)>0){
 			if($affvcreg=="1"){//发送邮件
 				$_POST[is_active]=0;
 				$_POST[status]=0;	
@@ -63,7 +66,4 @@ if(!isset($action) || empty($action)){
 		exit;
 	}		
 }
-
-include PrintEot($job,'www');
-footer(false);
 ?>

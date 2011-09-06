@@ -1,4 +1,5 @@
 <?php 
+include_once('rolecontrol.php');	
 
 strlen($status)>0 && $transtr .= "&status=$status";
 strlen($enablecpc)>0 && $transtr .= "&enablecpc=$enablecpc";
@@ -13,7 +14,7 @@ if($action=="del"){
 	$objAffiliate = LOAD::loadDB("Affiliate");
 	$objAffiliate->clearAffWebSite($ids);
 	unset($objAffiliate);
-	ObHeader($admin_file."&curpage=".$curpage.$transtr);	
+	ObHeader($admin_file.$transtr);
 }else if(empty($action)){
 	$stwhere = " a.is_del=1 and ";
 	(strlen($status)>0) && $stwhere .= " a.status=".intval($status)." and ";			

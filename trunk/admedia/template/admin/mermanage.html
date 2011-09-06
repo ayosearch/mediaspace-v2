@@ -26,7 +26,10 @@ print <<<EOT
 				
 					<td align=right>企业规模<font color=red>*</font>：</td>
 					<td>
-					    <select ID="scale" name="scale">$op_scalelist</select>			
+					    <select ID="scale" name="scale">
+					    <option value="">请选择...</option>
+					    $op_scalelist
+					    </select>			
 					</td>
 				</tr>
 				<tr>
@@ -35,10 +38,21 @@ print <<<EOT
 				
 					<td align=right>客户Logo：</td>
 					<td><INPUT id="logo_file" contentEditable="false" type="file" name="logo_file" style="width: 235px; height: 21px" />
-							<a href="$db_merchant[logo]" target="_blank" title="点击看原图"><img src="$db_merchant[logo]" border="0" height="64px" align="absmiddle"/></a></td>
+<!--
+EOT;
+if(isset($db_merchant) && $db_merchant[logo]){
+print <<<EOT
+-->				
+							<a href="$db_merchant[logo]" target="_blank" title="点击看原图"><img src="$db_merchant[logo]" border="0" height="64px" align="absmiddle"/></a>
+<!--
+EOT;
+}
+print <<<EOT
+-->
+					</td>
 				</tr>
 				<tr>
-					<td align=right>营业执照号码：</td>
+					<td align=right>营业执照号码<font color=red>*</font>：</td>
 					<td><input type="text" id="biz_code" style="WIDTH: 120px" NAME="biz_code" value="$db_merchant[biz_code]">
 					</td>
 				
@@ -46,15 +60,15 @@ print <<<EOT
 					<td><input type="text" id="url" name="url" style="WIDTH: 230px" value="$db_merchant[url]"></td>
 				</tr>
 				<tr>
-					<td align=right>开票抬头：</td>
+					<td align=right>开票抬头<font color=red>*</font>：</td>
 					<td><input type="text" id="ticket_title" name="ticket_title" style="WIDTH: 230px" value="$db_merchant[ticket_title]"></td>
 				
-					<td align=right>所在地区：</td>
+					<td align=right>所在地区<font color=red>*</font>：</td>
 					<td><div id="divCity"><SELECT id="province_id" style="WIDTH: 75px" onchange=updateCity(this); name="province_id">$op_provincelist</SELECT><SELECT id="city_id" style="WIDTH: 75px" name="city_id">$op_citylist</SELECT></div>
 				</tr>
 				<tr>
 					<td align=right>邮政编码：</td>
-					<td><input type="text" id="zip" name="zip" style="WIDTH: 120px" value="$db_merchant[zip]">
+					<td><input type="text" id="zip" name="zip" style="WIDTH: 120px" value="$db_merchant[zip]"/>
 					</td>
 				
 					<td align=right>详细地址：</td>
@@ -63,20 +77,22 @@ print <<<EOT
 				<tr>
 					<td align=right>所属行业：</td>
 					<td><div class="select">
-					    <select ID="trade" name="trade">$op_tradelist</select>
+					    <select ID="trade" name="trade"><option value="">请选择...</option>$op_tradelist</select>
 						</div>
 					</td>
 				
 					<td align=right>客户来源：</td>
 					<td><div class="select">
-						<select ID="client_source" name="client_source" style="WIDTH: 120px">$op_sourcelist</select>
+						<select ID="client_source" name="client_source" style="WIDTH: 120px">
+						<option value="">请选择...</option>$op_sourcelist
+						</select>
 						</div>
 					</td>
 				</tr>
 				<tr>
 					<td align=right>当前阶段：</td>
 					<td><div class="select">
-					    <select ID="phase" name="phase" style="WIDTH: 120px">$op_phaselist</select>
+					    <select ID="phase" name="phase" style="WIDTH: 120px"><option value="">请选择...</option>$op_phaselist</select>
 						</div>
 					</td>
 				
@@ -107,11 +123,20 @@ print <<<EOT
 -->
 					    </div>
 					</td>
-					<td align=right>销售人员：</td>
+					<td align=right>销售代表(<font color="red">*</font>)：</td>
 					<td>
-					    <select ID="seller" name="seller" style="WIDTH: 120px">$op_sellerlist</select>
+					    <select ID="seller_id" name="seller_id" style="WIDTH: 120px"><option value="">请选择...</option>$op_sellerlist</select>
 					</td>
 				</tr>
+				<tr>
+					<td align=right>阀值金额：</td>
+					<td><input type="text" id="deposit" name="deposit" style="WIDTH: 120px" value="$db_merchant[deposit]"/>
+					</td>
+				
+					<td align=right>当前留存/透支额度：</td>
+					<td><input type="text" id="over_draft" name="over_draft" style="WIDTH: 120px" value="$db_merchant[over_draft]"/>负数表示透支
+					</td>
+				</tr>				
 				<tr>
 					<td align=right style="height: 57px">备注：</td>
 					<td colspan=3 style="height: 57px">
@@ -140,11 +165,31 @@ function checkfrm(){
 		$('company').focus();
 		return false;
 	}	
+	if(isEmpty($('biz_code').value)){
+		alert('营业执照号码不能为空！');
+		$('biz_code').focus();
+		return false;
+	}
+	if(isEmpty($('scale').value)){
+		alert('请选择企业规模！');
+		$('scale').focus();
+		return false;
+	}	
+	if(isEmpty($('ticket_title').value)){
+		alert('开票抬头不能为空！');
+		$('ticket_title').focus();
+		return false;
+	}	
 	if(isEmpty($('short_name').value)){
 		alert('客户简称不能为空！');
 		$('short_name').focus();
 		return false;
 	}
+	if(isEmpty($('seller_id').value)){
+		alert('请选择销售代表！');
+		$('seller_id').focus();
+		return false;
+	}		
     return true;
 }
 </script>
@@ -232,7 +277,9 @@ print <<<EOT
                 <td align="middle" class="title" height="20" valign="center">所属行业</td>
                 <td align="middle" class="title" height="20" valign="center">网址</td>                               
                 <td align="middle" class="title" height="20" valign="center">销售</td>
-                <td align="middle" class="title" height="20" valign="center">添加日期</td>
+                <td align="middle" class="title" height="20" valign="center">添加日期</td>                
+                <td align="middle" class="title" height="20" valign="center">阀值</td>
+                <td align="middle" class="title" height="20" valign="center">留存/透支</td>                                 
                 <td align="middle" class="title" height="20" valign="center">状态</td>                  
                 <td align="middle" class="title" height="20" valign="center">操作</td>
             </tr>
@@ -272,7 +319,9 @@ print <<<EOT
 -->                
                 </td>             
                 <td align="middle" valign="center">&nbsp;$merchant[seller_name]</td>
-                <td align="middle" valign="center" width="145px">&nbsp;$cdate</td>
+                <td align="middle" valign="center" width="145px">&nbsp;$cdate</td>                
+                <td align="middle" valign="center">&nbsp;$merchant[deposit]</td>   
+                <td align="middle" valign="center">&nbsp;$merchant[over_draft]</td>                            
                 <td align="middle" valign="center" width="55px">$status</td>                   
                 <td align="middle" valign="center">&nbsp;
 <!--
@@ -314,7 +363,6 @@ print <<<EOT
 <input type="hidden" name="ids" value="$ids"/>
 <input type="hidden" name="source" value="$source"/>
 <input type="hidden" name="status" value="$status"/>
-<input type="hidden" name="curpage" value="$curpage"/>
 <TABLE cellSpacing="0" cellPadding="0" width="100%" border=0 ID="Table22">
 	<TBODY>	    
 		<TR >
