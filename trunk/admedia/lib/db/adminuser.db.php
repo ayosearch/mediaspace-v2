@@ -404,7 +404,7 @@ class PM_AdminUserDB extends BaseDB{
 				$sql = "select * from pm_sysrole where id = ".$rtUser["role_id"];
 			}
 			$query = $this->_db_adspace->query($sql);
-			$db_rolelist = $this->_getAllResultFromQuery($query,$this->_db_adspace);($query);
+			$db_rolelist = $this->_getAllResultFromQuery($query,$this->_db_adspace);
 			foreach($db_rolelist as $db_role){
 				$popedomIds .= $db_role["operate_ids"].",";
 			}
@@ -413,14 +413,14 @@ class PM_AdminUserDB extends BaseDB{
 			if(!empty($popedomIds)){
 				$sql = "select * from pm_syscelloperate where is_del=0 and id in (".$popedomIds.")";
 				$queryCol = $this->_db_adspace->query($sql);
-				$db_oplist = $this->_getAllResultFromQuery($query,$this->_db_adspace);($queryCol);
+				$db_oplist = $this->_getAllResultFromQuery($queryCol,$this->_db_adspace);
 				foreach($db_oplist as $db_op){
 					$strIds .= $db_op[col_id].",";
 					$strIds = $this->getSysUserParentColumns($queryModel,$db_op[col_id],$strIds);
 				}
 				$strIds = trimSameTags(rtrim($strIds,','));
 				$queryModel2 = $this->_db_adspace->query("select * from pm_sysmodule where is_del=0 and id in (".$strIds.") order by col_index ASC");
-				return $this->_getAllResultFromQuery($query,$this->_db_adspace);($queryModel2);
+				return $this->_getAllResultFromQuery($queryModel2,$this->_db_adspace);
 			}				
 		}
 		return null;
